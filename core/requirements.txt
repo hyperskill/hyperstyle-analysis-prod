@@ -1,0 +1,3 @@
+pandas==1.5.2
+dataclasses-json==0.5.7
+hyperstyle==1.4.1

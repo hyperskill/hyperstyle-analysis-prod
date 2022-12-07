@@ -1,0 +1,19 @@
+project: templates
+
+plugins:
+  enabled:
+    - python
+
+# Prerequisites: https://github.com/pyenv/pyenv/wiki#suggested-build-environment
+environment:
+  path: .venv
+  python: 3.9
+
+requirements:
+  main:
+    - name: argparse
+      version: ==1.4.0
+    - name: pandas
+      version: ==1.5.2
+    - name: diff-match-patch
+      version: ==20200713

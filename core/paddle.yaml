@@ -1,0 +1,19 @@
+project: core
+
+plugins:
+  enabled:
+    - python
+
+# Prerequisites: https://github.com/pyenv/pyenv/wiki#suggested-build-environment
+environment:
+  path: .venv
+  python: 3.9
+
+requirements:
+  main:
+    - name: argparse
+      version: ==1.4.0
+    - name: dataclasses-json
+      version: ==0.5.7
+    - name: hyperstyle
+      version: ==1.4.1
