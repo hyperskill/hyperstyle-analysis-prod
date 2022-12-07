@@ -29,6 +29,11 @@ tasks:
   run:
     - id: filter_by_diff
       entrypoint: templates/diffs/filter_by_diff.py
+  test:
+    pytest:
+      - id: filter_by_diff_tests
+        targets:
+          - templates/diffs
 
 subprojects:
   - core
