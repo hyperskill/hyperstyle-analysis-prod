@@ -25,5 +25,10 @@ requirements:
     - name: pytest-subtests
       version: ==0.9.0
 
+tasks:
+  run:
+    - id: filter_by_diff
+      entrypoint: templates/diffs/filter_by_diff.py
+
 subprojects:
   - core

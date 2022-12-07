@@ -71,3 +71,14 @@ class SubmissionColumns(Enum):
     RAW_ISSUES_DIFF = 'raw_issues_diff'
     HYPERSTYLE_ISSUES = 'hyperstyle_issues'
     QODANA_ISSUES = 'qodana_issues'
+
+
+@unique
+class IssuesColumns(Enum):
+    NAME = 'name'
+    CATEGORY = 'category'
+    COUNT = 'count'
+    TEXT = 'text'
+    CODE_SAMPLE = 'code_sample'
+    DIFFICULTY = 'difficulty'
+    POSITION = 'position'

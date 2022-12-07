@@ -28,3 +28,8 @@ def write_df(df: pd.DataFrame, path: Union[str, Path]):
         df.to_csv(path, index=False)
     else:
         raise NotImplementedError(f'Can not write df with extension {ext.value}')
+
+
+def equal_df(expected_df: pd.DataFrame, actual_df: pd.DataFrame) -> bool:
+    return (expected_df.empty and actual_df.empty) or expected_df.reset_index(drop=True).equals(
+        actual_df.reset_index(drop=True))
