@@ -51,3 +51,4 @@ Output csv file will be saved to `filtered_submissions_path` and will contain al
 - `issues_column` + `_diff` will contain filtered template issues
 - `issues_column` + `_all` will contain both students and template issues
 - `issues_column` + `_diff_template_positions` - for each issue from the `issues_column` + `_diff` column stores row number and offset in this row in the template.
+

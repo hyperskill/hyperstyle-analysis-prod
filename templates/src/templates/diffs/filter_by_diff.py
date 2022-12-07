@@ -1,4 +1,5 @@
 import argparse
+import ast
 import bisect
 from pathlib import Path
 
@@ -8,17 +9,21 @@ from typing import List, Tuple, Optional
 import pandas as pd
 from diff_match_patch import diff_match_patch
 
-from core.model.column_name import SubmissionColumns, StepColumns
+from core.model.column_name import SubmissionColumns, StepColumns, IssuesColumns
 from core.model.quality.issue.issue import BaseIssue
 from core.utils.df_utils import filter_df_by_iterable_value, read_df, write_df
 from core.utils.logging_utils import configure_logger
 from core.utils.quality.code_utils import split_code_to_lines
-from core.utils.quality.report_utils import parse_report
+from core.utils.quality.report_utils import parse_report, parse_str_report
 
 from src.templates.diffs.model.diff_interval import DiffInterval
 from src.templates.diffs.model.diff_result import DiffResult
 from src.templates.diffs.model.diff_tag import DiffTag
 from src.templates.utils.template_utils import parse_template_code_from_step
+
+
+DIF_SUFFIX = 'diff'
+DIFF_TEMPLATE_POSITIONS_SUFFIX = 'diff_template_positions'
 
 
 def get_code_prefix_lengths(code_lines: List[str]) -> List[int]:
@@ -131,9 +136,9 @@ def filter_in_single_submission(submission: pd.Series, step: pd.Series, issues_c
     template_issues_positions = issues_offsets_to_positions(template_issues_offsets, template_lines)
 
     submission[issues_column] = report.filter_issues(lambda i: i not in template_issues).to_json()
-    submission[f'{issues_column}_diff'] = report.filter_issues(lambda i: i in template_issues).to_json()
+    submission[f'{issues_column}_{DIF_SUFFIX}'] = report.filter_issues(lambda i: i in template_issues).to_json()
     submission[f'{issues_column}_all'] = report.to_json()
-    submission[f'{issues_column}_diff_template_positions'] = str(template_issues_positions)
+    submission[f'{issues_column}_{DIFF_TEMPLATE_POSITIONS_SUFFIX}'] = str(template_issues_positions)
 
     return submission
 
@@ -152,7 +157,13 @@ def filter_template_issues_using_diff(df_submissions: pd.DataFrame, df_steps: pd
     return df_submissions.apply(lambda submission: apply_filter(submission), axis=1)
 
 
-def main(submissions_path: str, steps_path: str, filtered_submissions_path: Optional[str], issues_column: str):
+def main(
+        submissions_path: str,
+        steps_path: str,
+        filtered_submissions_path: Optional[str],
+        issues_column: str,
+        templates_issues_path: Optional[str],
+):
     df_submissions = read_df(submissions_path)
     df_steps = read_df(steps_path)
     df_filtered_issues = filter_template_issues_using_diff(
@@ -160,6 +171,53 @@ def main(submissions_path: str, steps_path: str, filtered_submissions_path: Opti
         df_steps,
         issues_column,
     )
+    save_filtered_df(df_filtered_issues, filtered_submissions_path)
+
+    if templates_issues_path is not None:
+        template_issues_df = create_templates_issues_df(df_filtered_issues, issues_column)
+        write_df(template_issues_df, templates_issues_path)
+
+
+def create_templates_issues_df(df_filtered_issues: pd.DataFrame, issues_column: str) -> pd.DataFrame:
+    row_number_column = 'row_number'
+    offset_column = 'offset'
+    issues_dict = {
+        SubmissionColumns.STEP_ID.value: [],
+        IssuesColumns.NAME.value: [],
+        IssuesColumns.CATEGORY.value: [],
+        IssuesColumns.DIFFICULTY.value: [],
+        IssuesColumns.TEXT.value: [],
+        row_number_column: [],
+        offset_column: [],
+    }
+
+    def unzip_issue(row: pd.Series):
+        report = parse_str_report(row[f'{issues_column}_{DIF_SUFFIX}'], issues_column)
+        issues = report.get_issues()
+        positions = ast.literal_eval(row[f'{issues_column}_{DIFF_TEMPLATE_POSITIONS_SUFFIX}'])
+        step_id = row[SubmissionColumns.STEP_ID.value]
+        for issue, pos in zip(issues, positions):
+            issues_dict[SubmissionColumns.STEP_ID.value].append(step_id)
+            issues_dict[IssuesColumns.NAME.value].append(issue.get_name())
+            issues_dict[IssuesColumns.CATEGORY.value].append(issue.get_category())
+            issues_dict[IssuesColumns.DIFFICULTY.value].append(issue.get_difficulty())
+            issues_dict[IssuesColumns.TEXT.value].append(issue.get_text())
+            row_number, offset = pos
+            issues_dict[row_number_column].append(row_number)
+            issues_dict[offset_column].append(offset)
+
+    df_filtered_issues.apply(lambda row: unzip_issue(row), axis=1)
+    return pd.DataFrame.from_dict(issues_dict).drop_duplicates(subset=[
+        SubmissionColumns.STEP_ID.value,
+        IssuesColumns.NAME.value,
+        IssuesColumns.CATEGORY.value,
+        IssuesColumns.DIFFICULTY.value,
+        row_number_column,
+        offset_column,
+    ])
+
+
+def save_filtered_df(df_filtered_issues: pd.DataFrame, filtered_submissions_path: Optional[str]):
     if filtered_submissions_path is None:
         print(df_filtered_issues)
     else:
@@ -173,10 +231,16 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
                         help='Column where issues stored.',
                         choices=[SubmissionColumns.HYPERSTYLE_ISSUES.value, SubmissionColumns.QODANA_ISSUES.value])
 
-    parser.add_argument('--output-path', type=str, default=None,
-                        help='Path .csv file with submissions with filtered template issues. '
-                             'If no value was passed, the output will be printed into the console.'
-                        )
+    parser.add_argument(
+        '--output-path', type=str, default=None,
+        help='Path .csv file with submissions with filtered template issues. '
+             'If no value was passed, the output will be printed into the console.'
+    )
+    parser.add_argument(
+        '--templates-issues-path', type=str, default=None,
+        help='Path .csv file with template issues in the user-friendly format. '
+             'By default it is None and does not create this file.'
+    )
     parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
 
 
@@ -196,4 +260,5 @@ if __name__ == '__main__':
         args.steps_path,
         args.output_path,
         args.issues_column,
+        args.templates_issues_path,
     )
