@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from templates.diffs.model.diff_interval import DiffInterval
-from templates.diffs.model.diff_tag import DiffTag
+from src.templates.diffs.model.diff_interval import DiffInterval
+from src.templates.diffs.model.diff_tag import DiffTag
 
 
 @dataclass(frozen=True)

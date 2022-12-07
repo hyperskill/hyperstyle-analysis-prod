@@ -13,10 +13,10 @@ from core.utils.logging_utils import configure_logger
 from core.utils.quality.code_utils import split_code_to_lines
 from core.utils.quality.report_utils import parse_report
 
-from templates.diffs.model.diff_interval import DiffInterval
-from templates.diffs.model.diff_result import DiffResult
-from templates.diffs.model.diff_tag import DiffTag
-from templates.utils.template_utils import parse_template_code_from_step
+from src.templates.diffs.model.diff_interval import DiffInterval
+from src.templates.diffs.model.diff_result import DiffResult
+from src.templates.diffs.model.diff_tag import DiffTag
+from src.templates.utils.template_utils import parse_template_code_from_step
 
 
 def get_code_prefix_lengths(code_lines: List[str]) -> List[int]:

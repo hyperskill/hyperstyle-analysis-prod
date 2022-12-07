@@ -2,10 +2,10 @@ from typing import List
 
 import pytest
 
-from templates.diffs.filter_by_diff import get_template_to_code_diffs
-from templates.diffs.model.diff_interval import DiffInterval
-from templates.diffs.model.diff_result import DiffResult
-from templates.diffs.model.diff_tag import DiffTag
+from src.templates.diffs.filter_by_diff import get_template_to_code_diffs
+from src.templates.diffs.model.diff_interval import DiffInterval
+from src.templates.diffs.model.diff_result import DiffResult
+from src.templates.diffs.model.diff_tag import DiffTag
 
 DIFF_TEST_DATA = [
     (["a = 1\n", "b = 2\n", "c = # put your code here\n", "print(a, b, c)"],
