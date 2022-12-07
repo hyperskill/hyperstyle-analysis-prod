@@ -1,7 +1,9 @@
 import argparse
 import bisect
+from pathlib import Path
+
 import sys
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 import pandas as pd
 from diff_match_patch import diff_match_patch
@@ -150,7 +152,7 @@ def filter_template_issues_using_diff(df_submissions: pd.DataFrame, df_steps: pd
     return df_submissions.apply(lambda submission: apply_filter(submission), axis=1)
 
 
-def main(submissions_path: str, steps_path: str, filtered_submissions_path: str, issues_column: str):
+def main(submissions_path: str, steps_path: str, filtered_submissions_path: Optional[str], issues_column: str):
     df_submissions = read_df(submissions_path)
     df_steps = read_df(steps_path)
     df_filtered_issues = filter_template_issues_using_diff(
@@ -158,18 +160,23 @@ def main(submissions_path: str, steps_path: str, filtered_submissions_path: str,
         df_steps,
         issues_column,
     )
-    write_df(df_filtered_issues, filtered_submissions_path)
+    if filtered_submissions_path is None:
+        print(df_filtered_issues)
+    else:
+        write_df(df_filtered_issues, filtered_submissions_path)
 
 
 def configure_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument('submissions_path', type=str, help='Path to .csv file with submissions.')
     parser.add_argument('steps_path', type=str, help='Path to .csv file with steps.')
-    parser.add_argument('filtered_submissions_path', type=str,
-                        help='Path .csv file with submissions with filtered template issues.')
     parser.add_argument('issues_column', type=str,
                         help='Column where issues stored.',
                         choices=[SubmissionColumns.HYPERSTYLE_ISSUES.value, SubmissionColumns.QODANA_ISSUES.value])
 
+    parser.add_argument('--output-path', type=str, default=None,
+                        help='Path .csv file with submissions with filtered template issues. '
+                             'If no value was passed, the output will be printed into the console.'
+                        )
     parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
 
 
@@ -178,11 +185,15 @@ if __name__ == '__main__':
     configure_parser(parser)
 
     args = parser.parse_args(sys.argv[1:])
-    configure_logger(args.filtered_submissions_path, 'template_issues_filtering_by_diff', args.log_path)
+    if args.output_path is None:
+        log_file_suffix = Path(args.submissions_path).parent
+    else:
+        log_file_suffix = args.output_path
+    configure_logger(log_file_suffix, 'template_issues_filtering_by_diff', args.log_path)
 
     main(
         args.submissions_path,
         args.steps_path,
-        args.filtered_submissions_path,
+        args.output_path,
         args.issues_column,
     )

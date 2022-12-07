@@ -38,12 +38,16 @@ Required arguments:
 
 - `submissions_path` — Path to .csv file with submissions. The file must contain the following columns: `id`, `lang`, `step_id`, `code`, `group`, `attempt`, `hyperskill_issues`/`qodana_issues` (please, use [preprocess_submissions.py](../preprocessing/preprocess_submissions.py) script to get  `group` and `attempt` columns).
 - `steps_path` — Path to .csv file with steps. The file must contain the following columns: `id`, and `code_template` OR `code_templates`.
-- `filtered_submissions_path` — Path to resulting .csv file with submissions with filtered issues.
-- `template_issues_path` - Path .csv file with template issues with their positions.
 - `issues_column` — Column name in .csv file with submissions where issues are stored (can be `hyperstyle_issues` ot `qodana_issues`).
+
+Optional arguments:
+
+- `--output-path` — Path to resulting .csv file with submissions with filtered issues. If no value was passed, the output will be printed into the console.
+- `--log-path` — Path to directory for log. The default value is `None`.
 
 ### Output format
 Output csv file will be saved to `filtered_submissions_path` and will contain all data from csv in `submissions_path` but issues from `issues_column` will be modified in following way:
 - `issues_column` will contain only students issues with filtered template issues
 - `issues_column` + `_diff` will contain filtered template issues
 - `issues_column` + `_all` will contain both students and template issues
+- `issues_column` + `_diff_template_positions` - for each issue from the `issues_column` + `_diff` column stores row number and offset in this row in the template.
