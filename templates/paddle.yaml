@@ -33,7 +33,7 @@ tasks:
     pytest:
       - id: filter_by_diff_tests
         targets:
-          - templates/diffs
+          - templates_tests/diffs
 
 subprojects:
   - core
