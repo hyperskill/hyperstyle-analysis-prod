@@ -1,8 +1,6 @@
 import argparse
 import bisect
 import sys
-from dataclasses import dataclass
-from enum import Enum, unique
 from typing import List, Tuple
 
 import pandas as pd
@@ -10,42 +8,15 @@ from diff_match_patch import diff_match_patch
 
 from core.model.column_name import SubmissionColumns, StepColumns
 from core.model.quality.issue.issue import BaseIssue
-from core.utils.code_utils import split_code_to_lines
 from core.utils.df_utils import filter_df_by_iterable_value, read_df, write_df
 from core.utils.logging_utils import configure_logger
-from core.utils.report_utils import parse_report
+from core.utils.quality.code_utils import split_code_to_lines
+from core.utils.quality.report_utils import parse_report
+
+from templates.diffs.model.diff_interval import DiffInterval
+from templates.diffs.model.diff_result import DiffResult
+from templates.diffs.model.diff_tag import DiffTag
 from templates.utils.template_utils import parse_template_code_from_step
-
-
-@unique
-class DiffTag(Enum):
-    ADDITION = 1
-    EQUAL = 0
-    DELETION = -1
-
-
-@dataclass(frozen=True)
-class DiffInterval:
-    """
-        start - position of change start (included)
-        end - position of change end (excluded)
-    """
-    start: int
-    end: int
-
-
-@dataclass(frozen=True)
-class DiffResult:
-    """
-        tag - type of change where 0 (code not changed), 1 (code added), -1 (code deleted)
-        patch - part of code which was changes
-        template_interval - changed interval in template
-        code_interval - changed interval in code
-    """
-    tag: DiffTag
-    patch: str
-    template_interval: DiffInterval
-    code_interval: DiffInterval
 
 
 def get_code_prefix_lengths(code_lines: List[str]) -> List[int]:

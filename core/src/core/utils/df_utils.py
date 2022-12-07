@@ -3,7 +3,7 @@ from typing import Iterable, Union, Optional
 
 import pandas as pd
 
-from core.utils.extension_utils import get_restricted_extension, AnalysisExtension
+from core.utils.file.extension_utils import get_restricted_extension, AnalysisExtension
 
 
 def filter_df_by_iterable_value(df: pd.DataFrame, column: str, value: Iterable) -> pd.DataFrame:

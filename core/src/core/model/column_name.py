@@ -46,6 +46,7 @@ class StepColumns(Enum):
 
     THREAD = 'thread'
 
+
 @unique
 class SubmissionColumns(Enum):
     ID = 'id'

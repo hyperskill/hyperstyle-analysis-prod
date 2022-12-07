@@ -5,7 +5,7 @@ from typing import Union
 
 from hyperstyle.src.python.review.common.file_system import Extension
 
-from core.utils.extension_utils import AnalysisExtension
+from core.utils.file.extension_utils import AnalysisExtension
 
 
 def clean_file(path: str):

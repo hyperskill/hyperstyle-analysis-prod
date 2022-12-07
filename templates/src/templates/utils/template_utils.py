@@ -4,7 +4,7 @@ import pandas as pd
 from typing import Optional, List
 
 from core.model.column_name import StepColumns
-from core.utils.code_utils import split_code_to_lines
+from core.utils.quality.code_utils import split_code_to_lines
 
 
 def parse_template_code_from_step(step: pd.Series, lang: Optional[str] = None, keep_ends: bool = False) -> List[str]:

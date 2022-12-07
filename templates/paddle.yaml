@@ -17,3 +17,13 @@ requirements:
       version: ==1.5.2
     - name: diff-match-patch
       version: ==20200713
+  dev:
+    - name: pytest
+      version: ==7.2.0
+    - name: pytest-runner
+      version: ==6.0.0
+    - name: pytest-subtests
+      version: ==0.9.0
+
+subprojects:
+  - core

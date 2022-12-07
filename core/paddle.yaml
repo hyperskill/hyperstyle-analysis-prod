@@ -11,8 +11,8 @@ environment:
 
 requirements:
   main:
-    - name: argparse
-      version: ==1.4.0
+    - name: pandas
+      version: ==1.5.2
     - name: dataclasses-json
       version: ==0.5.7
     - name: hyperstyle

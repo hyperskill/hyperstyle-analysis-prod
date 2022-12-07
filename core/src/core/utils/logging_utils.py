@@ -2,7 +2,7 @@ import logging
 import os
 from typing import Optional
 
-from core.utils.file_utils import get_name_from_path, get_parent_folder, create_file, clean_file
+from core.utils.file.file_utils import get_name_from_path, get_parent_folder, create_file, clean_file
 
 
 def configure_logger(processing_file_path: str, prefix: str, log_directory_path: Optional[str] = None):
