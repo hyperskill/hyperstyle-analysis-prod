@@ -1,0 +1,12 @@
+step_id,name,category,difficulty,text,row_number,offset
+1,WPS446,BEST_PRACTICES,MEDIUM,Found approximate constant: 2.7182818284590453,1,6
+2,WPS446,BEST_PRACTICES,MEDIUM,Found approximate constant: 2.718281828459045,1,1
+2,SC200,BEST_PRACTICES,MEDIUM,Possibly misspelt word: `eul`,1,8
+3,WPS432,BEST_PRACTICES,MEDIUM,Found magic number: 1,1,7
+3,WPS432,BEST_PRACTICES,MEDIUM,Found magic number: 2,2,7
+4,SC200,INFO,EASY,Possibly misspelt word: ‘y1’,2,0
+4,SC200,INFO,EASY,Possibly misspelt word: ‘y2’,6,1
+4,SC200,INFO,EASY,Possibly misspelt word: ‘y1’,9,4
+4,SC200,INFO,EASY,Possibly misspelt word: ‘y2’,9,10
+
+

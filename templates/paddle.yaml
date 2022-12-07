@@ -29,10 +29,6 @@ tasks:
   run:
     - id: filter_by_diff
       entrypoint: templates/diffs/filter_by_diff.py
-      args:
-        - /Users/anastasia.birillo/PycharmProjects/hyperstyle-analysis-prod/templates/tests/resources/templates_tests/diffs/submissions_python3_hyperstyle.csv
-        - /Users/anastasia.birillo/PycharmProjects/hyperstyle-analysis-prod/templates/tests/resources/templates_tests/diffs/steps.csv
-        - hyperstyle_issues
   test:
     pytest:
       - id: filter_by_diff_tests
