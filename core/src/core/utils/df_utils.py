@@ -20,6 +20,13 @@ def read_df(path: Union[str, Path]) -> Optional[pd.DataFrame]:
     raise NotImplementedError(f'Can not read df with extension {ext.value}')
 
 
+def write_or_pint_df(df: pd.DataFrame, path: Optional[Union[str, Path]]):
+    if path is None:
+        print(df)
+    else:
+        write_df(df, path)
+
+
 def write_df(df: pd.DataFrame, path: Union[str, Path]):
     """ Write dataframe to given .csv. """
 
@@ -33,3 +40,11 @@ def write_df(df: pd.DataFrame, path: Union[str, Path]):
 def equal_df(expected_df: pd.DataFrame, actual_df: pd.DataFrame) -> bool:
     return (expected_df.empty and actual_df.empty) or expected_df.reset_index(drop=True).equals(
         actual_df.reset_index(drop=True))
+
+
+def merge_dfs(df_left: pd.DataFrame, df_right: pd.DataFrame, left_on: str, right_on: str, how='inner') -> pd.DataFrame:
+    """ Merge two given dataframes on `left_on` = `right_on`. Duplicated columns are removed. """
+
+    df_merged = pd.merge(df_left, df_right, how=how, left_on=left_on, right_on=right_on, suffixes=('', '_extra'))
+    df_merged.drop(df_merged.filter(regex='_extra$').columns.tolist(), axis=1, inplace=True)
+    return df_merged

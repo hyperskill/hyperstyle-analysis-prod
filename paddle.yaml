@@ -6,4 +6,5 @@ metadata:
 subprojects:
   - core
   - templates
+  - preprocessing
 
