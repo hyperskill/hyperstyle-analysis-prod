@@ -64,11 +64,26 @@ def issues_offsets_to_positions(offsets: List[int], code_lines: List[str]) -> Li
     return issues_positions
 
 
+def get_code_line(code: str, code_end: int, code_lines: List[str]) -> str:
+    rest = code[code_end:]
+    rest = rest[:rest.index('\n')]
+    start = None
+    for line in code_lines:
+        if rest in line:
+            start = line
+    if start is None:
+        return rest
+    return start
+
+
 def get_template_to_code_diffs(template_lines: List[str], code_lines: List[str]) -> List[DiffResult]:
     """ Get template to students code diffs. """
 
+    code = ''.join(code_lines)
+    template = ''.join(template_lines)
+
     matcher = diff_match_patch()
-    patches = matcher.diff_main(''.join(template_lines), ''.join(code_lines))
+    patches = matcher.diff_main(template, code)
 
     diffs = []
     code_start, code_end = 0, 0
@@ -81,6 +96,15 @@ def get_template_to_code_diffs(template_lines: List[str], code_lines: List[str])
         if tag == DiffTag.EQUAL.value:
             code_end = code_start + len(patch)
             template_end = template_start + len(patch)
+
+            if patch.strip('\n').strip(' ') == '':
+                tag = DiffTag.ERROR.value
+
+            # TODO: probably make it better
+            if not patch.endswith('\n'):
+                code_line = get_code_line(code, code_end, code_lines)
+                if code_line.strip('\n') not in template:
+                    tag = DiffTag.ERROR.value
 
         if tag == DiffTag.DELETION.value:
             template_end = template_start + len(patch)
@@ -115,6 +139,10 @@ def get_template_issues(issues: List[BaseIssue], issues_offsets: List[int], diff
 
             # If issue is inside code interval and tag is "equal" consider issue as template
             interval_offset = offset - diff.code_interval.start
+            # TODO: add tests?
+            if interval_offset < 0:
+                break
+            # TODO: add tests and recalculate offset?
             template_offset = diff.template_interval.start + interval_offset
             template_issues.append(issue)
             template_issues_offsets.append(template_offset)
@@ -175,6 +203,7 @@ def main(
 
     if templates_issues_path is not None:
         template_issues_df = create_templates_issues_df(df_filtered_issues, issues_column)
+        template_issues_df = template_issues_df.drop('offset', axis=1)
         write_df(template_issues_df, templates_issues_path)
 
 
@@ -214,7 +243,7 @@ def create_templates_issues_df(df_filtered_issues: pd.DataFrame, issues_column: 
         IssuesColumns.DIFFICULTY.value,
         row_number_column,
         offset_column,
-    ])
+    ]).sort_values(SubmissionColumns.STEP_ID.value)
 
 
 def configure_parser(parser: argparse.ArgumentParser) -> None:

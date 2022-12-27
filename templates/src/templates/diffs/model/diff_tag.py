@@ -6,4 +6,5 @@ class DiffTag(Enum):
     ADDITION = 1
     EQUAL = 0
     DELETION = -1
+    ERROR = -2
 

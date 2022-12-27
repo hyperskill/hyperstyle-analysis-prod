@@ -1,4 +1,4 @@
-from tests import TEST_DATA_FOLDER
+from tests import PREPROCESSING_TEST_DATA_FOLDER
 
-PREPROCESSING_FOLDER = TEST_DATA_FOLDER / 'preprocessing_tests'
+PREPROCESSING_FOLDER = PREPROCESSING_TEST_DATA_FOLDER / 'preprocessing_tests'
 SUBMISSIONS_FILE = 'submissions.csv'

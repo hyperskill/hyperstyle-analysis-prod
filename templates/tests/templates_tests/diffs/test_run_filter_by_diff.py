@@ -1,7 +1,7 @@
 from core.model.column_name import SubmissionColumns
 from core.utils.subprocess_runner import run_in_subprocess
 from src.templates import MAIN_FOLDER
-from templates_tests.diffs import SUBMISSIONS_FILE, DIFF_TEMPLATE_ISSUES_FOLDER, STEPS_FILE
+from templates_tests.diffs import DIFF_TEMPLATE_ISSUES_FOLDER, SUBMISSIONS_FILE, STEPS_FILE
 
 DIFF_TEST_DATA = [
     (
