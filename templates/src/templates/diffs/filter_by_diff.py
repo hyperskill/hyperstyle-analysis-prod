@@ -24,6 +24,7 @@ from src.templates.utils.template_utils import parse_template_code_from_step
 
 DIF_SUFFIX = 'diff'
 DIFF_TEMPLATE_POSITIONS_SUFFIX = 'diff_template_positions'
+EMPTY_STRING = ''
 
 
 def get_code_prefix_lengths(code_lines: List[str]) -> List[int]:
@@ -66,6 +67,8 @@ def issues_offsets_to_positions(offsets: List[int], code_lines: List[str]) -> Li
 
 def get_code_line(code: str, code_end: int, code_lines: List[str]) -> str:
     rest = code[code_end:]
+    if '\n' not in rest:
+        return EMPTY_STRING
     rest = rest[:rest.index('\n')]
     start = None
     for line in code_lines:
@@ -99,11 +102,10 @@ def get_template_to_code_diffs(template_lines: List[str], code_lines: List[str])
 
             if patch.strip('\n').strip(' ') == '':
                 tag = DiffTag.ERROR.value
-
             # TODO: probably make it better
-            if not patch.endswith('\n'):
+            elif not patch.endswith('\n'):
                 code_line = get_code_line(code, code_end, code_lines)
-                if code_line.strip('\n') not in template:
+                if code_line == EMPTY_STRING or code_line.strip('\n') not in template:
                     tag = DiffTag.ERROR.value
 
         if tag == DiffTag.DELETION.value:

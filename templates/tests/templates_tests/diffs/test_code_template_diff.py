@@ -11,24 +11,24 @@ DIFF_TEST_DATA = [
     (["a = 1\n", "b = 2\n", "c = # put your code here\n", "print(a, b, c)"],
      ["a = 1\n", "b = 2\n", "c = 3\n", "print(a, b, c)"],
      [
-         DiffResult(DiffTag.EQUAL.value, "a = 1\nb = 2\nc = ", DiffInterval(0, 16), DiffInterval(0, 16)),
+         DiffResult(DiffTag.ERROR.value, "a = 1\nb = 2\nc = ", DiffInterval(0, 16), DiffInterval(0, 16)),
          DiffResult(DiffTag.DELETION.value, "# put your code here", DiffInterval(16, 36), DiffInterval(16, 16)),
          DiffResult(DiffTag.ADDITION.value, "3", DiffInterval(36, 36), DiffInterval(16, 17)),
-         DiffResult(DiffTag.EQUAL.value, "\nprint(a, b, c)", DiffInterval(36, 51), DiffInterval(17, 32))]),
+         DiffResult(DiffTag.ERROR.value, "\nprint(a, b, c)", DiffInterval(36, 51), DiffInterval(17, 32))]),
     (["a = 1\n", "b = 2\n", "c = # put your code here\n", "print(a, b, c)"],
      ["A = 1\n", "b = 2\n", "c = 3\n", "print(a, b, c)"],
      [
          DiffResult(DiffTag.DELETION.value, "a", DiffInterval(0, 1), DiffInterval(0, 0)),
          DiffResult(DiffTag.ADDITION.value, "A", DiffInterval(1, 1), DiffInterval(0, 1)),
-         DiffResult(DiffTag.EQUAL.value, " = 1\nb = 2\nc = ", DiffInterval(1, 16), DiffInterval(1, 16)),
+         DiffResult(DiffTag.ERROR.value, " = 1\nb = 2\nc = ", DiffInterval(1, 16), DiffInterval(1, 16)),
          DiffResult(DiffTag.DELETION.value, "# put your code here", DiffInterval(16, 36), DiffInterval(16, 16)),
          DiffResult(DiffTag.ADDITION.value, "3", DiffInterval(36, 36), DiffInterval(16, 17)),
-         DiffResult(DiffTag.EQUAL.value, "\nprint(a, b, c)", DiffInterval(36, 51), DiffInterval(17, 32))]),
+         DiffResult(DiffTag.ERROR.value, "\nprint(a, b, c)", DiffInterval(36, 51), DiffInterval(17, 32))]),
     (["# a = 1"],
      ["a = 1"],
      [
          DiffResult(DiffTag.DELETION.value, "# ", DiffInterval(0, 2), DiffInterval(0, 0)),
-         DiffResult(DiffTag.EQUAL.value, "a = 1", DiffInterval(2, 7), DiffInterval(0, 5))]),
+         DiffResult(DiffTag.ERROR.value, "a = 1", DiffInterval(2, 7), DiffInterval(0, 5))]),
     # Lines swap does not work properly
     (["a = 1\n", "b = 2\n", "c = 3\n"],
      ["b = 2\n", "a = 1\n", "c = 3\n"],
@@ -39,7 +39,7 @@ DIFF_TEST_DATA = [
 
          DiffResult(DiffTag.DELETION.value, "1", DiffInterval(4, 5), DiffInterval(4, 4)),
          DiffResult(DiffTag.ADDITION.value, "2", DiffInterval(5, 5), DiffInterval(4, 5)),
-         DiffResult(DiffTag.EQUAL.value, "\n", DiffInterval(5, 6), DiffInterval(5, 6)),
+         DiffResult(DiffTag.ERROR.value, "\n", DiffInterval(5, 6), DiffInterval(5, 6)),
 
          DiffResult(DiffTag.DELETION.value, "b", DiffInterval(6, 7), DiffInterval(6, 6)),
          DiffResult(DiffTag.ADDITION.value, "a", DiffInterval(7, 7), DiffInterval(6, 7)),
