@@ -9,7 +9,7 @@ from typing import Optional
 import pandas as pd
 
 from core.model.column_name import SubmissionColumns, Client
-from core.utils.df_utils import read_df, merge_dfs, write_df, write_or_pint_df
+from core.utils.df_utils import read_df, merge_dfs, write_or_pint_df
 from core.utils.logging_utils import configure_logger
 from core.utils.parsing_utils import str_to_datetime
 

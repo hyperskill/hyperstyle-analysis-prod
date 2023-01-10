@@ -33,20 +33,20 @@ Run the [preprocess_submissions.py](./src/preprocessing/preprocess_submissions.p
 
 **Required arguments:**
     
-    | Argument                          | Description                                                                                                                                                                              |
-    |-----------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-    | **submissions_path**              | Path to .csv file with `submissions`. The file must contain the following columns: `id`, `step` (or `step_id`), `code`, `user_id`, `time`. The following columns are optional: `client`. |
-    | **preprocessed_submissions_path** | Path to .csv output file with `preprocessed submissions` with issues. If not provided the output will be printed into console.                                                                   |
+| Argument                           | Description                                                                                                                                                                               |
+|------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **submissions_path**               | Path to .csv file with `submissions`. The file must contain the following columns: `id`, `step` (or `step_id`), `code`, `user_id`, `time`. The following columns are optional: `client`.  |
+| **preprocessed_submissions_path**  | Path to .csv output file with `preprocessed submissions` with issues. If not provided the output will be printed into console.                                                            |
 
 
 
 **Optional arguments:**
     
-    | Argument                                    | Description                                                                                                         |
-    |---------------------------------------------|---------------------------------------------|
-    | **--users-to-submissions-path** | Path to file with `user` to submission relation (if data is not presented in submissions dataset or was anonymized). |
-    | **--diff-ratio**                | Ration to remove submissions which has lines change more then in `diff-ratio` times. Default is 10.0.               |
-    | **--max-attempts**              | Remove submissions series with more then `max-attempts` attempts. Default is 5.                                     |
+| Argument                                     | Description                                                                                                          |
+|----------------------------------------------|----------------------------------------------------------------------------------------------------------------------|
+| **--users-to-submissions-path**              | Path to file with `user` to submission relation (if data is not presented in submissions dataset or was anonymized). |
+| **--diff-ratio**                             | Ration to remove submissions which has lines change more then in `diff-ratio` times. Default is 10.0.                |
+| **--max-attempts**                           | Remove submissions series with more then `max-attempts` attempts. Default is 5.                                      |
 
 ### Output format
 Output csv file will be saved to `preprocessed_submissions_path` and will contain all data from csv in `submissions_path` and several additional columns:
