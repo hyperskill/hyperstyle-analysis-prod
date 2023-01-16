@@ -134,6 +134,7 @@ class PlatformClient:
             response_json = raw_response.json()
 
         preprocessed_response = kebab_to_snake_case(response_json)
+
         return from_dict(data_class=obj_response_type,
                          data=preprocessed_response,
                          config=Config(type_hooks={datetime.datetime: str_to_datetime}))

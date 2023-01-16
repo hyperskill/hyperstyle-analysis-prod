@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-from analysis.src.python.data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
-from analysis.src.python.data_collection.hyperskill.hyperskill_objects import HyperskillPlatform
+from data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
+from data_collection.hyperskill.hyperskill_objects import HyperskillPlatform
 
 """
 This file contains classes, which describe track entity from Hyperskill platform.

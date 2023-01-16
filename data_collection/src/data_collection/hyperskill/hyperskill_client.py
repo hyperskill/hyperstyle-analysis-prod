@@ -7,8 +7,7 @@ from data_collection.hyperskill.api.projects import Project, ProjectsResponse
 from data_collection.hyperskill.api.search_results import \
     SearchResult, SearchResultsRequestParams, SearchResultsResponse
 from data_collection.hyperskill.api.steps import StepsRequestParams, StepsResponse
-from analysis.src.python.data_collection.hyperskill.api.submissions import Submission, SubmissionRequestParams, \
-    SubmissionResponse
+from data_collection.hyperskill.api.submissions import Submission, SubmissionRequestParams, SubmissionResponse
 from data_collection.hyperskill.api.topics import Topic, TopicsResponse
 from data_collection.hyperskill.api.tracks import Track, TracksResponse
 from data_collection.hyperskill.api.users import User, UserResponse

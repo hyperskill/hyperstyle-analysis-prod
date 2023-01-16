@@ -17,6 +17,8 @@ requirements:
       version: ==1.5.2
     - name: requests
       version: ==2.25.1
+    - name: dacite
+      version: ==1.6.0
   dev:
     - name: pytest
       version: ==7.2.0
