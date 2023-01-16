@@ -82,3 +82,9 @@ class IssuesColumns(Enum):
     CODE_SAMPLE = 'code_sample'
     DIFFICULTY = 'difficulty'
     POSITION = 'position'
+
+
+@unique
+class Client(Enum):
+    WEB = 'web'
+    IDEA = 'idea'

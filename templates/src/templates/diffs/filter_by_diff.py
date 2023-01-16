@@ -11,7 +11,7 @@ from diff_match_patch import diff_match_patch
 
 from core.model.column_name import SubmissionColumns, StepColumns, IssuesColumns
 from core.model.quality.issue.issue import BaseIssue
-from core.utils.df_utils import filter_df_by_iterable_value, read_df, write_df
+from core.utils.df_utils import filter_df_by_iterable_value, read_df, write_df, write_or_pint_df
 from core.utils.logging_utils import configure_logger
 from core.utils.quality.code_utils import split_code_to_lines
 from core.utils.quality.report_utils import parse_report, parse_str_report
@@ -171,7 +171,7 @@ def main(
         df_steps,
         issues_column,
     )
-    save_filtered_df(df_filtered_issues, filtered_submissions_path)
+    write_or_pint_df(df_filtered_issues, filtered_submissions_path)
 
     if templates_issues_path is not None:
         template_issues_df = create_templates_issues_df(df_filtered_issues, issues_column)
@@ -215,13 +215,6 @@ def create_templates_issues_df(df_filtered_issues: pd.DataFrame, issues_column: 
         row_number_column,
         offset_column,
     ])
-
-
-def save_filtered_df(df_filtered_issues: pd.DataFrame, filtered_submissions_path: Optional[str]):
-    if filtered_submissions_path is None:
-        print(df_filtered_issues)
-    else:
-        write_df(df_filtered_issues, filtered_submissions_path)
 
 
 def configure_parser(parser: argparse.ArgumentParser) -> None:

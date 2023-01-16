@@ -1,0 +1,37 @@
+project: preprocessing
+
+plugins:
+  enabled:
+    - python
+
+# Prerequisites: https://github.com/pyenv/pyenv/wiki#suggested-build-environment
+environment:
+  path: .venv
+  python: 3.9
+
+requirements:
+  main:
+    - name: argparse
+      version: ==1.4.0
+    - name: pandas
+      version: ==1.5.2
+  dev:
+    - name: pytest
+      version: ==7.2.0
+    - name: pytest-runner
+      version: ==6.0.0
+    - name: pytest-subtests
+      version: ==0.9.0
+
+tasks:
+  run:
+    - id: preprocess_submissions
+      entrypoint: preprocessing/preprocess_submissions.py
+  test:
+    pytest:
+      - id: preprocess_submissions_tests
+        targets:
+          - preprocessing_tests/preprocess_submissions
+
+subprojects:
+  - core
