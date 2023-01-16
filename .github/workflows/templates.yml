@@ -4,7 +4,7 @@ on: [ push, pull_request ]
 
 jobs:
   test:
-    // TODO: add a docker-image
+#   TODO: add a docker-image
     runs-on: ubuntu-latest
 
     steps:
