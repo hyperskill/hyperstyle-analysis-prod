@@ -28,3 +28,8 @@ def parse_template_from_dict(template_dict: str, lang: Optional[str] = None, kee
     templates_code = ast.literal_eval(template_dict)
     return split_code_to_lines(templates_code[lang], keep_ends=keep_ends)
 
+
+# TODO: support multi-line comments
+def is_comment(code_line) -> bool:
+    return code_line.lstrip().startswith("#") or code_line.lstrip().startswith("//")
+
