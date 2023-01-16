@@ -1,0 +1,7 @@
+argparse==1.4.0
+pandas==1.5.2
+diff-match-patch==20200713
+pytest==7.2.0
+pytest-runner==6.0.0
+pytest-subtests==0.9.0
+hyperstyle==1.4.1
