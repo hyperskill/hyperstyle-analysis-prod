@@ -8,8 +8,6 @@ job("HyperstyleUtilities / Release / Docker") {
     val version = "0.0.1"
     val type = "hyperstyle-utilities"
 
-    container("openjdk:11") {}
-
     kaniko {
         build {
             context = "."
