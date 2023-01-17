@@ -4,10 +4,10 @@ import sys
 from typing import List
 
 from core.utils.df_utils import read_df
-from data_collection.api.platform_objects import Platform
-from data_collection.hyperskill.hyperskill_client import HyperskillClient
-from data_collection.stepik.stepik_client import StepikClient
-from data_collection.utils.csv_utils import save_objects_to_csv
+from src.data_collection.api.platform_objects import Platform
+from src.data_collection.hyperskill.hyperskill_client import HyperskillClient
+from src.data_collection.stepik.stepik_client import StepikClient
+from src.data_collection.utils.csv_utils import save_objects_to_csv
 
 platform_client = {
     Platform.HYPERSKILL: HyperskillClient,

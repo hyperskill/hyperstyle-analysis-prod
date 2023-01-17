@@ -2,8 +2,8 @@ import datetime
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-from data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
-from data_collection.stepik.stepik_objects import StepikPlatform
+from src.data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
+from src.data_collection.stepik.stepik_objects import StepikPlatform
 
 """
 This file contains classes, which describe lesson entity from Stepik platform. Lesson is a group of steps.

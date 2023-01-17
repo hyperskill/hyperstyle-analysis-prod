@@ -2,7 +2,7 @@ import datetime
 from dataclasses import dataclass
 from typing import List, Optional
 
-from data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
+from src.data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
 
 """
 This file contains classes, which describe submission entity from Stepik platform.

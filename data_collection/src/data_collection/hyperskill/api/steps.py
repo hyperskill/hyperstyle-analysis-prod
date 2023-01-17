@@ -2,8 +2,8 @@ import datetime
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
 
-from data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
-from data_collection.hyperskill.hyperskill_objects import HyperskillPlatform
+from src.data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
+from src.data_collection.hyperskill.hyperskill_objects import HyperskillPlatform
 
 """
 This file contains classes, which describe step entity from Hyperskill platform.
