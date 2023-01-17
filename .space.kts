@@ -17,7 +17,7 @@ job("HyperstyleUtilities / Release / Docker") {
             target = "paddle-py-3-9"
             args["VERSION"] = version
         }
-        push("registry.jetbrains.team/p/code-quality-for-online-learning-platforms/hyperstyle-utilities/docker/${type}") {
+        push("registry.jetbrains.team/p/code-quality-for-online-learning-platforms/hyperstyle-utilities/${type}") {
             tags(version)
         }
     }
