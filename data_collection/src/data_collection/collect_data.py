@@ -3,11 +3,11 @@ import logging
 import sys
 from typing import List
 
-from analysis.src.python.data_collection.api.platform_objects import Platform
-from analysis.src.python.data_collection.hyperskill.hyperskill_client import HyperskillClient
-from analysis.src.python.data_collection.stepik.stepik_client import StepikClient
-from analysis.src.python.data_collection.utils.csv_utils import save_objects_to_csv
-from analysis.src.python.utils.df_utils import read_df
+from core.utils.df_utils import read_df
+from data_collection.api.platform_objects import Platform
+from data_collection.hyperskill.hyperskill_client import HyperskillClient
+from data_collection.stepik.stepik_client import StepikClient
+from data_collection.utils.csv_utils import save_objects_to_csv
 
 platform_client = {
     Platform.HYPERSKILL: HyperskillClient,
@@ -19,15 +19,13 @@ def configure_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
 
     parser.add_argument('platform', type=str, help='platform to collect data from', choices=Platform.values())
-
     parser.add_argument('object', type=str,
                         help='objects to request from platform (can be defaults like `step` or custom like `java`')
+    parser.add_argument('output-path', type=str, help='path to directory where to save the results')
     parser.add_argument('--ids', '-i', nargs='*', type=int, default=None, help='ids of requested objects')
-    parser.add_argument('--ids_from_file', '-f', type=str, default=None, help='csv file to get ids from')
-    parser.add_argument('--ids_from_column', '-c', type=str, default=None, help='column in csv file to get ids from')
+    parser.add_argument('--ids-from-file-path', '-f', type=str, default=None, help='csv file to get ids from')
+    parser.add_argument('--ids-from-column', '-c', type=str, default=None, help='column in csv file to get ids from')
     parser.add_argument('--count', '-cnt', type=int, default=None, help='count of requested objects')
-    parser.add_argument('--output', '-out', type=str, default='results',
-                        help='path to directory where to save the results')
     parser.add_argument('--port', '-p', type=int, default=8000, help='port to run authorization server at')
     return parser
 
@@ -52,10 +50,10 @@ if __name__ == '__main__':
 
     if args.ids is not None:
         ids = args.ids
-    elif args.ids_from_file is not None and args.ids_from_column is not None:
-        ids = get_object_ids_from_file(args.ids_from_file, args.ids_from_column)
+    elif args.ids_from_file_path is not None and args.ids_from_column is not None:
+        ids = get_object_ids_from_file(args.ids_from_file_path, args.ids_from_column)
     else:
         ids = None
 
     objects = client.get_objects(args.object, ids, args.count)
-    save_objects_to_csv(args.output, objects, args.object)
+    save_objects_to_csv(args.output_path, objects, args.object)

@@ -30,7 +30,7 @@ requirements:
 tasks:
   run:
     - id: collect_data
-      entrypoint: data_collection/run_data_collection.py
+      entrypoint: data_collection/collect_data.py
 
 subprojects:
   - core

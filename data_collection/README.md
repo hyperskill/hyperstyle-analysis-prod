@@ -25,7 +25,7 @@ This module use platforms' APIs to extract information about following entities 
 | user       | Registered people on platform.                                                    |
 | submission | User's attempt to solve the step's task and platform's feedback on this solution. |
 
-To get data from the education platforms, configure and run [run_data_collection.py](src/data_collection/run_data_collection.py) 
+To get data from the education platforms, configure and run [collect_data.py](src/data_collection/collect_data.py) 
 from command line with following arguments:
 ### Configure:
 
@@ -43,20 +43,20 @@ For more information about api go to [hyperskill api documentation](https://hype
 
 **Required arguments:**
 
-| Argument     | Description                                                                                                                                                                                                                                                                             |
-|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **platform** | Platform to collect data from (can be `hyperskill` or `stepik`).                                                                                                                                                                                                                        |
-| **object**   | Objects to request from platform (can be defaults or custom. Custom is any string you want to find. Default objects for `hyperskill` client are `step`, `track`, `project`, `topic`, `user`, `submission` and for `stepik` client are `step`, `lesson`, `course`, `user`, `submission`. |
+| Argument        | Description                                                                                                                                                                                                                                                                             |
+|-----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **platform**    | Platform to collect data from (can be `hyperskill` or `stepik`).                                                                                                                                                                                                                        |
+| **object**      | Objects to request from platform (can be defaults or custom. Custom is any string you want to find. Default objects for `hyperskill` client are `step`, `track`, `project`, `topic`, `user`, `submission` and for `stepik` client are `step`, `lesson`, `course`, `user`, `submission`. |
+| **output_path** | Path to directory where to save the results.                                                                                                                                                                                                                                            |
 
 **Optional arguments:**
 
 | Argument                               | Description                                                                                                                                 |
 |----------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
 | **&#8209;&#8209;ids**                  | List of ids of requested objects.                                                                                                           |
-| **&#8209;&#8209;ids_from_file**        | File with `.csv` extension to get ids from it's column, which name is defined using **&#8209;&#8209;ids_from_column** flag.                 |
+| **&#8209;&#8209;ids-from-file-path**   | File with `.csv` extension to get ids from it's column, which name is defined using **&#8209;&#8209;ids_from_column** flag.                 |
 | **&#8209;&#8209;ids_from_column**      | Column in `.csv` file defined by **&#8209;&#8209;ids_from_file** to get ids from.                                                           |
-| **&#8209;&#8209;count**                | Count of requested objects.                                                                                                                 |
-| **&#8209;o**, **&#8209;&#8209;output** | Path to directory where to save the results.                                                                                                |
+| **&#8209;&#8209;count**                | Count of requested objects (By default all object are collected).                                                                           |
 | **&#8209;&#8209;port**                 | Port to run authorization server on (must be the same as you have put to your application information in second step of Configure section). |
 
 For using API you need to be authorized in Hyperskill/Stepik. When the information gathering will start, you will see the authorization page.

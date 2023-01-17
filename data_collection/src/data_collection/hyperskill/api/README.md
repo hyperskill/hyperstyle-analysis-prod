@@ -3,7 +3,7 @@
 ### Topic
 Example request:
 ```http request 
-https://hyperskill.org/api/topics/1258
+https://hyperskill.org/api/topics/405
 ```
 Example response:
 ```json
@@ -59,7 +59,7 @@ Example response:
 ### Step
 Example request:
 ```http request 
-https://hyperskill.org/api/steps/2435
+https://hyperskill.org/api/steps/6382
 ```
 Example response:
 ```json
@@ -215,7 +215,7 @@ Example response:
 ### User
 Example request:
 ```http request 
-https://hyperskill.org/api/users
+https://hyperskill.org/api/users/130072519
 ```
 ```json
 {
@@ -494,7 +494,8 @@ Example response:
       "solving_context": "default",
       "is_published": false,
       "user_id": 130072519
-    }
+    },
+    ...
   ]
 }
 ```
