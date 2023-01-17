@@ -1,16 +1,16 @@
 import os
 from typing import Callable, Dict, List, Optional, Type, TypeVar
 
-from src.data_collection.api.platform_client import PlatformClient
-from src.data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
-from src.data_collection.stepik.api.courses import Course, CoursesResponse
-from src.data_collection.stepik.api.lessons import Lesson, LessonsResponse
-from src.data_collection.stepik.api.search_results import SearchResult, SearchResultsRequestParams, \
+from data_collection.api.platform_client import PlatformClient
+from data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
+from data_collection.stepik.api.courses import Course, CoursesResponse
+from data_collection.stepik.api.lessons import Lesson, LessonsResponse
+from data_collection.stepik.api.search_results import SearchResult, SearchResultsRequestParams, \
     SearchResultsResponse
-from src.data_collection.stepik.api.steps import Step, StepsResponse
-from src.data_collection.stepik.api.submissions import Submission, SubmissionsResponse
-from src.data_collection.stepik.api.users import User, UsersResponse
-from src.data_collection.stepik.stepik_objects import ObjectClass, StepikPlatform
+from data_collection.stepik.api.steps import Step, StepsResponse
+from data_collection.stepik.api.submissions import Submission, SubmissionsResponse
+from data_collection.stepik.api.users import User, UsersResponse
+from data_collection.stepik.stepik_objects import ObjectClass, StepikPlatform
 
 T = TypeVar('T', bound=Object)
 

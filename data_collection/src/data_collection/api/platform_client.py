@@ -6,10 +6,10 @@ from typing import Dict, List, Optional, Type, TypeVar
 import requests
 from dacite import Config, from_dict
 
-from src.data_collection.api.platform_auth import OauthServer
-from src.data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
-from src.data_collection.api.utils import str_to_datetime
-from src.data_collection.utils.json_utils import kebab_to_snake_case
+from data_collection.api.platform_auth import OauthServer
+from data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
+from data_collection.api.utils import str_to_datetime
+from data_collection.utils.json_utils import kebab_to_snake_case
 
 T = TypeVar('T', bound=Object)
 

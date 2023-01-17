@@ -25,7 +25,7 @@ This module use platforms' APIs to extract information about following entities 
 | user       | Registered people on platform.                                                    |
 | submission | User's attempt to solve the step's task and platform's feedback on this solution. |
 
-To get data from the education platforms, configure and run [collect_data.py](src/data_collection/api/collect_data.py) 
+To get data from the education platforms, configure and run [collect_data.py](src/data_collection/collect_data.py) 
 from command line with following arguments:
 ### Configure:
 

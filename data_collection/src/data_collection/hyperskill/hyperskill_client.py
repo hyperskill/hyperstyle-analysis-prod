@@ -1,17 +1,17 @@
 import os
 from typing import Callable, Dict, List, Optional
 
-from src.data_collection.api.platform_client import PlatformClient
-from src.data_collection.api.platform_objects import BaseRequestParams, Object
-from src.data_collection.hyperskill.api.projects import Project, ProjectsResponse
-from src.data_collection.hyperskill.api.search_results import \
+from data_collection.api.platform_client import PlatformClient
+from data_collection.api.platform_objects import BaseRequestParams, Object
+from data_collection.hyperskill.api.projects import Project, ProjectsResponse
+from data_collection.hyperskill.api.search_results import \
     SearchResult, SearchResultsRequestParams, SearchResultsResponse
-from src.data_collection.hyperskill.api.steps import StepsRequestParams, StepsResponse
-from src.data_collection.hyperskill.api.submissions import Submission, SubmissionRequestParams, SubmissionResponse
-from src.data_collection.hyperskill.api.topics import Topic, TopicsResponse
-from src.data_collection.hyperskill.api.tracks import Track, TracksResponse
-from src.data_collection.hyperskill.api.users import User, UserResponse
-from src.data_collection.hyperskill.hyperskill_objects import HyperskillPlatform, ObjectClass
+from data_collection.hyperskill.api.steps import StepsRequestParams, StepsResponse
+from data_collection.hyperskill.api.submissions import Submission, SubmissionRequestParams, SubmissionResponse
+from data_collection.hyperskill.api.topics import Topic, TopicsResponse
+from data_collection.hyperskill.api.tracks import Track, TracksResponse
+from data_collection.hyperskill.api.users import User, UserResponse
+from data_collection.hyperskill.hyperskill_objects import HyperskillPlatform, ObjectClass
 
 
 class HyperskillClient(PlatformClient):

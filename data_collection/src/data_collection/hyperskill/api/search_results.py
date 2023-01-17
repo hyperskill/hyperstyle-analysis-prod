@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 
-from src.data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
+from data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
 
 """
 This file contains classes, which describe entities related to search result in Hyperskill platform.
