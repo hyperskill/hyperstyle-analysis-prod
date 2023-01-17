@@ -63,7 +63,7 @@ def issues_offsets_to_positions(offsets: List[int], code_lines: List[str]) -> Li
     return issues_positions
 
 
-def to_cleanup_semantic(template_lines: List[str], code_lines: List[str]):
+def to_cleanup_semantic(template_lines: List[str], code_lines: List[str]) -> bool:
     """
     Indicates if we should to apply the <diff_cleanupEfficiency> function
     See: https://github.com/google/diff-match-patch/wiki/API#diff_cleanupsemanticdiffs--null
