@@ -15,7 +15,7 @@ job("HyperstyleUtilities / Release / Docker") {
             target = type
             args["VERSION"] = version
         }
-        push("registry.jetbrains.team/p/code-quality-for-online-learning-platforms/hyperstyle-utilities/${type}") {
+        push("registry.jetbrains.team/p/code-quality-for-online-learning-platforms/hyperstyle-utilities/docker/${type}") {
             tags(version)
         }
     }
