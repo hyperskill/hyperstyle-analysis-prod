@@ -2,11 +2,10 @@ import argparse
 import ast
 import bisect
 from pathlib import Path
-
-import sys
 from typing import List, Tuple, Optional
 
 import pandas as pd
+import sys
 from diff_match_patch import diff_match_patch
 
 from core.model.column_name import SubmissionColumns, StepColumns, IssuesColumns
@@ -15,11 +14,10 @@ from core.utils.df_utils import filter_df_by_iterable_value, read_df, write_df, 
 from core.utils.logging_utils import configure_logger
 from core.utils.quality.code_utils import split_code_to_lines
 from core.utils.quality.report_utils import parse_report, parse_str_report
-
-from src.templates.diffs.model.diff_interval import DiffInterval
-from src.templates.diffs.model.diff_result import DiffResult
-from src.templates.diffs.model.diff_tag import DiffTag
-from src.templates.utils.template_utils import parse_template_code_from_step, is_comment
+from templates.diffs.model.diff_interval import DiffInterval
+from templates.diffs.model.diff_result import DiffResult
+from templates.diffs.model.diff_tag import DiffTag
+from templates.utils.template_utils import parse_template_code_from_step, is_comment
 
 DIF_SUFFIX = 'diff'
 DIFF_TEMPLATE_POSITIONS_SUFFIX = 'diff_template_positions'
