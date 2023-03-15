@@ -31,6 +31,14 @@ tasks:
   run:
     - id: collect_data
       entrypoint: data_collection/collect_data.py
+      args:
+        - hyperskill
+        - step
+        - ./data_collection/src/resources
+
+  test:
+    pytest:
+      - id: collect_data_tests
 
 subprojects:
   - core

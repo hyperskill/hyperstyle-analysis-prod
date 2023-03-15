@@ -32,8 +32,9 @@ class OauthHandler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
-        self.server.platform_token = response.json()['access_token']
-        self.wfile.write(response.json()['access_token'].encode())
+        access_token = response.json()['access_token']
+        self.server.platform_token = access_token
+        self.wfile.write(access_token.encode())
 
 
 class OauthServer(HTTPServer):

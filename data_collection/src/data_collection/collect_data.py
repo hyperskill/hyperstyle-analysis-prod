@@ -2,9 +2,6 @@ import argparse
 import logging
 import sys
 from typing import List
-
-print(sys.path)
-
 from core.utils.df_utils import read_df
 from data_collection.api.platform_objects import Platform
 from data_collection.hyperskill.hyperskill_client import HyperskillClient
@@ -23,7 +20,7 @@ def configure_parser() -> argparse.ArgumentParser:
     parser.add_argument('platform', type=str, help='platform to collect data from', choices=Platform.values())
     parser.add_argument('object', type=str,
                         help='objects to request from platform (can be defaults like `step` or custom like `java`')
-    parser.add_argument('output-path', type=str, help='path to directory where to save the results')
+    parser.add_argument('output_path', type=str, help='path to directory where to save the results')
     parser.add_argument('--ids', '-i', nargs='*', type=int, default=None, help='ids of requested objects')
     parser.add_argument('--ids-from-file-path', '-f', type=str, default=None, help='csv file to get ids from')
     parser.add_argument('--ids-from-column', '-c', type=str, default=None, help='column in csv file to get ids from')

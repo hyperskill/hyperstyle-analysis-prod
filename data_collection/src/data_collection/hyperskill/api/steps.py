@@ -73,12 +73,12 @@ class Step(Object):
     is_skipped: bool
     last_completed_at: Optional[datetime.datetime]
     likes_statistics: List[LikesStatistics]
-    lesson_stepik_id: int
+    lesson_stepik_id: Optional[int]
     position: int
     seconds_to_complete: Optional[float]
     solved_by: int
     stage: Optional[int]
-    stepik_id: int
+    stepik_id: Optional[int]
     success_rate: Optional[float]
     title: str
     topic: Optional[int]

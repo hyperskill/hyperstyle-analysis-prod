@@ -53,14 +53,19 @@ class HyperskillClient(PlatformClient):
         """ Returns steps data. If topic_ids are defined method returns steps only related to listed topics, otherwise
          return all steps. """
         if topic_ids is None:
-            return self._get_objects(ObjectClass.STEP, StepsResponse, StepsRequestParams(ids=ids), count=count)
-        else:
-            steps = []
-            for topic_id in topic_ids:
-                steps += self._get_objects(ObjectClass.STEP, StepsResponse,
-                                           StepsRequestParams(topic=topic_id), count=count)
-                if count is not None and len(steps) >= count:
-                    return steps[:count]
+            topics = self.get_topics()
+            topic_ids = [t.id for t in topics]
+
+        steps = []
+        for topic_id in topic_ids:
+            steps += self._get_objects(ObjectClass.STEP, StepsResponse,
+                                       StepsRequestParams(topic=topic_id), count=count)
+            if count is not None and len(steps) >= count:
+                return steps[:count]
+
+        if ids is not None:
+            steps = [s for s in steps if s.id in ids]
+
         return steps
 
     def get_topics(self, ids: Optional[List[int]] = None, count: Optional[int] = None) -> List[Topic]:
