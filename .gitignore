@@ -1,0 +1,5 @@
+**/.paddle/**
+**/.venv/**
+**/.pytest_cache/**
+.idea
+*.log

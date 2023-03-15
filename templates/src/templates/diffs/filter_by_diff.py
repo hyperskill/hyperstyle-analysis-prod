@@ -2,11 +2,10 @@ import argparse
 import ast
 import bisect
 from pathlib import Path
-
-import sys
 from typing import List, Tuple, Optional
 
 import pandas as pd
+import sys
 from diff_match_patch import diff_match_patch
 
 from core.model.column_name import SubmissionColumns, StepColumns, IssuesColumns
@@ -15,12 +14,10 @@ from core.utils.df_utils import filter_df_by_iterable_value, read_df, write_df, 
 from core.utils.logging_utils import configure_logger
 from core.utils.quality.code_utils import split_code_to_lines
 from core.utils.quality.report_utils import parse_report, parse_str_report
-
-from src.templates.diffs.model.diff_interval import DiffInterval
-from src.templates.diffs.model.diff_result import DiffResult
-from src.templates.diffs.model.diff_tag import DiffTag
-from src.templates.utils.template_utils import parse_template_code_from_step
-
+from templates.diffs.model.diff_interval import DiffInterval
+from templates.diffs.model.diff_result import DiffResult
+from templates.diffs.model.diff_tag import DiffTag
+from templates.utils.template_utils import parse_template_code_from_step, is_comment
 
 DIF_SUFFIX = 'diff'
 DIFF_TEMPLATE_POSITIONS_SUFFIX = 'diff_template_positions'
@@ -64,11 +61,68 @@ def issues_offsets_to_positions(offsets: List[int], code_lines: List[str]) -> Li
     return issues_positions
 
 
+def to_cleanup_semantic(template_lines: List[str], code_lines: List[str]) -> bool:
+    """
+    Indicates if we should to apply the <diff_cleanupEfficiency> function
+    See: https://github.com/google/diff-match-patch/wiki/API#diff_cleanupsemanticdiffs--null
+
+    If the template contains a comment, and the user deleted this comment (or vice versa),
+    and the comment partially contains constructs from the code, e.g. names or variables or keywords,
+    then the diffs are built inconsistently, and we should combine additions and deletions into a readable format.
+
+    Consider an example:
+
+    1) The template code:
+
+    def foo():
+
+        # You already are within the body of func foo()
+        # Declare and assign the correct value to the 'varchest' variable below:
+
+        print(varchest)
+
+    2) The user code:
+
+    def foo():
+
+        varchest = "gold"
+
+        print(varchest)
+
+    In this case we will get the following set of diffs:
+    [
+        (0, 'def foo():\n\n    '),
+        (-1, "# You already are within the body of func foo()\n    # Declare and assign the correct value to the '"),
+        (0, 'varchest'),
+        (-1, "'"), (0, ' '), (-1, 'variable'),
+        (1, '='), (0, ' '), (-1, 'bel'), (1, '"g'), (0, 'o'), (-1, 'w:'), (1, 'ld"'),
+        (0, '\n\n    print(varchest)')
+    ]
+
+    The comment and the variable definition are mixed,
+    so if we use <diff_cleanupEfficiency> the additional and deletions will be merged:
+    [
+        (0, 'def foo():\n\n    '),
+        (-1, "# You already are within the body of func foo()\n    # Declare and assign the correct value to the 'varchest' variable below:"),
+        (1, 'varchest = "gold"'),
+        (0, '\n\n    print(varchest)')
+    ]
+
+    See more examples in tests.
+    """
+    template_comments = filter(is_comment, template_lines)
+    code_comments = filter(is_comment, code_lines)
+    return any(x not in template_comments for x in code_comments) or any(
+        x not in code_comments for x in template_comments)
+
+
 def get_template_to_code_diffs(template_lines: List[str], code_lines: List[str]) -> List[DiffResult]:
     """ Get template to students code diffs. """
 
     matcher = diff_match_patch()
     patches = matcher.diff_main(''.join(template_lines), ''.join(code_lines))
+    if to_cleanup_semantic(template_lines, code_lines):
+        matcher.diff_cleanupSemantic(patches)
 
     diffs = []
     code_start, code_end = 0, 0

@@ -4,8 +4,8 @@ step_id,name,category,difficulty,text,row_number,offset
 2,SC200,BEST_PRACTICES,MEDIUM,Possibly misspelt word: `eul`,1,8
 3,WPS432,BEST_PRACTICES,MEDIUM,Found magic number: 1,1,7
 3,WPS432,BEST_PRACTICES,MEDIUM,Found magic number: 2,2,7
-4,SC200,INFO,EASY,Possibly misspelt word: ‘y1’,2,0
-4,SC200,INFO,EASY,Possibly misspelt word: ‘y2’,6,1
+4,SC200,INFO,EASY,Possibly misspelt word: ‘y1’,4,13
+4,SC200,INFO,EASY,Possibly misspelt word: ‘y2’,6,6
 4,SC200,INFO,EASY,Possibly misspelt word: ‘y1’,9,4
 4,SC200,INFO,EASY,Possibly misspelt word: ‘y2’,9,10
 
