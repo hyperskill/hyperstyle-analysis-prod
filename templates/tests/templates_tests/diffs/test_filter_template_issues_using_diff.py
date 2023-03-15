@@ -3,7 +3,7 @@ import pytest
 
 from core.model.column_name import IssuesColumns, SubmissionColumns
 from core.utils.df_utils import read_df, equal_df
-from src.templates.diffs.filter_by_diff import filter_template_issues_using_diff, create_templates_issues_df
+from templates.diffs.filter_by_diff import filter_template_issues_using_diff, create_templates_issues_df
 from templates_tests.diffs import DIFF_TEMPLATE_ISSUES_FOLDER, SUBMISSIONS_FILE, STEPS_FILE
 
 TEMPLATE_ISSUES_TEST_DATA = [

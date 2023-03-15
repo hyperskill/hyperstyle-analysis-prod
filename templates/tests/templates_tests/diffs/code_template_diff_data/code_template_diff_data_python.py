@@ -1,6 +1,6 @@
-from src.templates.diffs.model.diff_interval import DiffInterval
-from src.templates.diffs.model.diff_result import DiffResult
-from src.templates.diffs.model.diff_tag import DiffTag
+from templates.diffs.model.diff_interval import DiffInterval
+from templates.diffs.model.diff_result import DiffResult
+from templates.diffs.model.diff_tag import DiffTag
 
 DIFF_TEST_DATA_PYTHON = [
     (

@@ -16,6 +16,9 @@ requirements:
     - name: pandas
       version: ==1.5.2
   dev:
+    #TODO: delete
+    - name: pandas
+      version: ==1.5.2
     - name: pytest
       version: ==7.2.0
     - name: pytest-runner

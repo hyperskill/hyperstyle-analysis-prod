@@ -1,0 +1,21 @@
+name: Test
+
+on: [ push, pull_request ]
+
+jobs:
+  test:
+#   TODO: add a docker-image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+
+      - name: 'Build Docker image'
+        run: docker build -t hyperstyle-analysis-prod .
+
+      - name: 'Run templates tests'
+        run: docker run hyperstyle-analysis-prod :templates:filter_by_diff_tests
+
+      - name: 'Run preprocessing tests'
+        run: docker run hyperstyle-analysis-prod :preprocessing:preprocess_submissions_tests
