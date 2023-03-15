@@ -2,8 +2,8 @@ from typing import List
 
 import pytest
 
-from src.templates.diffs.filter_by_diff import get_template_to_code_diffs
-from src.templates.diffs.model.diff_result import DiffResult
+from templates.diffs.filter_by_diff import get_template_to_code_diffs
+from templates.diffs.model.diff_result import DiffResult
 from templates_tests.diffs.code_template_diff_data.code_template_diff_data_java import DIFF_TEST_DATA_JAVA
 from templates_tests.diffs.code_template_diff_data.code_template_diff_data_kotlin import DIFF_TEST_DATA_KOTLIN
 from templates_tests.diffs.code_template_diff_data.code_template_diff_data_python import DIFF_TEST_DATA_PYTHON

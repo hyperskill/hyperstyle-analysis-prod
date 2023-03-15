@@ -2,7 +2,7 @@ from typing import List
 
 import pytest
 
-from src.templates.diffs.filter_by_diff import to_cleanup_semantic
+from templates.diffs.filter_by_diff import to_cleanup_semantic
 
 CLEANUP_SEMANTIC_TEST_DATA = [
     (

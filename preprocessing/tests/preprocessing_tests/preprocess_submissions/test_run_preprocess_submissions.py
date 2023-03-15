@@ -1,3 +1,5 @@
+import sys
+
 from core.model.column_name import SubmissionColumns
 from core.utils.df_utils import read_df, equal_df
 from core.utils.subprocess_runner import run_in_subprocess
@@ -6,13 +8,13 @@ from preprocessing_tests import PREPROCESSING_FOLDER, SUBMISSIONS_FILE
 
 DIFF_TEST_DATA = [
     (
-        ['python3', (MAIN_FOLDER.parent / 'diffs' / 'filter_by_dif.py')],
-     ),
+        [sys.executable, (MAIN_FOLDER.parent / 'diffs' / 'filter_by_dif.py')],
+    ),
 ]
 
 
 def test_incorrect_arguments():
-    command = ['python3', (MAIN_FOLDER.parent / 'preprocess_submissions.py')]
+    command = [sys.executable, (MAIN_FOLDER.parent / 'preprocess_submissions.py')]
 
     stdout, stderr = run_in_subprocess(command)
 
@@ -22,7 +24,7 @@ def test_incorrect_arguments():
 
 def test_correct_arguments():
     command = [
-        'python3',
+        sys.executable,
         (MAIN_FOLDER.parent / 'preprocess_submissions.py'),
         PREPROCESSING_FOLDER / SUBMISSIONS_FILE,
     ]
@@ -38,7 +40,7 @@ def test_correct_arguments():
 def test_output_with_correct_arguments():
     output_file = PREPROCESSING_FOLDER / 'preprocessed_submissions.csv'
     command = [
-        'python3',
+        sys.executable,
         (MAIN_FOLDER.parent / 'preprocess_submissions.py'),
         PREPROCESSING_FOLDER / SUBMISSIONS_FILE,
         output_file
