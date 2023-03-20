@@ -39,6 +39,8 @@ tasks:
   test:
     pytest:
       - id: collect_data_tests
+        targets:
+          - data_collection_tests
 
 subprojects:
   - core

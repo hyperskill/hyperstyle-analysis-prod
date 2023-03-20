@@ -17,3 +17,5 @@ class ObjectClass(str, Enum):
 
 class StepikPlatform:
     BASE_URL = 'https://stepik.org'
+    CLIENT_ID = 'STEPIK_CLIENT_ID'
+    CLIENT_SECRET = 'STEPIK_CLIENT_SECRET'

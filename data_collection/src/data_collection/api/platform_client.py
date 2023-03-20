@@ -1,5 +1,6 @@
 import datetime
 import logging
+import os
 from dataclasses import asdict
 from typing import Dict, List, Optional, Type, TypeVar
 
@@ -9,6 +10,8 @@ from dacite import Config, from_dict
 from data_collection.api.platform_auth import OauthServer
 from data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
 from data_collection.api.utils import str_to_datetime
+from data_collection.hyperskill.hyperskill_objects import HyperskillPlatform
+from data_collection.stepik.stepik_objects import StepikPlatform
 from data_collection.utils.json_utils import kebab_to_snake_case
 
 T = TypeVar('T', bound=Object)
@@ -27,6 +30,9 @@ class PlatformClient:
     def _get_authentication_code_token(self):
         """ Runs authorization process using authentication-code grant type and
         gets session token for data exchange. """
+
+        if os.environ.get(HyperskillPlatform.CLIENT_ID) is None and os.environ.get(StepikPlatform.CLIENT_ID) is None:
+            raise ValueError('You need to specify CLIENT_ID for the platform')
 
         server = OauthServer(self.host, self.client_id, self.client_secret, self.port)
         server.open_oauth_page()
