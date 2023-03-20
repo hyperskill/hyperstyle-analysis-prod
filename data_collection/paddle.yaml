@@ -1,0 +1,46 @@
+project: data_collection
+
+plugins:
+  enabled:
+    - python
+
+# Prerequisites: https://github.com/pyenv/pyenv/wiki#suggested-build-environment
+environment:
+  path: .venv
+  python: 3.9
+
+requirements:
+  main:
+    - name: argparse
+      version: ==1.4.0
+    - name: pandas
+      version: ==1.5.2
+    - name: requests
+      version: ==2.25.1
+    - name: dacite
+      version: ==1.6.0
+  dev:
+    - name: pytest
+      version: ==7.2.0
+    - name: pytest-runner
+      version: ==6.0.0
+    - name: pytest-subtests
+      version: ==0.9.0
+
+tasks:
+  run:
+    - id: collect_data
+      entrypoint: data_collection/collect_data.py
+      args:
+        - hyperskill
+        - step
+        - ./data_collection/src/resources
+
+  test:
+    pytest:
+      - id: collect_data_tests
+        targets:
+          - data_collection_tests
+
+subprojects:
+  - core

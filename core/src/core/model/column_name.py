@@ -28,6 +28,7 @@ class StepColumns(Enum):
 
     BLOCK = 'block'
     TEXT = 'text'
+    LANGUAGE = 'language'
 
     HEADER_LINES_COUNT = 'code_templates_header_lines_count'
     FOOTER_LINES_COUNT = 'code_templates_footer_lines_count'
@@ -88,3 +89,59 @@ class IssuesColumns(Enum):
 class Client(Enum):
     WEB = 'web'
     IDEA = 'idea'
+
+
+@unique
+class CommentsColumns(Enum):
+    COMMENT = 'comment'
+    HINT = 'hint'
+    USEFUL_LINK = 'useful link'
+    SOLUTIONS = 'solutions'
+
+
+@unique
+class LikesColumns(Enum):
+    LOVE = 'love'
+    HAPPY = 'happy'
+    NEUTRAL = 'neutral'
+    SAD = 'sad'
+    ANGRY = 'angry'
+
+
+@unique
+class Complexity(Enum):
+    SHALLOW = 'shallow'
+    MIDDLE = 'middle'
+    DEEP = 'deep'
+
+
+@unique
+class Difficulty(Enum):
+    EASY = 'easy'
+    MEDIUM = 'medium'
+    HARD = 'hard'
+
+
+@unique
+class Scope(Enum):
+    SMALL = 'small'
+    MEDIUM = 'medium'
+    WIDE = 'wide'
+
+
+@unique
+class TopicColumns(Enum):
+    ID = 'id'
+    CHILDREN = 'children'
+    DEPTH = 'depth'
+    PREREQUISITES_COUNT = 'prerequisites_count'
+    HIERARCHY = 'hierarchy'
+    PREREQUISITES = 'prerequisites'
+    ROOT_ID = 'root_id'
+    ROOT_TITLE = 'root_title'
+    TITLE = 'title'
+    TOPOLOGICAL_INDEX = 'topological_index'
+    THEORY = 'theory'
+    PARENT_ID = 'parent_id'
+    HAS_STEPS = 'has_steps'
+    URL = 'url'

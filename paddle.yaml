@@ -7,4 +7,5 @@ subprojects:
   - core
   - templates
   - preprocessing
+  - data_collection
 
