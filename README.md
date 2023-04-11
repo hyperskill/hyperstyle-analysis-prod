@@ -4,8 +4,29 @@ This repository contains several tools-helpers to work with data from the Hypers
 
 - [core](./core) module contains some common functions like pandas utilities or some common models
 - [templates](./templates/README.md) module contains algorithms for searching code quality issues in the pre-written templates.
-- [data collection](./data_collection/README.md) module contains client for Stepik and Hyperskill. This module use platforms' APIs to extract information about following entities from the educational platforms.
+- [data collection](./data_collection/README.md) module contains client for Hyperskill. This module use platforms' APIs to extract information about following entities from the educational platforms.
 - [preprocessing](./preprocessing/README.md) module contains methods to preprocess and prepare data, collected from Hyperskill educational platform, for further analysis.
+
+### JetBrains Academy/Hyperskill platform
+
+On the JetBrains Academy platform, the educational process is structured as follows: firstly,
+the student’s solution is checked for correctness using traditional predefined tests. Then, two
+scenarios are possible:
+
+**(1)** if the solution is incorrect (contains compilation errors or does not pass all tests), 
+then these problems are reported to the student, and they continue to solve the
+task;
+
+**(2)** if the solution is correct, the [Hyperstyle](https://github.com/hyperskill/hyperstyle) tool is launched to check the quality of the code.
+
+
+Therefore, the result of the Hyperstyle tool can only be determined for _correct_ solutions,
+that is, solutions that pass all tests. After successfully passing the solution, the student receives
+a code quality grade on a four-point scale, and all detected issues (if any) are highlighted in
+the code editor. An example of the Hyperstyle user interface:
+
+![The Hyperstyle user interface on the JetBrains Academy platform.](./images/hyperstyle.png "The Hyperstyle user interface on the JetBrains Academy platform.")
+
 
 ### Getting started
 
