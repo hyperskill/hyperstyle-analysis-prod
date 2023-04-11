@@ -4,7 +4,7 @@ import os
 from dataclasses import asdict
 from typing import List, TypeVar
 
-from data_collection.api.platform_objects import Object
+from core.model.api.platform_objects import Object
 
 
 class CsvWriter:

@@ -8,7 +8,7 @@ import requests
 from dacite import Config, from_dict
 
 from data_collection.api.platform_auth import OauthServer
-from data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
+from core.model.api.platform_objects import BaseRequestParams, Object, ObjectResponse
 from data_collection.api.utils import str_to_datetime
 from data_collection.hyperskill.hyperskill_objects import HyperskillPlatform
 from data_collection.stepik.stepik_objects import StepikPlatform

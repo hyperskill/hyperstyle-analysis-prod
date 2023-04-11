@@ -2,7 +2,7 @@ import os
 from typing import Callable, Dict, List, Optional
 
 from data_collection.api.platform_client import PlatformClient
-from data_collection.api.platform_objects import BaseRequestParams, Object
+from core.model.api.platform_objects import BaseRequestParams, Object
 from data_collection.hyperskill.api.projects import Project, ProjectsResponse
 from data_collection.hyperskill.api.search_results import \
     SearchResult, SearchResultsRequestParams, SearchResultsResponse

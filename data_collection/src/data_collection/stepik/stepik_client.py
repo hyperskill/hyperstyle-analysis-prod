@@ -2,7 +2,7 @@ import os
 from typing import Callable, Dict, List, Optional, Type, TypeVar
 
 from data_collection.api.platform_client import PlatformClient
-from data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
+from core.model.api.platform_objects import BaseRequestParams, Object, ObjectResponse
 from data_collection.stepik.api.courses import Course, CoursesResponse
 from data_collection.stepik.api.lessons import Lesson, LessonsResponse
 from data_collection.stepik.api.search_results import SearchResult, SearchResultsRequestParams, \
