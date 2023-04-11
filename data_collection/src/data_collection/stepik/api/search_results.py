@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
-from data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
+from core.model.api.platform_objects import BaseRequestParams, Object, ObjectResponse
 
 """
 This file contains classes, which describe entities related to search result in Stepik platform.

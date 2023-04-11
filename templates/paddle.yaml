@@ -29,11 +29,18 @@ tasks:
   run:
     - id: filter_by_diff
       entrypoint: templates/diffs/filter_by_diff.py
+    - id: search_by_freq
+      entrypoint: templates/freq/search_template_issues.py
+    - id: postprocess_by_freq
+      entrypoint: templates/freq/postprocess.py
   test:
     pytest:
       - id: filter_by_diff_tests
         targets:
           - templates_tests/diffs
+      - id: search_by_freq_tests
+        targets:
+          - templates_tests/freq
 
 subprojects:
   - core

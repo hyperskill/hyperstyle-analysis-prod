@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Iterable, Union, Optional
+from typing import Iterable, Union, Optional, Any
 
 import pandas as pd
 
@@ -8,6 +8,10 @@ from core.utils.file.extension_utils import get_restricted_extension, AnalysisEx
 
 def filter_df_by_iterable_value(df: pd.DataFrame, column: str, value: Iterable) -> pd.DataFrame:
     return df.loc[df[column].isin(value)]
+
+
+def filter_df_by_single_value(df: pd.DataFrame, column: str, value: Any) -> pd.DataFrame:
+    return df.loc[df[column] == value]
 
 
 def read_df(path: Union[str, Path]) -> Optional[pd.DataFrame]:

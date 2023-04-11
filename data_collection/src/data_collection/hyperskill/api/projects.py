@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
 
-from data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
+from core.model.api.platform_objects import BaseRequestParams, Object, ObjectResponse
 from data_collection.hyperskill.hyperskill_objects import HyperskillPlatform
 
 """

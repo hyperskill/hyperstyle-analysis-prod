@@ -14,8 +14,10 @@ jobs:
       - name: 'Build Docker image'
         run: docker build -t hyperstyle-analysis-prod .
 
-      - name: 'Run templates tests'
+      - name: 'Run diff templates tests'
         run: docker run hyperstyle-analysis-prod :templates:filter_by_diff_tests
+      - name: 'Run freq templates tests'
+        run: docker run hyperstyle-analysis-prod :templates:search_by_freq_tests
 
       - name: 'Run preprocessing tests'
         run: docker run hyperstyle-analysis-prod :preprocessing:preprocess_submissions_tests
