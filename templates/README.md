@@ -1,3 +1,11 @@
+## Description
+
+This module contains several algorithms to find code quality issues in pre-written code templates.
+
+The algorithms have been tested on the JetBrains Academy platform. 
+As a tool for evaluating code quality, [Hyperstyle](https://github.com/hyperskill/hyperstyle) was used, which is currently used on the platform by default. 
+More information about the platform and the use of Hyperstyle can be found [here](./README.md).
+
 # Searching code quality issues in the task templates
 
 This module allows running the algorithm of searching code quality issues 
