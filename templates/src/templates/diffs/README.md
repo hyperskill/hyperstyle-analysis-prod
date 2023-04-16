@@ -1,3 +1,13 @@
+## Description
+
+This module contains an algorithm for finding code quality issues in pre-written code templates using difference analysis. 
+Motivation, why this algorithm is needed, can be found [here](../../../README.md).
+
+The algorithm has been tested on the JetBrains Academy platform. 
+As a tool for evaluating code quality, [Hyperstyle](https://github.com/hyperskill/hyperstyle) was used, which is currently used on the platform by default. 
+More information about the platform and the use of Hyperstyle can be found [here](../../../../README.md).
+
+
 ## Filtering based on difference analysis of code from template and students code
 
 The idea of this algorithm is to build diff between template and students code and consider issue as template if 

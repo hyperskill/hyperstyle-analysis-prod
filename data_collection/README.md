@@ -1,6 +1,6 @@
-## Stepik and Hyperskill data collection
+## Stepik and Hyperskill/JetBrains Academy data collection
 
-This module contains client for Stepik and Hyperskill. This educational platforms provides open APIs with information
+This module contains client for Stepik and Hyperskill/JetBrains Academy. This educational platforms provides open APIs with information
 about platforms' objects.
 This module use platforms' APIs to extract information about following entities from educational platforms:
 
