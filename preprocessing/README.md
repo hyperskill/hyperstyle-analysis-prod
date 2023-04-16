@@ -1,7 +1,8 @@
 # Hyperskill/JetBrains Academy data preprocessing
 
-This module contains methods to preprocess and prepare data, collected from Hyperskill educational platform, 
-for further analysis. 
+This module contains methods to preprocess and prepare data, collected from JetBrains Academy/Hyperskill educational platform, 
+for further analysis.
+More information about the platform and the use of Hyperstyle can be found [here](./README.md).
 
 ## 1. Preprocess submissions
 
