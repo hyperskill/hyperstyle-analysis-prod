@@ -23,4 +23,4 @@ jobs:
         run: docker run hyperstyle-analysis-prod :preprocessing:preprocess_submissions_tests
 
       - name: 'Run jba tests'
-        run: docker run jba :data_processing_tests
+        run: docker run hyperstyle-analysis-prod :jba:data_processing_tests
