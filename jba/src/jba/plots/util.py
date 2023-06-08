@@ -51,4 +51,6 @@ def _make_plot_pretty(ax, tasks_df: pd.DataFrame, course_name: Optional[str], yl
     plt.xlabel("tasks")
     plt.title(course_name)
     [t.set_color(c) for t, c in zip(ax.xaxis.get_ticklabels(), _get_tasks_colors(tasks_df))]
+    ax.margins(x=0)
+    # plt.tick_params(axis='x', which='major', labelsize=7)
     plt.tight_layout()

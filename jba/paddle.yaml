@@ -22,15 +22,15 @@ tasks:
   run:
     - id: prepare_course_data
       entrypoint: jba/processing/prepare_course_data.py
-      args:
-        - /Users/anastasia.birillo/PycharmProjects/hyperstyle-analysis-prod/jba/src/jba/data/data_etl_edu_submissions.csv
-        - 21067
-        - /Users/anastasia.birillo/IdeaProjects/csc-kotlin-course
+#      args:
+#        - /Users/anastasia.birillo/PycharmProjects/hyperstyle-analysis-prod/jba/src/jba/data/data_etl_edu_submissions.csv
+#        - 20995
+#        - /Users/anastasia.birillo/Downloads/CppBasics-main
     - id: process_course_data
       entrypoint: jba/processing/data_processing.py
-      args:
-        - /Users/anastasia.birillo/PycharmProjects/hyperstyle-analysis-prod/jba/src/jba/data/kotlin/course_21067.csv
-        - /Users/anastasia.birillo/PycharmProjects/hyperstyle-analysis-prod/jba/src/jba/data/kotlin/course_21067_structure.csv
+#      args:
+#        - /Users/anastasia.birillo/PycharmProjects/hyperstyle-analysis-prod/jba/src/jba/data/cpp/course_20995.csv
+#        - /Users/anastasia.birillo/PycharmProjects/hyperstyle-analysis-prod/jba/src/jba/data/cpp/course_20995_structure.csv
     # Plots
     - id: plot_task_solving
       entrypoint: jba/plots/task_solving.py
