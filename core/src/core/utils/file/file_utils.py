@@ -52,8 +52,8 @@ def add_slash(path: str) -> str:
     return path
 
 
-def remove_slash(path: str) -> str:
-    return path.rstrip('/')
+def remove_slash(path: Union[str, Path]) -> str:
+    return str(path).rstrip('/')
 
 
 # For getting name of the last folder or file

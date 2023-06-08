@@ -58,7 +58,7 @@ def filter_by_course_id_and_save(df_path: str, course_id: int) -> Path:
     return output_folder
 
 
-def _gather_tasks_with_id(course_root_path: str) -> pd.DataFrame:
+def _gather_course_structure(course_root_path: str) -> pd.DataFrame:
     course_info_file_name = f'course-info{AnalysisExtension.YAML.value}'
     course_root_path_without_slash = remove_slash(course_root_path)
     course_info_parsed = _parse_course_config(course_root_path_without_slash, course_info_file_name)
@@ -111,5 +111,5 @@ if __name__ == '__main__':
 
     args = parser.parse_args(sys.argv[1:])
     output_path = filter_by_course_id_and_save(args.data_path, args.course_id)
-    tasks_info_df = _gather_tasks_with_id(args.course_sources_path)
+    tasks_info_df = _gather_course_structure(args.course_sources_path)
     write_df(tasks_info_df, f'{output_path}/course_{args.course_id}_structure{AnalysisExtension.CSV.value}')

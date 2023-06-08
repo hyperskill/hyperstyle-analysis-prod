@@ -17,33 +17,30 @@ requirements:
       version: ==1.24.3
     - name: matplotlib
       version: ==3.5.1
+  dev:
+    - name: pytest
+      version: ==7.2.0
+    - name: pytest-runner
+      version: ==6.0.0
+    - name: pytest-subtests
+      version: ==0.9.0
 
 tasks:
   run:
     - id: prepare_course_data
       entrypoint: jba/processing/prepare_course_data.py
-#      args:
-#        - /Users/anastasia.birillo/PycharmProjects/hyperstyle-analysis-prod/jba/src/jba/data/data_etl_edu_submissions.csv
-#        - 20995
-#        - /Users/anastasia.birillo/Downloads/CppBasics-main
     - id: process_course_data
       entrypoint: jba/processing/data_processing.py
-#      args:
-#        - /Users/anastasia.birillo/PycharmProjects/hyperstyle-analysis-prod/jba/src/jba/data/cpp/course_20995.csv
-#        - /Users/anastasia.birillo/PycharmProjects/hyperstyle-analysis-prod/jba/src/jba/data/cpp/course_20995_structure.csv
     # Plots
     - id: plot_task_solving
       entrypoint: jba/plots/task_solving.py
-#      args:
-#        - /Users/anastasia.birillo/PycharmProjects/hyperstyle-analysis-prod/jba/src/jba/data/kotlin/course_21067_preprocessed.csv
-#        - /Users/anastasia.birillo/PycharmProjects/hyperstyle-analysis-prod/jba/src/jba/data/kotlin/course_21067_structure.csv
-#        - --course-name "Kotlin Onboarding Introduction"
     - id: plot_task_attempt
       entrypoint: jba/plots/task_attempt.py
-#      args:
-#        - /Users/anastasia.birillo/PycharmProjects/hyperstyle-analysis-prod/jba/src/jba/data/kotlin/course_21067_preprocessed.csv
-#        - /Users/anastasia.birillo/PycharmProjects/hyperstyle-analysis-prod/jba/src/jba/data/kotlin/course_21067_structure.csv
-#        - --course-name "Kotlin Onboarding Introduction"
+  test:
+    pytest:
+      - id: data_processing_tests
+        targets:
+          - jba_tests/processing/data_processing
 
 subprojects:
   - core
