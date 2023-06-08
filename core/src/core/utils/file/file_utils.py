@@ -67,3 +67,17 @@ def get_name_from_path(path: Union[Path, str], with_extension: bool = True) -> s
     elif AnalysisExtension.get_extension_from_file(file_name) == Extension.EMPTY:
         raise ValueError('Cannot get file name with extension, because the passed path does not contain it')
     return file_name
+
+
+def get_output_filename(input_path: Union[str, Path], output_suffix: str = '') -> str:
+    extension = AnalysisExtension.get_extension_from_file(input_path)
+    input_filename = get_name_from_path(input_path, with_extension=False)
+
+    return f'{input_filename}{output_suffix}{extension.value}'
+
+
+def get_output_path(input_path: Union[str, Path], output_suffix: str) -> Path:
+    parent_dir = get_parent_folder(input_path)
+    output_filename = get_output_filename(input_path, output_suffix)
+
+    return parent_dir / output_filename

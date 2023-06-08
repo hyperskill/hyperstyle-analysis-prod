@@ -1,0 +1,50 @@
+project: jba
+
+plugins:
+  enabled:
+    - python
+
+# Prerequisites: https://github.com/pyenv/pyenv/wiki#suggested-build-environment
+environment:
+  path: .venv
+  python: 3.9
+
+requirements:
+  main:
+    - name: pandas
+      version: ==1.5.2
+    - name: numpy
+      version: ==1.24.3
+    - name: matplotlib
+      version: ==3.5.1
+
+tasks:
+  run:
+    - id: prepare_course_data
+      entrypoint: jba/processing/prepare_course_data.py
+      args:
+        - /Users/anastasia.birillo/PycharmProjects/hyperstyle-analysis-prod/jba/src/jba/data/data_etl_edu_submissions.csv
+        - 21067
+        - /Users/anastasia.birillo/IdeaProjects/csc-kotlin-course
+    - id: process_course_data
+      entrypoint: jba/processing/data_processing.py
+      args:
+        - /Users/anastasia.birillo/PycharmProjects/hyperstyle-analysis-prod/jba/src/jba/data/kotlin/course_21067.csv
+        - /Users/anastasia.birillo/PycharmProjects/hyperstyle-analysis-prod/jba/src/jba/data/kotlin/course_21067_structure.csv
+    # Plots
+    - id: plot_task_solving
+      entrypoint: jba/plots/task_solving.py
+#      args:
+#        - /Users/anastasia.birillo/PycharmProjects/hyperstyle-analysis-prod/jba/src/jba/data/kotlin/course_21067_preprocessed.csv
+#        - /Users/anastasia.birillo/PycharmProjects/hyperstyle-analysis-prod/jba/src/jba/data/kotlin/course_21067_structure.csv
+#        - --course-name "Kotlin Onboarding Introduction"
+    - id: plot_task_attempt
+      entrypoint: jba/plots/task_attempt.py
+#      args:
+#        - /Users/anastasia.birillo/PycharmProjects/hyperstyle-analysis-prod/jba/src/jba/data/kotlin/course_21067_preprocessed.csv
+#        - /Users/anastasia.birillo/PycharmProjects/hyperstyle-analysis-prod/jba/src/jba/data/kotlin/course_21067_structure.csv
+#        - --course-name "Kotlin Onboarding Introduction"
+
+subprojects:
+  - core
+

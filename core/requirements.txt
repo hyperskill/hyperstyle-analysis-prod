@@ -2,3 +2,4 @@ pandas==1.5.2
 dataclasses-json==0.5.7
 hyperstyle==1.4.1
 python-dateutil==2.8.2
+pyyaml==5.4.1
