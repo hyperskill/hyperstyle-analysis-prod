@@ -8,4 +8,5 @@ subprojects:
   - templates
   - preprocessing
   - data_collection
+  - jba
 

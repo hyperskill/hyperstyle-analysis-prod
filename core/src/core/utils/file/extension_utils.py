@@ -15,6 +15,8 @@ class AnalysisExtension(Enum):
     HTML = '.html'
     TXT = '.txt'
 
+    YAML = '.yaml'
+
     # Image extensions
     PNG = '.png'
     JPG = '.jpg'

@@ -1,0 +1,47 @@
+project: jba
+
+plugins:
+  enabled:
+    - python
+
+# Prerequisites: https://github.com/pyenv/pyenv/wiki#suggested-build-environment
+environment:
+  path: .venv
+  python: 3.9
+
+requirements:
+  main:
+    - name: pandas
+      version: ==1.5.2
+    - name: numpy
+      version: ==1.24.3
+    - name: matplotlib
+      version: ==3.5.1
+  dev:
+    - name: pytest
+      version: ==7.2.0
+    - name: pytest-runner
+      version: ==6.0.0
+    - name: pytest-subtests
+      version: ==0.9.0
+
+tasks:
+  run:
+    - id: prepare_course_data
+      entrypoint: jba/processing/prepare_course_data.py
+    - id: process_course_data
+      entrypoint: jba/processing/data_processing.py
+    # Plots
+    - id: plot_task_solving
+      entrypoint: jba/plots/task_solving.py
+    - id: plot_task_attempt
+      entrypoint: jba/plots/task_attempt.py
+  test:
+    pytest:
+      - id: data_processing_tests
+        targets:
+          - jba_tests/processing/data_processing
+
+subprojects:
+  - core
+

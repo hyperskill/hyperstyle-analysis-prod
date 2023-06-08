@@ -19,3 +19,5 @@ requirements:
       version: ==1.4.1
     - name: python-dateutil
       version: ==2.8.2
+    - name: pyyaml
+      version: ==5.4.1
