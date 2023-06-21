@@ -1,9 +1,11 @@
 import os
+import re
 import shutil
+import tempfile
 from pathlib import Path
 from typing import Union
 
-from hyperstyle.src.python.review.common.file_system import Extension
+from hyperstyle.src.python.review.common.file_system import Extension, ItemCondition
 
 from core.utils.file.extension_utils import AnalysisExtension
 
@@ -50,6 +52,17 @@ def add_slash(path: str) -> str:
     if not path.endswith('/'):
         path += '/'
     return path
+
+
+def file_match_condition(regex: str) -> ItemCondition:
+    def does_name_match(name: str) -> bool:
+        return re.fullmatch(regex, name) is not None
+
+    return does_name_match
+
+
+def get_tmp_directory() -> Path:
+    return Path(tempfile.gettempdir())
 
 
 def remove_slash(path: Union[str, Path]) -> str:

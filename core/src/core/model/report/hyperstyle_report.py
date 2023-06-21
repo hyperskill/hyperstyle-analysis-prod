@@ -27,3 +27,22 @@ class HyperstyleReport(QualityReport, BaseReport):
     @staticmethod
     def from_file(json_path: Path) -> 'HyperstyleReport':
         return HyperstyleReport.from_dict(parse_json(json_path))
+
+
+@dataclass_json
+@dataclass(frozen=True, eq=True)
+class HyperstyleFileReport(HyperstyleReport):
+    file_name: str
+
+    def to_hyperstyle_report(self) -> HyperstyleReport:
+        return HyperstyleReport(self.quality, self.issues)
+
+
+@dataclass_json
+@dataclass(frozen=True, eq=True)
+class HyperstyleNewFormatReport(QualityReport):
+    file_review_results: List[HyperstyleFileReport]
+
+    @staticmethod
+    def from_file(json_path: Path) -> 'HyperstyleNewFormatReport':
+        return HyperstyleNewFormatReport.from_dict(parse_json(json_path))

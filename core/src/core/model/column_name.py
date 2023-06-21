@@ -65,6 +65,7 @@ class SubmissionColumns(Enum):
     TIME = 'time'
     HIDDEN_CODE_TEMPLATE = 'hidden_code_template'
     CODE_STYLE = 'code_style'
+    CODE_STYLE_FEEDBACK_TIME = 'code_style_feedback_time'
 
     # issues
     RAW_ISSUES = 'raw_issues'
