@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Union
+from typing import List, Union, Optional
 
 from core.utils.file.file_utils import create_directory
 from hyperstyle.src.python.review.application_config import LanguageVersion
@@ -24,5 +24,6 @@ class EvaluationConfig:
     def build_command(self,
                       input_path: Union[Path, str],
                       output_path: Union[Path, str],
-                      language_version: LanguageVersion) -> List[str]:
+                      language_version: LanguageVersion,
+                      submission_path: Optional[Path]) -> List[str]:
         pass

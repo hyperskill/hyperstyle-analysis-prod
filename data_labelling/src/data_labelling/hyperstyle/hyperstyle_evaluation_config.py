@@ -50,7 +50,8 @@ class HyperstyleEvaluationConfig(EvaluationConfig):
     def build_command(self,
                       input_path: Union[str, Path],
                       output_path: Union[str, Path],
-                      language_version: LanguageVersion) -> List[str]:
+                      language_version: LanguageVersion,
+                      submission_path: Optional[Path]) -> List[str]:
 
         # TODO: move to a variable
         if self.venv is not None:
@@ -82,11 +83,16 @@ class HyperstyleEvaluationConfig(EvaluationConfig):
         else:
             bash_prefix = ['/bin/bash', '-c']
 
+        if submission_path is not None:
+            path_to_inspect = submission_path
+        else:
+            path_to_inspect = input_path
+
         # If docker path specified, hyperstyle will run inside docker
         if self.docker_path is not None:
             python_command += ['/input', '>', f'/output/{OUTPUT_FILE_PATH}']
             command = ['docker', 'run',
-                       '-v', f'{input_path}/:/input/',
+                       '-v', f'{path_to_inspect}/:/input/',
                        '-v', f'{output_path}/:/output/',
                        f'{self.docker_path}',
                        ]
@@ -94,7 +100,7 @@ class HyperstyleEvaluationConfig(EvaluationConfig):
                 command += bash_prefix
             command += [' '.join(python_command)]
         else:
-            python_command += [str(input_path)]
+            python_command += [str(path_to_inspect)]
             command = []
             if bash_prefix is not None:
                 command += bash_prefix

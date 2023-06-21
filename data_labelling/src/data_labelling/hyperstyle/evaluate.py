@@ -12,7 +12,7 @@ from core.utils.df_utils import read_df, write_df
 from core.utils.file.file_utils import get_output_path, get_output_filename
 from data_labelling.hyperstyle.evaluation_args import configure_arguments
 from data_labelling.hyperstyle.hyperstyle_evaluation_config import HyperstyleEvaluationConfig
-from data_labelling.utils.evaluation_utils import evaluate_by_language, evaluate_by_solution
+from data_labelling.utils.evaluation_utils import evaluate_by_solution
 from data_labelling.utils.file_util import get_solution_id_by_file_path
 
 logger = logging.getLogger(__name__)
@@ -59,13 +59,8 @@ def parse_hyperstyle_result(results_path: Path) -> pd.Series:
 
 def evaluate_hyperstyle(df_solutions: pd.DataFrame, config: HyperstyleEvaluationConfig) -> pd.DataFrame:
     """ Run hyperstyle tool on solutions. """
-
-    if config.new_format:
-        df_solutions = evaluate_by_language(df_solutions, config, parse_hyperstyle_new_format_result,
-                                            working_directory=config.working_directory)
-    else:
-        df_solutions = evaluate_by_solution(df_solutions, config, parse_hyperstyle_result,
-                                            working_directory=config.working_directory)
+    df_solutions = evaluate_by_solution(df_solutions, config, parse_hyperstyle_result,
+                                        working_directory=config.working_directory)
     return df_solutions
 
 
