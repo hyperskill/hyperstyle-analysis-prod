@@ -43,7 +43,7 @@ tasks:
 
   test:
     pytest:
-      - id: data_labelling_hyperstyle
+      - id: data_labelling_hyperstyle_tests
         targets:
           - data_labelling_tests/hyperstyle
 

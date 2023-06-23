@@ -24,3 +24,6 @@ jobs:
 
       - name: 'Run jba tests'
         run: docker run hyperstyle-analysis-prod :jba:data_processing_tests
+
+      - name: 'Run data labelling tests'
+        run: docker run hyperstyle-analysis-prod :data_labelling:data_labelling_hyperstyle_tests
