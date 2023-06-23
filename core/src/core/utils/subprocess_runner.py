@@ -25,6 +25,6 @@ def run_in_subprocess(command: List[str],
     if stdout:
         logger.debug('%s\'s stdout:\n%s' % (command[0], stdout))
     if stderr:
-        logger.debug('%s\'s stderr:\n%s' % (command[0], stderr))
+        logger.debug(f'An error occur during a subprocess call: {stderr}')
 
     return stdout, stderr

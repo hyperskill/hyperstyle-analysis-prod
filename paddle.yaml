@@ -9,4 +9,5 @@ subprojects:
   - preprocessing
   - data_collection
   - jba
+  - data_labelling
 
