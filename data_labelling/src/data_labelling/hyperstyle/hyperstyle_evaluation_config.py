@@ -61,9 +61,6 @@ class HyperstyleEvaluationConfig(EvaluationConfig):
         if self.with_all_categories:
             python_command += ['--with-all-categories']
 
-        if self.new_format:
-            python_command += ['--new-format']
-
         if self.n_cpu:
             python_command += ['--n-cpu', str(self.n_cpu)]
 
