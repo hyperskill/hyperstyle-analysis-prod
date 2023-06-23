@@ -19,12 +19,33 @@ requirements:
       version: ==0.5.7
     - name: hyperstyle
       version: ==1.4.1
+  dev:
+    - name: pytest
+      version: ==7.2.0
+    - name: pytest-runner
+      version: ==6.0.0
+    - name: pytest-subtests
+      version: ==0.9.0
 
 tasks:
   run:
     - id: run_hyperstyle
       entrypoint: data_labelling/hyperstyle/evaluate.py
+      args:
+        - /Users/anastasia.birillo/PycharmProjects/hyperstyle-analysis-prod/data_labelling/src/data/real_data/2023_06_05/submissions_python_2023_06_05_cut.csv
+        - --output-path /Users/anastasia.birillo/PycharmProjects/hyperstyle-analysis-prod/data_labelling/src/data/real_data/2023_06_05/output
+        - --docker-path None
+        - --disable pylint,flake8,radon
+        - -cwd /Users/anastasia.birillo/PycharmProjects/hyperstyle_new
+        - --tool-path /Users/anastasia.birillo/PycharmProjects/hyperstyle_new/hyperstyle/src/python/review/run_tool.py
+        - --venv /Users/anastasia.birillo/PycharmProjects/hyperstyle_new/venv
+        - --with-all-categories
 
+  test:
+    pytest:
+      - id: data_labelling_hyperstyle
+        targets:
+          - data_labelling_tests/hyperstyle
 
 subprojects:
   - core

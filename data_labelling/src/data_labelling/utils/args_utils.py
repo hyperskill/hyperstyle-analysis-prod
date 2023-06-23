@@ -53,26 +53,3 @@ script_structure_rule = ('Please, make sure your XLSX-file matches following scr
                          f'{LanguageVersion.JAVA_8.value} ,'
                          f'{LanguageVersion.JAVA_11.value} and {LanguageVersion.KOTLIN.value}.')
 
-
-# Split string by separator
-def parse_set_arg(str_arg: str, separator: str = ',') -> Set[str]:
-    return set(str_arg.split(separator))
-
-
-def get_in_and_out_list(root: Path,
-                        in_ext: Union[Extension, AnalysisExtension] = AnalysisExtension.CSV,
-                        out_ext: Union[Extension, AnalysisExtension]
-                        = AnalysisExtension.CSV) -> List[Tuple[Path, Path]]:
-    in_files = get_all_file_system_items(root, file_match_condition(rf'in_\d+{in_ext.value}'))
-    out_files = get_all_file_system_items(root, file_match_condition(rf'out_\d+{out_ext.value}'))
-    return pair_in_and_out_files(in_files, out_files)
-
-
-def pair_in_and_out_files(in_files: List[Path], out_files: List[Path]) -> List[Tuple[Path, Path]]:
-    pairs = []
-    for in_file in in_files:
-        out_file = Path(re.sub(r'in(?=[^in]*$)', 'out', str(in_file)))
-        if out_file not in out_files:
-            raise ValueError(f'List of out files does not contain a file for {in_file}')
-        pairs.append((in_file, out_file))
-    return pairs

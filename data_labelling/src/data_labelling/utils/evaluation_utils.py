@@ -55,7 +55,7 @@ def evaluate(
 
     submission_path = save_solution_to_file(solution, input_path)
     command = config.build_command(input_path, output_path, get_language_version(language_version), submission_path)
-    output, time = evaluate_command(command, working_directory)
+    output, cur_time = evaluate_command(command, working_directory)
     if output is not None:
         next(create_file(output_path / config.result_path, output))
 
@@ -63,7 +63,7 @@ def evaluate(
 
     remove_directory(language_version_path)
 
-    return result, time
+    return result, cur_time
 
 
 def evaluate_command(command: List[str], working_directory: Optional[str] = None) -> Tuple[Optional[str], float]:

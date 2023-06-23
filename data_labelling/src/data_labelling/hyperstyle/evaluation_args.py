@@ -2,7 +2,7 @@ import argparse
 from pathlib import Path
 
 from core.utils.file.file_utils import get_tmp_directory
-from data_labelling.hyperstyle.hyperstyle_evaluation_config import HYPERSTYLE_DOCKER_PATH, HYPERSTYLE_TOOL_PATH
+from data_labelling.hyperstyle.hyperstyle_evaluation_config import HYPERSTYLE_TOOL_PATH
 from data_labelling.utils.args_utils import EvaluationRunToolArgument
 
 
@@ -15,12 +15,6 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         default=None,
                         type=lambda value: Path(value).absolute(),
                         help='Path to the directory where to save evaluation results')
-
-    parser.add_argument('-dp', '--docker-path',
-                        default=HYPERSTYLE_DOCKER_PATH,
-                        type=str,
-                        help='Path to docker (USER/NAME:VERSION) to run evaluation on. '
-                             'If `None` hyperstyle will run locally.')
 
     parser.add_argument('-tp', '--tool-path',
                         default=HYPERSTYLE_TOOL_PATH,

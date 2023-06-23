@@ -21,30 +21,6 @@ logging.basicConfig(level=logging.INFO)
 HYPERSTYLE_OUTPUT_SUFFIX = '_hyperstyle'
 
 
-def parse_hyperstyle_new_format_result(results_path: Path) -> pd.DataFrame:
-    """ Parse results for group of solution and split by solution id. """
-
-    try:
-        report = HyperstyleNewFormatReport.from_file(results_path)
-    except Exception as e:
-        logging.error(f"Can not parse new format report from hyperstyle output: {e}")
-        raise Exception(e)
-
-    results_dict = {
-        SubmissionColumns.ID.value: [],
-        SubmissionColumns.HYPERSTYLE_ISSUES.value: [],
-    }
-
-    for file_report in report.file_review_results:
-        solution_id = get_solution_id_by_file_path(file_report.file_name)
-        results_dict[SubmissionColumns.ID.value].append(solution_id)
-
-        issues = file_report.to_hyperstyle_report().to_json()
-        results_dict[SubmissionColumns.HYPERSTYLE_ISSUES.value].append(issues)
-
-    return pd.DataFrame.from_dict(results_dict)
-
-
 def parse_hyperstyle_result(results_path: Path) -> pd.Series:
     """ Parse result for single solution. """
 
@@ -72,12 +48,9 @@ def main():
     args = parser.parse_args()
 
     df_solutions = read_df(args.solutions_file_path)
-    config = HyperstyleEvaluationConfig(docker_path=None if args.docker_path == 'None' else args.docker_path,
-                                        tool_path=args.tool_path,
+    config = HyperstyleEvaluationConfig(tool_path=args.tool_path,
                                         allow_duplicates=args.allow_duplicates,
                                         with_all_categories=args.with_all_categories,
-                                        # new_format is True for batching evaluation
-                                        new_format=False,
                                         tmp_path=args.tmp_directory,
                                         disable=args.disable,
                                         working_directory=args.working_directory,
