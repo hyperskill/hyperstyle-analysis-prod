@@ -12,12 +12,12 @@ environment:
 requirements:
   main:
     - name: pandas
-      version: ==1.5.2
+      version: ==2.0.3
     - name: dataclasses-json
-      version: ==0.5.7
+      version: ==0.5.9
     - name: hyperstyle
-      version: ==1.4.1
+      version: ==1.4.2
     - name: python-dateutil
       version: ==2.8.2
     - name: pyyaml
-      version: ==5.4.1
+      version: ==6.0
