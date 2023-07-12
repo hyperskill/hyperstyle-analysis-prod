@@ -2,7 +2,7 @@ pandas==2.0.3
 numpy==1.25.0
 matplotlib==3.7.2
 python-dotenv==1.0.0
-requests==2.31.0
+requests==2.25.1
 pytest==7.4.0
 pytest-runner==6.0.0
 pytest-subtests==0.11.0
