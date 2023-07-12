@@ -1,5 +1,5 @@
 pandas==2.0.3
-numpy==1.25.0
+numpy==1.24.40
 matplotlib==3.7.2
 python-dotenv==1.0.0
 requests==2.25.1
