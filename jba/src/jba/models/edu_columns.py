@@ -9,6 +9,8 @@ class EduColumnName(Enum):
     STATUS = 'status'
     USER_ID = 'user_id'
     TASK_TYPE = 'task_type'
+    CODE_SNIPPETS = 'code_snippets'
+    UUID = 'uuid'
 
     TASK_ID = 'task_id'
     TASK_GLOBAL_NUMBER = 'task_global_number'
@@ -25,6 +27,12 @@ class EduColumnName(Enum):
     SECTION_NAME = 'section_name'
     SECTION_NUMBER = 'section_number'
     SECTIONS_AMOUNT = 'sections_amount'
+
+    SOLUTION_AWS_KEY = 'solution_aws_key'
+    FORMAT_VERSION = 'format_version'
+    UPDATE_VERSION = 'update_version'
+    CHECKER_OUTPUT = 'checker_output'
+    VISIBILITY = 'visibility'
 
 
 @unique
