@@ -16,7 +16,7 @@ requirements:
     - name: pandas
       version: ==2.0.3
     - name: requests
-      version: ==2.25.1
+      version: ==2.31.0
     - name: dacite
       version: ==1.8.1
   dev:

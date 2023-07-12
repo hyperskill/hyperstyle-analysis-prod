@@ -1,6 +1,6 @@
 argparse==1.4.0
 pandas==2.0.3
-requests==2.25.1
+requests==2.31.0
 dacite==1.8.1
 pytest==7.4.0
 pytest-runner==6.0.0

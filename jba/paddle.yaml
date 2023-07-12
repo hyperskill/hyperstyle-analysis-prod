@@ -14,13 +14,13 @@ requirements:
     - name: pandas
       version: ==2.0.3
     - name: numpy
-      version: ==1.24.40
+      version: ==1.25.0
     - name: matplotlib
       version: ==3.7.2
     - name: python-dotenv
       version: ==1.0.0
     - name: requests
-      version: ==2.25.1
+      version: ==2.31.0
   dev:
     - name: pytest
       version: ==7.4.0
