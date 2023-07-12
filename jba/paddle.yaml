@@ -12,18 +12,22 @@ environment:
 requirements:
   main:
     - name: pandas
-      version: ==1.5.2
+      version: ==2.0.3
     - name: numpy
-      version: ==1.24.3
+      version: ==1.25.0
     - name: matplotlib
-      version: ==3.5.1
+      version: ==3.7.2
+    - name: python-dotenv
+      version: ==1.0.0
+    - name: requests
+      version: ==2.31.0
   dev:
     - name: pytest
-      version: ==7.2.0
+      version: ==7.4.0
     - name: pytest-runner
       version: ==6.0.0
     - name: pytest-subtests
-      version: ==0.9.0
+      version: ==0.11.0
 
 tasks:
   run:
@@ -31,11 +35,16 @@ tasks:
       entrypoint: jba/processing/prepare_course_data.py
     - id: process_course_data
       entrypoint: jba/processing/data_processing.py
+
     # Plots
-    - id: plot_task_solving
-      entrypoint: jba/plots/task_solving.py
     - id: plot_task_attempt
       entrypoint: jba/plots/task_attempt.py
+    - id: plot_task_solving
+      entrypoint: jba/plots/task_solving.py
+
+    # Data gathering
+    - id: submissions_gathering
+      entrypoint: jba/gathering/gather_submissions_info.py
   test:
     pytest:
       - id: data_processing_tests

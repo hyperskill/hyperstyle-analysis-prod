@@ -12,20 +12,20 @@ environment:
 requirements:
   main:
     - name: pandas
-      version: ==1.5.2
+      version: ==2.0.3
     - name: pyyaml
-      version: ==5.4.1
+      version: ==6.0
     - name: dataclasses-json
-      version: ==0.5.7
+      version: ==0.5.9
     - name: hyperstyle
-      version: ==1.4.1
+      version: ==1.4.2
   dev:
     - name: pytest
-      version: ==7.2.0
+      version: ==7.4.0
     - name: pytest-runner
       version: ==6.0.0
     - name: pytest-subtests
-      version: ==0.9.0
+      version: ==0.11.0
 
 tasks:
   run:
