@@ -54,7 +54,7 @@ Run the script by one of the following way with the arguments:
 
 Required arguments:
 
-- `course_data_path` — Path to .csv file with preprocessed data by [data_processing.py](./src/jba/processing/data_processing.py).
+- `course_data_path` — Path to .csv file with preprocessed data by [prepare_course_data.py](./src/jba/processing/prepare_course_data.py).
 - `course_structure_path` — Path to .csv file with the course structure gathered by [prepare_course_data.py](./src/jba/processing/prepare_course_data.py).
 
 After this step you will get a new file with course data with `courseId_preprocessed` suffix. 
