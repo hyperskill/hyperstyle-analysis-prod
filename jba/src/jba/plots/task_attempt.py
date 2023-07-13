@@ -45,6 +45,7 @@ def plot_task_attempts(course_data_df: pd.DataFrame, all_tasks_data_df: pd.DataF
     tasks_df[max_attempts_count_column] = tasks_df.apply(
         lambda row: _calculate_max(tasks_stat, row[EduColumnName.TASK_ID.value]), axis=1)
 
+    plt.figure(dpi=300)
     ax = plt.gca()
     tasks_df.plot(kind='line', x=EduColumnName.TASK_NAME.value, y=median_attempts_count_column, color='black', ax=ax)
     tasks_df.plot(kind='line', x=EduColumnName.TASK_NAME.value, y=min_attempts_count_column, color='blue', ax=ax)
