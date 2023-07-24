@@ -17,7 +17,7 @@ CONTENT_FIELD = 'content'
 ID_FIELD = 'id'
 
 
-def _parse_course_config(base_path: str, inner_folder: str) -> dict:
+def parse_course_config(base_path: str, inner_folder: str) -> dict:
     full_path = f'{base_path}/{inner_folder}'
     if not exists(full_path):
         raise ValueError(f'The {inner_folder} does not exist in {base_path}!')
@@ -35,13 +35,13 @@ def _parse_edu_config_item(base_path: str, nested_folder_name: str, item_type: s
     current_path = f'{base_path}/{nested_folder_name}'
 
     item_remote_info_file_name = f'{item_type}-remote-info{AnalysisExtension.YAML.value}'
-    item_remote_info_parsed = _parse_course_config(current_path, item_remote_info_file_name)
+    item_remote_info_parsed = parse_course_config(current_path, item_remote_info_file_name)
     item_id = _parse_yaml_section(item_remote_info_parsed, ID_FIELD,
                                   f'{current_path}/{item_remote_info_file_name}')
 
     if not is_terminal:
         item_info_file_name = f'{item_type}-info{AnalysisExtension.YAML.value}'
-        item_info_parsed = _parse_course_config(current_path, item_info_file_name)
+        item_info_parsed = parse_course_config(current_path, item_info_file_name)
         nested_items = _parse_yaml_section(item_info_parsed, CONTENT_FIELD,
                                            f'{current_path}/{item_info_file_name}')
     else:
@@ -61,7 +61,7 @@ def filter_by_course_id_and_save(df_path: str, course_id: int) -> Path:
 def _gather_course_structure(course_root_path: str) -> pd.DataFrame:
     course_info_file_name = f'course-info{AnalysisExtension.YAML.value}'
     course_root_path_without_slash = remove_slash(course_root_path)
-    course_info_parsed = _parse_course_config(course_root_path_without_slash, course_info_file_name)
+    course_info_parsed = parse_course_config(course_root_path_without_slash, course_info_file_name)
     sections = _parse_yaml_section(course_info_parsed, CONTENT_FIELD, course_root_path_without_slash)
     headers = [
         EduColumnName.TASK_GLOBAL_NUMBER.value,
