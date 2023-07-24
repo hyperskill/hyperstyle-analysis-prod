@@ -7,7 +7,7 @@ plugins:
 # Prerequisites: https://github.com/pyenv/pyenv/wiki#suggested-build-environment
 environment:
   path: .venv
-  python: 3.8
+  python: 3.9
 
 requirements:
   main:
@@ -45,6 +45,13 @@ tasks:
     # Data gathering
     - id: submissions_gathering
       entrypoint: jba/gathering/gather_submissions_info.py
+
+    # Tests runner
+    - id: tests_runner
+      entrypoint: jba/tests/tests_runner.py
+    - id: tests_parser
+      entrypoint: jba/tests/tests_parser.py
+
   test:
     pytest:
       - id: data_processing_tests
