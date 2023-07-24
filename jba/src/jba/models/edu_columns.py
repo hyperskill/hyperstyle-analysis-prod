@@ -34,6 +34,8 @@ class EduColumnName(Enum):
     CHECKER_OUTPUT = 'checker_output'
     VISIBILITY = 'visibility'
 
+    GRADLE_LOGS = 'gradle_logs'
+
 
 @unique
 class EduTaskStatus(Enum):
@@ -46,3 +48,19 @@ class EduTaskType(Enum):
     THEORY = 'theory'
     EDU = 'edu'
     UNDEFINED = 'undefined'
+
+
+@unique
+class EduCodeSnippetField(Enum):
+    NAME = 'name'
+    TEXT = 'text'
+
+
+@unique
+class EduConfigField(Enum):
+    TYPE = 'type'
+    FILES = 'files'
+    CUSTOM_NAME = 'custom_name'
+    FEEDBACK_LINK = 'feedback_link'
+    NAME = 'name'
+    VISIBLE = 'visible'
