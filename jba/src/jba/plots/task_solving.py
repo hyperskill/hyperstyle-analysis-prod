@@ -44,6 +44,7 @@ def plot_task_solving(course_data_df: pd.DataFrame, all_tasks_data_df: pd.DataFr
     tasks_df[unfinished_column] = tasks_df.apply(
         lambda row: _calculate_unfinished_correct_amount(tasks_stat, row[EduColumnName.TASK_ID.value]), axis=1)
 
+    plt.figure(dpi=300)
     ax = plt.gca()
     tasks_df.plot(kind='line', x=EduColumnName.TASK_NAME.value, y=started_column, color='red', ax=ax)
     tasks_df.plot(kind='line', x=EduColumnName.TASK_NAME.value, y=unfinished_column, color='black', ax=ax)
