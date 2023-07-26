@@ -262,15 +262,6 @@ def test_check_user_submissions(repo: Path):
     assert sorted(modification_times) == modification_times
 
 
-def test_functional_incorrect_arguments(repo: Path):
-    command = [sys.executable, (MAIN_FOLDER.parent / 'tests' / 'tests_runner.py')]
-
-    stdout, stderr = run_in_subprocess(command)
-
-    assert stdout == ''
-    assert 'error: the following arguments are required' in stderr
-
-
 def test_functional(repo: Path):
     with TemporaryDirectory() as tmp_dir:
         command = [
@@ -287,3 +278,12 @@ def test_functional(repo: Path):
             submissions_logs_folder = Path(tmp_dir) / str(submission_id)
             assert submissions_logs_folder.exists()
             assert_submission(submissions_logs_folder, *args)
+
+
+def test_functional_incorrect_arguments(repo: Path):
+    command = [sys.executable, (MAIN_FOLDER.parent / 'tests' / 'tests_runner.py')]
+
+    stdout, stderr = run_in_subprocess(command)
+
+    assert stdout == ''
+    assert 'error: the following arguments are required' in stderr
