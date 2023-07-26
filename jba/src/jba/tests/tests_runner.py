@@ -170,13 +170,11 @@ def main():
 
     submissions = read_df(args.submissions_path)
 
-    submissions_with_tests = submissions.groupby(EduColumnName.USER_ID.value, as_index=False).parallel_apply(
+    submissions.groupby(EduColumnName.USER_ID.value, as_index=False).parallel_apply(
         check_user,
         args.course_sources_path,
         args.logs_output_path,
     )
-
-    write_df(submissions_with_tests, get_output_path(args.submissions_path, '-with_logs'))
 
 
 if __name__ == '__main__':
