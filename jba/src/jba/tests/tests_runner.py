@@ -68,7 +68,7 @@ def _check_submission(submission: pd.Series, course_root_path: Path, output_path
 
     if pd.isna(submission[EduColumnName.CODE_SNIPPETS.value]):
         logger.warning(f'Code snippets are missing')
-        return None, None
+        return
 
     section_name = submission.get(EduColumnName.SECTION_NAME.value)
     lesson_name = submission[EduColumnName.LESSON_NAME.value]
@@ -77,17 +77,17 @@ def _check_submission(submission: pd.Series, course_root_path: Path, output_path
     task_root_path = course_root_path / ('' if section_name is None else section_name) / lesson_name / task_name
 
     task_config = parse_course_config(task_root_path, f'task-info{AnalysisExtension.YAML.value}')
-    invisible_files = {
+    visible_files = {
         file_info[EduConfigField.NAME.value]
         for file_info in task_config[EduConfigField.FILES.value]
-        if not file_info[EduConfigField.VISIBLE.value]
+        if file_info[EduConfigField.VISIBLE.value]
     }
-    logger.debug(f'Invisible files: {invisible_files}')
+    logger.debug(f'Visible files: {visible_files}')
 
     snippets = {
         task_root_path / snippet[EduCodeSnippetField.NAME.value]: snippet[EduCodeSnippetField.TEXT.value]
         for snippet in json.loads(submission[EduColumnName.CODE_SNIPPETS.value])
-        if snippet[EduCodeSnippetField.NAME.value] not in invisible_files
+        if snippet[EduCodeSnippetField.NAME.value] in visible_files
     }
     logger.debug(f'Snippets: {snippets.keys()}')
 
