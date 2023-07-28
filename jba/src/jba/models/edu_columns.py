@@ -34,7 +34,8 @@ class EduColumnName(Enum):
     CHECKER_OUTPUT = 'checker_output'
     VISIBILITY = 'visibility'
 
-    GRADLE_LOGS = 'gradle_logs'
+    EXCEPTIONS = 'exceptions'
+    TESTS = 'tests'
 
 
 @unique
