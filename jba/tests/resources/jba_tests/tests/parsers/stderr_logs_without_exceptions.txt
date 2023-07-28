@@ -1,0 +1,17 @@
+
+2 tests completed, 1 failed
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':Introduction-LastPush-FinishTheApp:test'.
+> There were failing tests. See the report at: file:///private/var/folders/s8/5wp__fwn76g29822xn4f8t6c0000gq/T/tmpksx8gltw/Introduction/LastPush/FinishTheApp/build/reports/tests/test/index.html
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+
+* Get more help at https://help.gradle.org
+
+BUILD FAILED in 4s
