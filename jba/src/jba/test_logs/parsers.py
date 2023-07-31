@@ -79,12 +79,12 @@ def parse_gradle_test_logs(test_logs_path: Path) -> List[TestData]:
     return tests
 
 
-def parse_gradle_stderr_logs(stderr_logs_path: Path, task_path: str) -> List[ExceptionData]:
+def parse_gradle_stderr_logs(stderr_logs_path: Path, relative_task_path: str) -> List[ExceptionData]:
     """
     Parse gradle stderr logs into list of `ExceptionData`.
 
     :param stderr_logs_path: Path to a text file with gradle stderr logs.
-    :param task_path: Relative path from a course root to a task folder.
+    :param relative_task_path: Relative path from a course root to a task folder.
     :return: List of `ExceptionData`.
     """
 
@@ -96,7 +96,7 @@ def parse_gradle_stderr_logs(stderr_logs_path: Path, task_path: str) -> List[Exc
                 continue
 
             full_file_path = match.group(1)
-            relative_file_path = full_file_path[full_file_path.find(task_path) + len(task_path) + 1 :]
+            relative_file_path = full_file_path[full_file_path.find(relative_task_path) + len(relative_task_path) + 1:]
 
             exceptions.append(
                 ExceptionData(

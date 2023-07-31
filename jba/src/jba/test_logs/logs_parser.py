@@ -38,9 +38,9 @@ def parse_gradle_logs(submission: pd.Series, gradle_logs_folder: Path) -> Tuple[
     lesson_name = submission[EduColumnName.LESSON_NAME.value]
     task_name = submission[EduColumnName.TASK_NAME.value]
 
-    task_path = Path('' if section_name is None else section_name) / lesson_name / task_name
+    relative_task_path = Path('' if section_name is None else section_name) / lesson_name / task_name
 
-    parsed_stderr_logs = _parse_stderr_logs(submission_gradle_logs_folder, str(task_path))
+    parsed_stderr_logs = _parse_stderr_logs(submission_gradle_logs_folder, str(relative_task_path))
     if parsed_stderr_logs is not None:
         parsed_stderr_logs = json.dumps([asdict(exception) for exception in parsed_stderr_logs])
 
@@ -51,12 +51,12 @@ def parse_gradle_logs(submission: pd.Series, gradle_logs_folder: Path) -> Tuple[
     return parsed_stderr_logs, parsed_test_logs
 
 
-def _parse_stderr_logs(submission_gradle_logs_path: Path, task_path: str) -> Optional[List[ExceptionData]]:
+def _parse_stderr_logs(submission_gradle_logs_path: Path, relative_task_path: str) -> Optional[List[ExceptionData]]:
     """
     Parse submission gradle stderr logs into list of `ExceptionData`.
 
     :param submission_gradle_logs_path: Path to a folder with submission gradle logs.
-    :param task_path: Relative path from a course root to a task.
+    :param relative_task_path: Relative path from a course root to a task.
     :return: List of `ExceptionData`.
     """
     logger.info('Parsing stderr logs')
@@ -66,7 +66,7 @@ def _parse_stderr_logs(submission_gradle_logs_path: Path, task_path: str) -> Opt
         logger.info('Stderr logs file does not exist')
         return None
 
-    exceptions = parse_gradle_stderr_logs(stderr_logs_file, task_path)
+    exceptions = parse_gradle_stderr_logs(stderr_logs_file, relative_task_path)
     if not exceptions:
         logger.info('There are no exceptions in the stderr logs file')
 
@@ -84,7 +84,7 @@ def _parse_test_logs(submission_gradle_logs_path: Path) -> Optional[List[TestDat
 
     test_gradle_logs_path = submission_gradle_logs_path / TEST_LOGS_FOLDER_NAME / 'classes'
     if not test_gradle_logs_path.exists():
-        logger.info('Test logs file does not exist')
+        logger.info('Test logs folder does not exist')
         return None
 
     return [
