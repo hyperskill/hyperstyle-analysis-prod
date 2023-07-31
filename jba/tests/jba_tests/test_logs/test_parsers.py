@@ -4,10 +4,10 @@ from typing import List
 from pathlib import Path
 
 from jba.models.edu_logs import ExceptionData, TestData
-from jba.tests.parsers import parse_gradle_stderr_logs, parse_gradle_test_logs
-from jba_tests.tests import TESTS_FOLDER
+from jba.test_logs.parsers import parse_gradle_stderr_logs, parse_gradle_test_logs
+from jba_tests.test_logs import TEST_LOGS_FOLDER
 
-PARSERS_FOLDER = TESTS_FOLDER / 'parsers'
+PARSERS_FOLDER = TEST_LOGS_FOLDER / 'parsers'
 
 
 PARSE_GRADLE_STDERR_LOGS_DATA = [

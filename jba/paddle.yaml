@@ -46,17 +46,20 @@ tasks:
     - id: submissions_gathering
       entrypoint: jba/gathering/gather_submissions_info.py
 
-    # Tests runner
+    # Test logs
     - id: tests_runner
-      entrypoint: jba/tests/tests_runner.py
-    - id: tests_parser
-      entrypoint: jba/tests/tests_parser.py
+      entrypoint: jba/test_logs/tests_runner.py
+    - id: logs_parser
+      entrypoint: jba/test_logs/logs_parser.py
 
   test:
     pytest:
       - id: data_processing_tests
         targets:
           - jba_tests/processing/data_processing
+      - id: test_logs_tests
+        targets:
+          - jba_tests/test_logs/
 
 subprojects:
   - core

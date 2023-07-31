@@ -1,4 +1,3 @@
-# TODO: check namings
 import argparse
 import json
 import logging
@@ -12,8 +11,8 @@ from core.utils.df_utils import read_df, write_df
 from core.utils.file.file_utils import get_output_path
 from jba.models.edu_columns import EduColumnName
 from jba.models.edu_logs import ExceptionData, TestData
-from jba.tests.parsers import parse_gradle_test_logs, parse_gradle_stderr_logs
-from jba.tests.tests_runner import GRADLE_STDERR_LOGS_FILE, TEST_LOGS_FOLDER_NAME
+from jba.test_logs.parsers import parse_gradle_test_logs, parse_gradle_stderr_logs
+from jba.test_logs.tests_runner import GRADLE_STDERR_LOGS_FILE, TEST_LOGS_FOLDER_NAME
 
 logger = logging.getLogger(__name__)
 

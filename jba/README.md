@@ -100,11 +100,11 @@ Optional arguments:
 
 # Run tests
 
-[This module](./src/jba/tests) allows you to run tests and parsed its output to perform further analysis.
+[This module](./src/jba/test_logs) allows you to run tests and parsed its output to perform further analysis.
 
 **Note**: This module only works with courses that have a structure like in [Kotlin Onboarding](https://github.com/jetbrains-academy/kotlin-onboarding-introduction)!
 
-1. [tests_runner.py](./src/jba/tests/tests_runner.py) allows you to run tests and save Gradle logs to perform further parsing.
+1. [tests_runner.py](src/jba/test_logs/tests_runner.py) allows you to run tests and save Gradle logs to perform further parsing.
 
 Run the script by one of the following way with the arguments:
 
@@ -121,7 +121,7 @@ Optional arguments:
 | **&#8209;&#8209;debug**       | Run the script in debug mode                  |
 
 
-2. [tests_parser.py](./src/jba/tests/tests_parser.py) allows you to parse Gradle logs into json strings.
+2. [logs_parser.py](src/jba/test_logs/logs_parser.py) allows you to parse Gradle logs into json strings.
 
 Run the script by one of the following way with the arguments:
 

@@ -11,10 +11,10 @@ from core.utils.subprocess_runner import run_in_subprocess
 from jba import MAIN_FOLDER
 from jba.models.edu_columns import EduColumnName
 from jba.models.edu_logs import ExceptionData, TestData
-from jba.tests.tests_parser import _parse_stderr_logs, _parse_test_logs, parse_gradle_logs
-from jba_tests.tests import TESTS_FOLDER
+from jba.test_logs.logs_parser import _parse_stderr_logs, _parse_test_logs, parse_gradle_logs
+from jba_tests.test_logs import TEST_LOGS_FOLDER
 
-TESTS_PARSER_FOLDER = TESTS_FOLDER / 'tests_parser'
+TESTS_PARSER_FOLDER = TEST_LOGS_FOLDER / 'tests_parser'
 
 
 SUBMISSIONS_ID_TO_EXPECTED_EXCEPTIONS = {
@@ -644,7 +644,7 @@ def test_functional():
 
         command = [
             sys.executable,
-            (MAIN_FOLDER.parent / 'tests' / 'tests_parser.py'),
+            (MAIN_FOLDER.parent / 'test_logs' / 'logs_parser.py'),
             (Path(tmp_dir) / 'submissions.csv'),
             (TESTS_PARSER_FOLDER / 'gradle_logs'),
         ]
@@ -704,7 +704,7 @@ def test_functional():
 
 
 def test_functional_incorrect_arguments():
-    command = [sys.executable, (MAIN_FOLDER.parent / 'tests' / 'tests_parser.py')]
+    command = [sys.executable, (MAIN_FOLDER.parent / 'test_logs' / 'logs_parser.py')]
 
     stdout, stderr = run_in_subprocess(command)
 

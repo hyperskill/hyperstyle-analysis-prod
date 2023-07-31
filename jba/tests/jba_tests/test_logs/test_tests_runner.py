@@ -14,7 +14,7 @@ from core.utils.file.file_utils import create_file
 from core.utils.subprocess_runner import run_in_subprocess
 from jba import MAIN_FOLDER
 from jba.models.edu_columns import EduColumnName, EduTaskStatus, EduCodeSnippetField
-from jba.tests.tests_runner import (
+from jba.test_logs.tests_runner import (
     _run_tests,
     GRADLE_STDOUT_LOGS_FILE,
     GRADLE_STDERR_LOGS_FILE,
@@ -22,9 +22,9 @@ from jba.tests.tests_runner import (
     _check_submission,
     check_user,
 )
-from jba_tests.tests import TESTS_FOLDER
+from jba_tests.test_logs import TEST_LOGS_FOLDER
 
-TESTS_RUNNER_FOLDER = TESTS_FOLDER / 'tests_runner'
+TESTS_RUNNER_FOLDER = TEST_LOGS_FOLDER / 'tests_runner'
 
 KOTLIN_ONBOARDING_INTRODUCTION_REPO = 'https://github.com/jetbrains-academy/kotlin-onboarding-introduction.git'
 KOTLIN_ONBOARDING_INTRODUCTION_COMMIT = '578dbbf8257bd5a3022c4e67bfebbaea4766f246'  # Version before refactoring
@@ -266,7 +266,7 @@ def test_functional(repo: Path):
     with TemporaryDirectory() as tmp_dir:
         command = [
             sys.executable,
-            (MAIN_FOLDER.parent / 'tests' / 'tests_runner.py'),
+            (MAIN_FOLDER.parent / 'test_logs' / 'tests_runner.py'),
             (TESTS_RUNNER_FOLDER / 'submissions.csv'),
             repo,
             tmp_dir,
@@ -281,7 +281,7 @@ def test_functional(repo: Path):
 
 
 def test_functional_incorrect_arguments(repo: Path):
-    command = [sys.executable, (MAIN_FOLDER.parent / 'tests' / 'tests_runner.py')]
+    command = [sys.executable, (MAIN_FOLDER.parent / 'test_logs' / 'tests_runner.py')]
 
     stdout, stderr = run_in_subprocess(command)
 
