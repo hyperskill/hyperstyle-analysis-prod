@@ -1,3 +1,4 @@
+import bs4
 import re
 
 import pandas as pd
@@ -9,6 +10,19 @@ from jba.models.edu_logs import TestData, TestDataField, ExceptionData
 
 EXCEPTION_REGEXP = re.compile(r'^e: (.*): \((\d+), (\d+)\): (.*)$')
 CLASS_NAME_REGEXP = re.compile(r'^Class (.*)$')
+
+
+def _parse_gradle_test_table(html_table: bs4.Tag) -> pd.DataFrame:
+    header_row = html_table.find('thead').find('tr')
+    test_table_header = [column.text.lower().replace(' ', '_') for column in header_row.find_all('th')]
+
+    test_table_data = []
+    for row in html_table.find_all('tr'):
+        row_data = [column.text for column in row.find_all('td')]
+        if row_data:
+            test_table_data.append(row_data)
+
+    return pd.DataFrame(test_table_data, columns=test_table_header)
 
 
 def parse_gradle_test_logs(test_logs_path: Path) -> List[TestData]:
@@ -25,7 +39,7 @@ def parse_gradle_test_logs(test_logs_path: Path) -> List[TestData]:
 
     # Find a tab with failed tests
     failed_test_tab = soup.find('ul', {'class': 'tabLinks'}).find(
-        lambda tag: tag.name == 'a' and 'Failed tests' in tag.text.strip()
+        lambda tag: tag.name == 'a' and 'Failed tests' in tag.text
     )
 
     failed_tests = {}
@@ -34,8 +48,8 @@ def parse_gradle_test_logs(test_logs_path: Path) -> List[TestData]:
 
         for failed_test in soup.find('div', {'id': failed_test_tab_id}).find_all('div', {'class': 'test'}):
             method_name = failed_test.find('a')['name']
-            test = failed_test.find('h3', {'class': 'failures'}).text.strip()
-            logs = failed_test.find('span', {'class': 'code'}).text.strip()
+            test = failed_test.find('h3', {'class': 'failures'}).text
+            logs = failed_test.find('span', {'class': 'code'}).text
 
             delimiter_index = logs.find(':')
             error_class = logs[:delimiter_index].strip()
@@ -53,11 +67,10 @@ def parse_gradle_test_logs(test_logs_path: Path) -> List[TestData]:
         .removeprefix('#')
     )
 
-    test_table = pd.read_html(str(soup.find('div', {'id': test_table_tab_id})))[0]
-    test_table.columns = map(lambda name: name.lower().replace(' ', '_'), test_table.columns)
+    test_table = _parse_gradle_test_table(soup.find('div', {'id': test_table_tab_id}).find('table'))
 
-    class_name_block = soup.find(lambda tag: tag.name == 'h1' and re.match(CLASS_NAME_REGEXP, tag.text.strip()))
-    class_name = re.match(CLASS_NAME_REGEXP, class_name_block.text.strip()).group(1)
+    class_name_block = soup.find(lambda tag: tag.name == 'h1' and re.match(CLASS_NAME_REGEXP, tag.text))
+    class_name = re.match(CLASS_NAME_REGEXP, class_name_block.text).group(1)
 
     tests = []
     for row in test_table.itertuples():
