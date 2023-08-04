@@ -1,3 +1,5 @@
+from textwrap import dedent
+
 import pytest
 from typing import List
 
@@ -491,6 +493,923 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                 result='failed',
                 error_class='java.lang.AssertionError',
                 message='You are asking the user to enter data fewer times than required in the task!',
+            ),
+        ],
+    ),
+    (
+        PARSERS_FOLDER / 'test_logs_several_failed_with_multiline_test_cases.html',
+        [
+            TestData(
+                class_name='Test',
+                test='canvasGeneratorFunction()',
+                method_name='canvasGeneratorFunction()',
+                duration='0s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    r"""
+                    [10]  X
+                    / \
+                    \ /
+                     X, Filter(width=6, height=8, result= X  X  X  X  X  X 
+                    / \/ \/ \/ \/ \/ \
+                    \ /\ /\ /\ /\ /\ /
+                     X  X  X  X  X  X 
+                    / \/ \/ \/ \/ \/ \
+                    \ /\ /\ /\ /\ /\ /
+                     X  X  X  X  X  X 
+                    / \/ \/ \/ \/ \/ \
+                    \ /\ /\ /\ /\ /\ /
+                     X  X  X  X  X  X 
+                    / \/ \/ \/ \/ \/ \
+                    \ /\ /\ /\ /\ /\ /
+                     X  X  X  X  X  X 
+                    / \/ \/ \/ \/ \/ \
+                    \ /\ /\ /\ /\ /\ /
+                     X  X  X  X  X  X 
+                    / \/ \/ \/ \/ \/ \
+                    \ /\ /\ /\ /\ /\ /
+                     X  X  X  X  X  X 
+                    / \/ \/ \/ \/ \/ \
+                    \ /\ /\ /\ /\ /\ /
+                     X  X  X  X  X  X 
+                    / \/ \/ \/ \/ \/ \
+                    \ /\ /\ /\ /\ /\ /
+                     X  X  X  X  X  X )
+                    """
+                ).strip(),
+                method_name='canvasGeneratorImplementation(String, Filter)[10]',
+                duration='0.001s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    r"""
+                    [11]   ____   
+                     /    \
+                    / /  \ \
+                    \ \__/ /
+                     \____/, Filter(width=1, height=1, result=  ____   
+                     /    \  
+                    / /  \ \ 
+                    \ \__/ / 
+                     \____/  )
+                    """
+                ).strip(),
+                method_name='canvasGeneratorImplementation(String, Filter)[11]',
+                duration='0.001s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    r"""
+                    [12]   ____   
+                     /    \
+                    / /  \ \
+                    \ \__/ /
+                     \____/, Filter(width=2, height=1, result=  ____     ____   
+                     /    \   /    \  
+                    / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / 
+                     \____/   \____/  )
+                    """
+                ).strip(),
+                method_name='canvasGeneratorImplementation(String, Filter)[12]',
+                duration='0.001s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    r"""
+                    [13]   ____   
+                     /    \
+                    / /  \ \
+                    \ \__/ /
+                     \____/, Filter(width=1, height=2, result=  ____   
+                     /    \  
+                    / /  \ \ 
+                    \ \__/ / 
+                     \____/  
+                     /    \  
+                    / /  \ \ 
+                    \ \__/ / 
+                     \____/  )
+                    """
+                ).strip(),
+                method_name='canvasGeneratorImplementation(String, Filter)[13]',
+                duration='0.004s',
+                result='failed',
+                error_class='org.opentest4j.AssertionFailedError',
+                message=dedent(
+                    r"""
+                    For pattern:
+                      ____   
+                     /    \
+                    / /  \ \
+                    \ \__/ /
+                     \____/
+                    , width=1, and height=2 the function canvasGenerator should return 
+                      ____   
+                     /    \  
+                    / /  \ \ 
+                    \ \__/ / 
+                     \____/  
+                     /    \  
+                    / /  \ \ 
+                    \ \__/ / 
+                     \____/  
+                     ==> expected: <  ____   
+                     /    \  
+                    / /  \ \ 
+                    \ \__/ / 
+                     \____/  
+                     /    \  
+                    / /  \ \ 
+                    \ \__/ / 
+                     \____/  > but was: <  ____   
+                     /    \  
+                    / /  \ \ 
+                    \ \__/ / 
+                     \____/  
+                     /    \ 
+                    / /  \ \
+                    \ \__/ /
+                     \____/ >
+                    """
+                ).strip(),
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    r"""
+                    [14]   ____   
+                     /    \
+                    / /  \ \
+                    \ \__/ /
+                     \____/, Filter(width=5, height=7, result=  ____     ____     ____     ____     ____   
+                     /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ …
+                    """
+                ).strip(),
+                method_name='canvasGeneratorImplementation(String, Filter)[14]',
+                duration='0.002s',
+                result='failed',
+                error_class='org.opentest4j.AssertionFailedError',
+                message=dedent(
+                    r"""
+                    For pattern:
+                      ____   
+                     /    \
+                    / /  \ \
+                    \ \__/ /
+                     \____/
+                    , width=5, and height=7 the function canvasGenerator should return 
+                      ____     ____     ____     ____     ____   
+                     /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/  
+                     ==> expected: <  ____     ____     ____     ____     ____   
+                     /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/  > but was: <  ____     ____     ____     ____     ____   
+                     /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/  
+                     /    \  /    \  /    \  /    \  /    \ 
+                    / /  \ \/ /  \ \/ /  \ \/ /  \ \/ /  \ \
+                    \ \__/ /\ \__/ /\ \__/ /\ \__/ /\ \__/ /
+                     \____/  \____/  \____/  \____/  \____/ 
+                     /    \  /    \  /    \  /    \  /    \ 
+                    / /  \ \/ /  \ \/ /  \ \/ /  \ \/ /  \ \
+                    \ \__/ /\ \__/ /\ \__/ /\ \__/ /\ \__/ /
+                     \____/  \____/  \____/  \____/  \____/ 
+                     /    \  /    \  /    \  /    \  /    \ 
+                    / /  \ \/ /  \ \/ /  \ \/ /  \ \/ /  \ \
+                    \ \__/ /\ \__/ /\ \__/ /\ \__/ /\ \__/ /
+                     \____/  \____/  \____/  \____/  \____/ 
+                     /    \  /    \  /    \  /    \  /    \ 
+                    / /  \ \/ /  \ \/ /  \ \/ /  \ \/ /  \ \
+                    \ \__/ /\ \__/ /\ \__/ /\ \__/ /\ \__/ /
+                     \____/  \____/  \____/  \____/  \____/ 
+                     /    \  /    \  /    \  /    \  /    \ 
+                    / /  \ \/ /  \ \/ /  \ \/ /  \ \/ /  \ \
+                    \ \__/ /\ \__/ /\ \__/ /\ \__/ /\ \__/ /
+                     \____/  \____/  \____/  \____/  \____/ 
+                     /    \  /    \  /    \  /    \  /    \ 
+                    / /  \ \/ /  \ \/ /  \ \/ /  \ \/ /  \ \
+                    \ \__/ /\ \__/ /\ \__/ /\ \__/ /\ \__/ /
+                     \____/  \____/  \____/  \____/  \____/ >
+                    """
+                ).strip(),
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    r"""
+                    [15]   ____   
+                     /    \
+                    / /  \ \
+                    \ \__/ /
+                     \____/, Filter(width=6, height=8, result=  ____     ____     ____     ____     ____     ____   
+                     /    \   /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \…
+                    """
+                ).strip(),
+                method_name='canvasGeneratorImplementation(String, Filter)[15]',
+                duration='0.002s',
+                result='failed',
+                error_class='org.opentest4j.AssertionFailedError',
+                message=dedent(
+                    r"""
+                    For pattern:
+                      ____   
+                     /    \
+                    / /  \ \
+                    \ \__/ /
+                     \____/
+                    , width=6, and height=8 the function canvasGenerator should return 
+                      ____     ____     ____     ____     ____     ____   
+                     /    \   /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/   \____/  
+                     ==> expected: <  ____     ____     ____     ____     ____     ____   
+                     /    \   /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/   \____/  
+                     /    \   /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/   \____/  > but was: <  ____     ____     ____     ____     ____     ____   
+                     /    \   /    \   /    \   /    \   /    \   /    \  
+                    / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ / /  \ \ 
+                    \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
+                     \____/   \____/   \____/   \____/   \____/   \____/  
+                     /    \  /    \  /    \  /    \  /    \  /    \ 
+                    / /  \ \/ /  \ \/ /  \ \/ /  \ \/ /  \ \/ /  \ \
+                    \ \__/ /\ \__/ /\ \__/ /\ \__/ /\ \__/ /\ \__/ /
+                     \____/  \____/  \____/  \____/  \____/  \____/ 
+                     /    \  /    \  /    \  /    \  /    \  /    \ 
+                    / /  \ \/ /  \ \/ /  \ \/ /  \ \/ /  \ \/ /  \ \
+                    \ \__/ /\ \__/ /\ \__/ /\ \__/ /\ \__/ /\ \__/ /
+                     \____/  \____/  \____/  \____/  \____/  \____/ 
+                     /    \  /    \  /    \  /    \  /    \  /    \ 
+                    / /  \ \/ /  \ \/ /  \ \/ /  \ \/ /  \ \/ /  \ \
+                    \ \__/ /\ \__/ /\ \__/ /\ \__/ /\ \__/ /\ \__/ /
+                     \____/  \____/  \____/  \____/  \____/  \____/ 
+                     /    \  /    \  /    \  /    \  /    \  /    \ 
+                    / /  \ \/ /  \ \/ /  \ \/ /  \ \/ /  \ \/ /  \ \
+                    \ \__/ /\ \__/ /\ \__/ /\ \__/ /\ \__/ /\ \__/ /
+                     \____/  \____/  \____/  \____/  \____/  \____/ 
+                     /    \  /    \  /    \  /    \  /    \  /    \ 
+                    / /  \ \/ /  \ \/ /  \ \/ /  \ \/ /  \ \/ /  \ \
+                    \ \__/ /\ \__/ /\ \__/ /\ \__/ /\ \__/ /\ \__/ /
+                     \____/  \____/  \____/  \____/  \____/  \____/ 
+                     /    \  /    \  /    \  /    \  /    \  /    \ 
+                    / /  \ \/ /  \ \/ /  \ \/ /  \ \/ /  \ \/ /  \ \
+                    \ \__/ /\ \__/ /\ \__/ /\ \__/ /\ \__/ /\ \__/ /
+                     \____/  \____/  \____/  \____/  \____/  \____/ 
+                     /    \  /    \  /    \  /    \  /    \  /    \ 
+                    / /  \ \/ /  \ \/ /  \ \/ /  \ \/ /  \ \/ /  \ \
+                    \ \__/ /\ \__/ /\ \__/ /\ \__/ /\ \__/ /\ \__/ /
+                     \____/  \____/  \____/  \____/  \____/  \____/ >
+                    """
+                ).strip(),
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    r"""
+                    [16] +---+---+
+                    | o   o |
+                    |   ^   |
+                    |  ---  |
+                    +---+---+, Filter(width=1, height=1, result=+---+---+
+                    | o   o |
+                    |   ^   |
+                    |  ---  |
+                    +---+---+)
+                    """
+                ).strip(),
+                method_name='canvasGeneratorImplementation(String, Filter)[16]',
+                duration='0s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    r"""
+                    [17] +---+---+
+                    | o   o |
+                    |   ^   |
+                    |  ---  |
+                    +---+---+, Filter(width=2, height=1, result=+---+---++---+---+
+                    | o   o || o   o |
+                    |   ^   ||   ^   |
+                    |  ---  ||  ---  |
+                    +---+---++---+---+)
+                    """
+                ).strip(),
+                method_name='canvasGeneratorImplementation(String, Filter)[17]',
+                duration='0s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    r"""
+                    [18] +---+---+
+                    | o   o |
+                    |   ^   |
+                    |  ---  |
+                    +---+---+, Filter(width=1, height=2, result=+---+---+
+                    | o   o |
+                    |   ^   |
+                    |  ---  |
+                    +---+---+
+                    | o   o |
+                    |   ^   |
+                    |  ---  |
+                    +---+---+)
+                    """
+                ).strip(),
+                method_name='canvasGeneratorImplementation(String, Filter)[18]',
+                duration='0.001s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    r"""
+                    [19] +---+---+
+                    | o   o |
+                    |   ^   |
+                    |  ---  |
+                    +---+---+, Filter(width=5, height=7, result=+---+---++---+---++---+---++---+---++---+---+
+                    | o   o || o   o || o   o || o   o || o   o |
+                    |   ^   ||   ^   ||   ^   ||   ^   ||   ^   |
+                    |  ---  ||  ---  ||  ---  ||  ---  ||  ---  |
+                    +---+---++---+---++---+---++---+---++---+---+
+                    | o   o || o   o || o   o || o   o || o   o |
+                    |   ^   ||   ^   ||   ^   ||   ^   ||   ^   |
+                    |  ---  ||  ---  ||  ---  ||  ---  ||  ---  |
+                    +---+---++---+---++---+---++---+---++---+---+
+                    | o   o || o   o || o   o || o   o || o   o |
+                    |   ^   ||   ^   |…
+                    """
+                ).strip(),
+                method_name='canvasGeneratorImplementation(String, Filter)[19]',
+                duration='0.001s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test='[1] ○, Filter(width=1, height=1, result=○)',
+                method_name='canvasGeneratorImplementation(String, Filter)[1]',
+                duration='0.004s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    r"""
+                    [20] +---+---+
+                    | o   o |
+                    |   ^   |
+                    |  ---  |
+                    +---+---+, Filter(width=6, height=8, result=+---+---++---+---++---+---++---+---++---+---++---+---+
+                    | o   o || o   o || o   o || o   o || o   o || o   o |
+                    |   ^   ||   ^   ||   ^   ||   ^   ||   ^   ||   ^   |
+                    |  ---  ||  ---  ||  ---  ||  ---  ||  ---  ||  ---  |
+                    +---+---++---+---++---+---++---+---++---+---++---+---+
+                    | o   o || o   o || o   o || o   o || o   o || o   o |
+                    |   ^   ||   ^   ||   ^   ||   ^   ||   ^   ||   ^   |
+                    |  ---  ||  ---  ||  ---  ||  ---  ||  ---  ||  ---  |
+                    +---+---++---+---++---+---++---+---++-…
+                    """
+                ).strip(),
+                method_name='canvasGeneratorImplementation(String, Filter)[20]',
+                duration='0.001s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    r"""
+                    [21]    .+------+
+                     .' |    .'|
+                    +---+--+'  |
+                    |   |  |   |
+                    |  ,+--+---+
+                    |.'    | .' 
+                    +------+', Filter(width=1, height=1, result=   .+------+
+                     .' |    .'|
+                    +---+--+'  |
+                    |   |  |   |
+                    |  ,+--+---+
+                    |.'    | .' 
+                    +------+'   )
+                    """
+                ).strip(),
+                method_name='canvasGeneratorImplementation(String, Filter)[21]',
+                duration='0.001s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    r"""
+                    [22]    .+------+
+                     .' |    .'|
+                    +---+--+'  |
+                    |   |  |   |
+                    |  ,+--+---+
+                    |.'    | .' 
+                    +------+', Filter(width=2, height=1, result=   .+------+   .+------+
+                     .' |    .'| .' |    .'|
+                    +---+--+'  |+---+--+'  |
+                    |   |  |   ||   |  |   |
+                    |  ,+--+---+|  ,+--+---+
+                    |.'    | .' |.'    | .' 
+                    +------+'   +------+'   )
+                    """
+                ).strip(),
+                method_name='canvasGeneratorImplementation(String, Filter)[22]',
+                duration='0.001s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    r"""
+                    [23]    .+------+
+                     .' |    .'|
+                    +---+--+'  |
+                    |   |  |   |
+                    |  ,+--+---+
+                    |.'    | .' 
+                    +------+', Filter(width=1, height=2, result=   .+------+
+                     .' |    .'|
+                    +---+--+'  |
+                    |   |  |   |
+                    |  ,+--+---+
+                    |.'    | .' 
+                    +------+'   
+                     .' |    .'|
+                    +---+--+'  |
+                    |   |  |   |
+                    |  ,+--+---+
+                    |.'    | .' 
+                    +------+'   )
+                    """
+                ).strip(),
+                method_name='canvasGeneratorImplementation(String, Filter)[23]',
+                duration='0s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    r"""
+                    [24]    .+------+
+                     .' |    .'|
+                    +---+--+'  |
+                    |   |  |   |
+                    |  ,+--+---+
+                    |.'    | .' 
+                    +------+', Filter(width=5, height=7, result=   .+------+   .+------+   .+------+   .+------+   .+------+
+                     .' |    .'| .' |    .'| .' |    .'| .' |    .'| .' |    .'|
+                    +---+--+'  |+---+--+'  |+---+--+'  |+---+--+'  |+---+--+'  |
+                    |   |  |   ||   |  |   ||   |  |   ||   |  |   ||   |  |   |
+                    |  ,+--+---+|  ,+--+---+|  ,+--+---+|  ,+--+---+|  ,+--+---+
+                    |.'    | .' |.'    | .' |.'    | .' |.'    | .' |.'    | .' 
+                    +------+'   +------+'   +------+'   +------+'   +------+'   
+                     .' |    .'| .' |    .'| .' |    .'| .' |    .'| .'…
+                    """
+                ).strip(),
+                method_name='canvasGeneratorImplementation(String, Filter)[24]',
+                duration='0.001s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    r"""
+                    [25]    .+------+
+                     .' |    .'|
+                    +---+--+'  |
+                    |   |  |   |
+                    |  ,+--+---+
+                    |.'    | .' 
+                    +------+', Filter(width=6, height=8, result=   .+------+   .+------+   .+------+   .+------+   .+------+   .+------+
+                     .' |    .'| .' |    .'| .' |    .'| .' |    .'| .' |    .'| .' |    .'|
+                    +---+--+'  |+---+--+'  |+---+--+'  |+---+--+'  |+---+--+'  |+---+--+'  |
+                    |   |  |   ||   |  |   ||   |  |   ||   |  |   ||   |  |   ||   |  |   |
+                    |  ,+--+---+|  ,+--+---+|  ,+--+---+|  ,+--+---+|  ,+--+---+|  ,+--+---+
+                    |.'    | .' |.'    | .' |.'    | .' |.'    | .' |.'    | .' |.'    | .' 
+                    +------+'   +------+'   +------+'   +---…
+                    """
+                ).strip(),
+                method_name='canvasGeneratorImplementation(String, Filter)[25]',
+                duration='0.002s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test='[2] ○, Filter(width=2, height=1, result=○○)',
+                method_name='canvasGeneratorImplementation(String, Filter)[2]',
+                duration='0.001s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    """
+                    [3] ○, Filter(width=1, height=2, result=○
+                    ○)
+                    """
+                ).strip(),
+                method_name='canvasGeneratorImplementation(String, Filter)[3]',
+                duration='0s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    """
+                    [4] ○, Filter(width=5, height=7, result=○○○○○
+                    ○○○○○
+                    ○○○○○
+                    ○○○○○
+                    ○○○○○
+                    ○○○○○
+                    ○○○○○)
+                    """
+                ).strip(),
+                method_name='canvasGeneratorImplementation(String, Filter)[4]',
+                duration='0s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    """
+                    [5] ○, Filter(width=6, height=8, result=○○○○○○
+                    ○○○○○○
+                    ○○○○○○
+                    ○○○○○○
+                    ○○○○○○
+                    ○○○○○○
+                    ○○○○○○
+                    ○○○○○○)
+                    """
+                ).strip(),
+                method_name='canvasGeneratorImplementation(String, Filter)[5]',
+                duration='0s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    r"""
+                    [6]  X
+                    / \
+                    \ /
+                     X, Filter(width=1, height=1, result= X 
+                    / \
+                    \ /
+                     X )
+                    """
+                ).strip(),
+                method_name='canvasGeneratorImplementation(String, Filter)[6]',
+                duration='0s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    r"""
+                    [7]  X
+                    / \
+                    \ /
+                     X, Filter(width=2, height=1, result= X  X 
+                    / \/ \
+                    \ /\ /
+                     X  X )
+                    """
+                ).strip(),
+                method_name='canvasGeneratorImplementation(String, Filter)[7]',
+                duration='0s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    r"""
+                    [8]  X
+                    / \
+                    \ /
+                     X, Filter(width=1, height=2, result= X 
+                    / \
+                    \ /
+                     X 
+                    / \
+                    \ /
+                     X )
+                    """
+                ).strip(),
+                method_name='canvasGeneratorImplementation(String, Filter)[8]',
+                duration='0.001s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    r"""
+                    [9]  X
+                    / \
+                    \ /
+                     X, Filter(width=5, height=7, result= X  X  X  X  X 
+                    / \/ \/ \/ \/ \
+                    \ /\ /\ /\ /\ /
+                     X  X  X  X  X 
+                    / \/ \/ \/ \/ \
+                    \ /\ /\ /\ /\ /
+                     X  X  X  X  X 
+                    / \/ \/ \/ \/ \
+                    \ /\ /\ /\ /\ /
+                     X  X  X  X  X 
+                    / \/ \/ \/ \/ \
+                    \ /\ /\ /\ /\ /
+                     X  X  X  X  X 
+                    / \/ \/ \/ \/ \
+                    \ /\ /\ /\ /\ /
+                     X  X  X  X  X 
+                    / \/ \/ \/ \/ \
+                    \ /\ /\ /\ /\ /
+                     X  X  X  X  X 
+                    / \/ \/ \/ \/ \
+                    \ /\ /\ /\ /\ /
+                     X  X  X  X  X )
+                    """
+                ).strip(),
+                method_name='canvasGeneratorImplementation(String, Filter)[9]',
+                duration='0.001s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test='fillPatternRowErrorCase()',
+                method_name='fillPatternRowErrorCase()',
+                duration='0.001s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test='fillPatternRowFunction()',
+                method_name='fillPatternRowFunction()',
+                duration='0s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test='[1] , 5,      ',
+                method_name='fillPatternRowImplementation(String, int, String)[1]',
+                duration='0.026s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test='[2] ○, 5, ○    ',
+                method_name='fillPatternRowImplementation(String, int, String)[2]',
+                duration='0.001s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test='[3] ○○, 5, ○○   ',
+                method_name='fillPatternRowImplementation(String, int, String)[3]',
+                duration='0.001s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test='[4] ○○○, 5, ○○○  ',
+                method_name='fillPatternRowImplementation(String, int, String)[4]',
+                duration='0s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test='[5] ○○○○, 5, ○○○○ ',
+                method_name='fillPatternRowImplementation(String, int, String)[5]',
+                duration='0.001s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test='[6] ○○○○○, 5, ○○○○○',
+                method_name='fillPatternRowImplementation(String, int, String)[6]',
+                duration='0.001s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test='getPatternHeightFunction()',
+                method_name='getPatternHeightFunction()',
+                duration='0s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test='[1] ○, 1',
+                method_name='getPatternHeightImplementation(String, int)[1]',
+                duration='0.006s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    r"""
+                    [2]  X
+                    / \
+                    \ /
+                     X, 4
+                    """
+                ).strip(),
+                method_name='getPatternHeightImplementation(String, int)[2]',
+                duration='0s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    r"""
+                    [3]   ____   
+                     /    \
+                    / /  \ \
+                    \ \__/ /
+                     \____/, 5
+                    """
+                ).strip(),
+                method_name='getPatternHeightImplementation(String, int)[3]',
+                duration='0s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    r"""
+                    [4] +---+---+
+                    | o   o |
+                    |   ^   |
+                    |  ---  |
+                    +---+---+, 5
+                    """
+                ).strip(),
+                method_name='getPatternHeightImplementation(String, int)[4]',
+                duration='0.001s',
+                result='passed',
+            ),
+            TestData(
+                class_name='Test',
+                test=dedent(
+                    r"""
+                    [5]    .+------+
+                     .' |    .'|
+                    +---+--+'  |
+                    |   |  |   |
+                    |  ,+--+---+
+                    |.'    | .' 
+                    +------+', 7
+                    """
+                ).strip(),
+                method_name='getPatternHeightImplementation(String, int)[5]',
+                duration='0.001s',
+                result='passed',
             ),
         ],
     ),
