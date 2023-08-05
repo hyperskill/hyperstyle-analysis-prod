@@ -8,3 +8,4 @@ pytest-runner==6.0.0
 pytest-subtests==0.11.0
 argparse==1.4.0
 pandarallel==1.6.5
+beautifulsoup4==4.12.2

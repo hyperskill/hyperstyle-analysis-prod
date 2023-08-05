@@ -1,0 +1,11 @@
+> Task :utils:compileKotlin UP-TO-DATE
+> Task :utils:compileJava NO-SOURCE
+> Task :utils:processResources UP-TO-DATE
+> Task :utils:classes UP-TO-DATE
+> Task :utils:inspectClassesForKotlinIC UP-TO-DATE
+> Task :utils:jar UP-TO-DATE
+> Task :Introduction-TheFirstDateWithProgramming-ReadUserInput:processResources NO-SOURCE
+> Task :Introduction-TheFirstDateWithProgramming-ReadUserInput:processTestResources NO-SOURCE
+
+> Task :Introduction-TheFirstDateWithProgramming-ReadUserInput:compileKotlin FAILED
+5 actionable tasks: 1 executed, 4 up-to-date

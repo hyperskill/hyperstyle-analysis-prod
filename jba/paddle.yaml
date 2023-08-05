@@ -49,6 +49,8 @@ tasks:
     # Test logs
     - id: tests_runner
       entrypoint: jba/test_logs/tests_runner.py
+    - id: logs_parser
+      entrypoint: jba/test_logs/logs_parser.py
 
   test:
     pytest:

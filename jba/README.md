@@ -122,3 +122,16 @@ Optional arguments:
 | **&#8209;&#8209;debug**       | Run the script in debug mode                      |
 
 
+2. [logs_parser.py](src/jba/test_logs/logs_parser.py) allows you to parse Gradle logs into json strings.
+
+Run the script by one of the following way with the arguments:
+
+Required arguments:
+- `submissions_path` — Path to .csv file with submissions.
+- `gradle_logs_path` — Path to a folder with gradle logs.
+
+Optional arguments:
+
+| Argument                | Description                  |
+|-------------------------|------------------------------|
+| **&#8209;&#8209;debug** | Run the script in debug mode |

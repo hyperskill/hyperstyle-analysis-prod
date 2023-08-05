@@ -1,0 +1,21 @@
+e: /private/var/folders/s8/5wp__fwn76g29822xn4f8t6c0000gq/T/tmpuc5s9cmc/Introduction/LastPush/FinishTheApp/src/main/kotlin/Main.kt: (2, 49): Expecting '"'
+e: /private/var/folders/s8/5wp__fwn76g29822xn4f8t6c0000gq/T/tmpuc5s9cmc/Introduction/LastPush/FinishTheApp/src/main/kotlin/Main.kt: (3, 30): Expecting an element
+e: /private/var/folders/s8/5wp__fwn76g29822xn4f8t6c0000gq/T/tmpuc5s9cmc/Introduction/LastPush/FinishTheApp/src/main/kotlin/Main.kt: (3, 50): Expecting ','
+e: /private/var/folders/s8/5wp__fwn76g29822xn4f8t6c0000gq/T/tmpuc5s9cmc/Introduction/LastPush/FinishTheApp/src/main/kotlin/Main.kt: (4, 25): Expecting an element
+e: /private/var/folders/s8/5wp__fwn76g29822xn4f8t6c0000gq/T/tmpuc5s9cmc/Introduction/LastPush/FinishTheApp/src/main/kotlin/Main.kt: (4, 42): Expecting an element
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':Introduction-LastPush-FinishTheApp:compileKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+
+* Get more help at https://help.gradle.org
+
+BUILD FAILED in 2s
