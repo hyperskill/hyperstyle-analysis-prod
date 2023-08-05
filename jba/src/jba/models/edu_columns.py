@@ -46,3 +46,19 @@ class EduTaskType(Enum):
     THEORY = 'theory'
     EDU = 'edu'
     UNDEFINED = 'undefined'
+
+
+@unique
+class EduCodeSnippetField(Enum):
+    NAME = 'name'
+    TEXT = 'text'
+
+
+@unique
+class EduConfigField(Enum):
+    TYPE = 'type'
+    FILES = 'files'
+    CUSTOM_NAME = 'custom_name'
+    FEEDBACK_LINK = 'feedback_link'
+    NAME = 'name'
+    VISIBLE = 'visible'

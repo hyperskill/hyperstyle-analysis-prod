@@ -6,10 +6,13 @@ from typing import List, Optional, Union, Tuple
 logger = logging.getLogger(__name__)
 
 
-def run_in_subprocess(command: List[str],
-                      working_directory: Optional[Union[str, Path]] = None,
-                      encoding: str = 'utf-8',
-                      subprocess_input: Optional[str] = None) -> Tuple[str, str]:
+def run_in_subprocess(
+    command: List[str],
+    working_directory: Optional[Union[str, Path]] = None,
+    encoding: str = 'utf-8',
+    subprocess_input: Optional[str] = None,
+    timeout: Optional[float] = None,
+) -> Tuple[str, str]:
     process = subprocess.run(
         command,
         stdout=subprocess.PIPE,
@@ -17,6 +20,7 @@ def run_in_subprocess(command: List[str],
         cwd=working_directory,
         encoding=encoding,
         input=subprocess_input,
+        timeout=timeout,
     )
 
     stdout = process.stdout
