@@ -203,6 +203,7 @@ def main():
         check_user,
         args.course_sources_path,
         args.logs_output_path,
+        args.timeout,
     )
 
 
