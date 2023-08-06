@@ -14,7 +14,7 @@ from jba.models.edu_logs import ExceptionData, TestData
 from jba.test_logs.logs_parser import _parse_stderr_logs, _parse_test_logs, parse_gradle_logs
 from jba_tests.test_logs import TEST_LOGS_FOLDER
 
-TESTS_PARSER_FOLDER = TEST_LOGS_FOLDER / 'tests_parser'
+LOGS_PARSER_FOLDER = TEST_LOGS_FOLDER / 'logs_parser'
 
 
 SUBMISSIONS_ID_TO_EXPECTED_EXCEPTIONS = {
@@ -602,7 +602,7 @@ PARSE_STDERR_LOGS_DATA = [
 @pytest.mark.parametrize(('submission_id', 'task_path'), PARSE_STDERR_LOGS_DATA)
 def test_parse_stderr_logs(submission_id: int, task_path: str):
     assert (
-        _parse_stderr_logs(TESTS_PARSER_FOLDER / 'gradle_logs' / str(submission_id), task_path)
+        _parse_stderr_logs(LOGS_PARSER_FOLDER / 'gradle_logs' / str(submission_id), task_path)
         == SUBMISSIONS_ID_TO_EXPECTED_EXCEPTIONS[submission_id]
     )
 
@@ -610,17 +610,17 @@ def test_parse_stderr_logs(submission_id: int, task_path: str):
 @pytest.mark.parametrize('submission_id', range(4))
 def test_parse_test_logs(submission_id: int):
     assert (
-        _parse_test_logs(TESTS_PARSER_FOLDER / 'gradle_logs' / str(submission_id))
+        _parse_test_logs(LOGS_PARSER_FOLDER / 'gradle_logs' / str(submission_id))
         == SUBMISSIONS_ID_TO_EXPECTED_TEST[submission_id]
     )
 
 
 @pytest.mark.parametrize('submission_id', range(4))
 def test_parse_gradle_logs(submission_id: int):
-    submissions = pd.read_csv(TESTS_PARSER_FOLDER / 'submissions.csv')
+    submissions = pd.read_csv(LOGS_PARSER_FOLDER / 'submissions.csv')
 
     actual_parsed_logs = parse_gradle_logs(
-        submissions[submissions[EduColumnName.ID.value] == submission_id].squeeze(), TESTS_PARSER_FOLDER / 'gradle_logs'
+        submissions[submissions[EduColumnName.ID.value] == submission_id].squeeze(), LOGS_PARSER_FOLDER / 'gradle_logs'
     )
 
     actual_exceptions, actual_tests = actual_parsed_logs
@@ -640,19 +640,19 @@ def test_parse_gradle_logs(submission_id: int):
 
 def test_functional():
     with TemporaryDirectory() as tmp_dir:
-        shutil.copyfile(TESTS_PARSER_FOLDER / 'submissions.csv', Path(tmp_dir) / 'submissions.csv')
+        shutil.copyfile(LOGS_PARSER_FOLDER / 'submissions.csv', Path(tmp_dir) / 'submissions.csv')
 
         command = [
             sys.executable,
             (MAIN_FOLDER.parent / 'test_logs' / 'logs_parser.py'),
             (Path(tmp_dir) / 'submissions.csv'),
-            (TESTS_PARSER_FOLDER / 'gradle_logs'),
+            (LOGS_PARSER_FOLDER / 'gradle_logs'),
         ]
 
         run_in_subprocess(command)
 
         expected_submissions = pd.read_csv(Path(tmp_dir) / 'submissions-with_parsed_logs.csv')
-        actual_submissions = pd.read_csv(TESTS_PARSER_FOLDER / 'submissions-with_parsed_logs.csv')
+        actual_submissions = pd.read_csv(LOGS_PARSER_FOLDER / 'submissions-with_parsed_logs.csv')
 
         for expected_row, actual_row in zip(expected_submissions.itertuples(), actual_submissions.itertuples()):
             expected_tests = (
