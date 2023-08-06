@@ -1,15 +1,15 @@
-from typing import Optional
-
 import argparse
 import json
 import logging
 import pandas as pd
+import subprocess
 import time
 from pandarallel import pandarallel
 from pandarallel.core import NB_PHYSICAL_CORES
 from pathlib import Path
 from shutil import copytree
 from tempfile import TemporaryDirectory
+from typing import Optional
 
 from core.utils.df_utils import read_df
 from core.utils.file.extension_utils import AnalysisExtension
@@ -41,15 +41,23 @@ def _run_tests(course_root_path: Path, task_root_path: Path, output_path: Path, 
 
     gradle_clean_task = f':{module_name}:clean'
     logger.info(f'Running {gradle_clean_task}')
-    run_in_subprocess(['./gradlew', gradle_clean_task], working_directory=course_root_path, timeout=timeout)
+    try:
+        run_in_subprocess(['./gradlew', gradle_clean_task], working_directory=course_root_path, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        logger.error(f'Timeout expired while running {gradle_clean_task}')
+        return
 
     gradle_test_task = f':{module_name}:test'
     logger.info(f'Running {gradle_test_task}')
-    stdout, stderr = run_in_subprocess(
-        ['./gradlew', gradle_test_task],
-        working_directory=course_root_path,
-        timeout=timeout,
-    )
+    try:
+        stdout, stderr = run_in_subprocess(
+            ['./gradlew', gradle_test_task],
+            working_directory=course_root_path,
+            timeout=timeout,
+        )
+    except subprocess.TimeoutExpired:
+        logger.error(f'Timeout expired while running {gradle_test_task}')
+        return
 
     finish = time.time()
 
