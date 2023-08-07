@@ -6,7 +6,7 @@ This module contains utilities to analyze data from JetBrains Marketplace.
 
 # Preprocess data
 
-This module contains script to preprocess row data to perform further analysis.
+[This module](./src/jba/processing) contains script to preprocess row data to perform further analysis.
 
 1. [prepare_course_data.py](./src/jba/processing/prepare_course_data.py) allows you to filter 
 data by the course id and also to collect information about the course structure.
@@ -54,7 +54,7 @@ Run the script by one of the following way with the arguments:
 
 Required arguments:
 
-- `course_data_path` — Path to .csv file with preprocessed data by [prepare_course_data.py](./src/jba/processing/prepare_course_data.py).
+- `course_data_path` — Path to .csv file with preprocessed data by [data_processing.py](./src/jba/processing/data_processing.py).
 - `course_structure_path` — Path to .csv file with the course structure gathered by [prepare_course_data.py](./src/jba/processing/prepare_course_data.py).
 
 After this step you will get a new file with course data with `courseId_preprocessed` suffix. 
@@ -63,7 +63,7 @@ After this step you will get a new file with course data with `courseId_preproce
 
 # Analyze data
 
-This module allows you to visualize the data to perform further analysis.
+[This module](./src/jba/plots) allows you to visualize the data to perform further analysis.
 
 1. [task_solving.py](./src/jba/plots/task_solving.py) allows you to plot line charts how students solve tasks from the course.
 
@@ -78,7 +78,7 @@ Optional arguments:
 
 | Argument                            | Description                                 |
 |-------------------------------------|---------------------------------------------|
-| **&#8209;&#8209;course-name**       | Name of the course to display on the chart. |
+| **&#8209;&#8209;course&#8209;name** | Name of the course to display on the chart. |
 
 
 2. [task_attempt.py](./src/jba/plots/task_attempt.py) allows you to plot line charts how many attempts students spend to solve the tasks from the course.
@@ -94,5 +94,33 @@ Optional arguments:
 
 | Argument                            | Description                                 |
 |-------------------------------------|---------------------------------------------|
-| **&#8209;&#8209;course-name**       | Name of the course to display on the chart. |
+| **&#8209;&#8209;course&#8209;name** | Name of the course to display on the chart. |
+
+----
+
+# Run tests
+
+[This module](./src/jba/test_logs) allows you to run tests and parsed its output to perform further analysis.
+
+**Note**: This module only works with courses that have a structure like in [Kotlin Onboarding](https://github.com/jetbrains-academy/kotlin-onboarding-introduction)!
+This means that your task module name should have a specific format. For example, assume you have a task in the folder `Introduction/LastPush/CompleteTheProject`, 
+then your module should be named `Introduction-LastPush-CompleteTheProject`
+
+1. [tests_runner.py](src/jba/test_logs/tests_runner.py) allows you to run tests via Gradle and save Gradle logs to perform further parsing.
+
+Run the script by one of the following way with the arguments:
+
+Required arguments:
+- `submissions_path` — Path to .csv file with submissions.
+- `course_sources_path` — Path to course sources.
+- `logs_output_path` — Path to the folder to store logs.
+
+Optional arguments:
+
+| Argument                      | Description                                       |
+|-------------------------------|---------------------------------------------------|
+| **&#8209;&#8209;timeout**     | Timeout in seconds for subprocess to be executed. |
+| **&#8209;&#8209;n&#8209;cpu** | Number of CPUs to use for parallel execution.     |
+| **&#8209;&#8209;debug**       | Run the script in debug mode                      |
+
 
