@@ -124,7 +124,28 @@ Optional arguments:
 | **&#8209;&#8209;debug**       | Run the script in debug mode                      |
 
 
-2. [logs_parser.py](src/jba/test_logs/logs_parser.py) allows you to parse Gradle logs into json strings.
+2. [logs_parser.py](src/jba/test_logs/logs_parser.py) allows you to parse Gradle logs into json strings:
+- Gradle exceptions will match the structure of the [`ExceptionData`](./src/jba/models/edu_logs.py) dataclass. For example:
+  ```json
+  {
+    "path": "src/main/kotlin/Main.kt", 
+    "line_number": 4, 
+    "column_number": 9, 
+    "message": "Conflicting declarations: val firstUserAnswer: String, val firstUserAnswer: String"
+  }
+  ```
+- Gradle tests will match the structure of the [`TestData`](./src/jba/models/edu_logs.py) dataclass.
+  ```json
+  {
+    "class_name": "Test", 
+    "test": "testCountExactMatchesFunction()", 
+    "method_name": "testCountExactMatchesFunction()", 
+    "duration": "0s", 
+    "result": "passed", 
+    "error_class": null, 
+    "message": null
+  }
+  ```
 
 Run the script by one of the following way with the arguments:
 

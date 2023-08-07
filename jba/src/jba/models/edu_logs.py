@@ -1,3 +1,4 @@
+from dataclasses_json import dataclass_json
 from typing import Optional
 
 from dataclasses import dataclass, field
@@ -16,6 +17,7 @@ class TestDataField(Enum):
     MESSAGE = 'message'
 
 
+@dataclass_json
 @dataclass
 class TestData:
     class_name: str
@@ -28,6 +30,7 @@ class TestData:
     message: Optional[str] = None
 
 
+@dataclass_json
 @dataclass
 class ExceptionData:
     path: str

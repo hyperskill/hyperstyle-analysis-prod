@@ -25,6 +25,10 @@ requirements:
       version: ==1.4.0
     - name: pandarallel
       version: ==1.6.5
+    - name: beautifulsoup4
+      version: ==4.12.2
+    - name: dataclasses-json
+      version: ==0.5.14
   dev:
     - name: pytest
       version: ==7.4.0

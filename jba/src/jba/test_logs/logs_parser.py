@@ -1,9 +1,7 @@
 import argparse
-import json
 import logging
 import os
 import pandas as pd
-from dataclasses import asdict
 from pathlib import Path
 from typing import Optional, List, Tuple
 
@@ -42,11 +40,11 @@ def parse_gradle_logs(submission: pd.Series, gradle_logs_folder: Path) -> Tuple[
 
     parsed_stderr_logs = _parse_stderr_logs(submission_gradle_logs_folder, str(relative_task_path))
     if parsed_stderr_logs is not None:
-        parsed_stderr_logs = json.dumps([asdict(exception) for exception in parsed_stderr_logs])
+        parsed_stderr_logs = ExceptionData.schema().dumps(parsed_stderr_logs, many=True)
 
     parsed_test_logs = _parse_test_logs(submission_gradle_logs_folder)
     if parsed_test_logs is not None:
-        parsed_test_logs = json.dumps([asdict(test) for test in parsed_test_logs])
+        parsed_test_logs = TestData.schema().dumps(parsed_test_logs, many=True)
 
     return parsed_stderr_logs, parsed_test_logs
 

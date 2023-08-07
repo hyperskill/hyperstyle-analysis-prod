@@ -625,11 +625,9 @@ def test_parse_gradle_logs(submission_id: int):
 
     actual_exceptions, actual_tests = actual_parsed_logs
     actual_exceptions = (
-        None
-        if actual_exceptions is None
-        else [ExceptionData(**exception_data) for exception_data in json.loads(actual_exceptions)]
+        None if actual_exceptions is None else ExceptionData.schema().loads(actual_exceptions, many=True)
     )
-    actual_tests = None if actual_tests is None else [TestData(**test_data) for test_data in json.loads(actual_tests)]
+    actual_tests = None if actual_tests is None else TestData.schema().loads(actual_tests, many=True)
 
     expected_exceptions = SUBMISSIONS_ID_TO_EXPECTED_EXCEPTIONS[submission_id]
     expected_tests = SUBMISSIONS_ID_TO_EXPECTED_TEST[submission_id]
@@ -658,15 +656,13 @@ def test_functional():
             expected_tests = (
                 None
                 if pd.isna(getattr(expected_row, EduColumnName.TESTS.value))
-                else [
-                    TestData(**test_data) for test_data in json.loads(getattr(expected_row, EduColumnName.TESTS.value))
-                ]
+                else TestData.schema().loads(getattr(expected_row, EduColumnName.TESTS.value), many=True)
             )
 
             actual_tests = (
                 None
                 if pd.isna(getattr(actual_row, EduColumnName.TESTS.value))
-                else [TestData(**test_data) for test_data in json.loads(getattr(actual_row, EduColumnName.TESTS.value))]
+                else TestData.schema().loads(getattr(actual_row, EduColumnName.TESTS.value), many=True)
             )
 
             assert expected_tests == actual_tests
@@ -674,19 +670,13 @@ def test_functional():
             expected_exceptions = (
                 None
                 if pd.isna(getattr(expected_row, EduColumnName.EXCEPTIONS.value))
-                else [
-                    ExceptionData(**exception_data)
-                    for exception_data in json.loads(getattr(expected_row, EduColumnName.EXCEPTIONS.value))
-                ]
+                else ExceptionData.schema().loads(getattr(expected_row, EduColumnName.EXCEPTIONS.value), many=True)
             )
 
             actual_exceptions = (
                 None
                 if pd.isna(getattr(actual_row, EduColumnName.EXCEPTIONS.value))
-                else [
-                    ExceptionData(**exception_data)
-                    for exception_data in json.loads(getattr(actual_row, EduColumnName.EXCEPTIONS.value))
-                ]
+                else ExceptionData.schema().loads(getattr(actual_row, EduColumnName.EXCEPTIONS.value), many=True)
             )
 
             assert expected_exceptions == actual_exceptions
