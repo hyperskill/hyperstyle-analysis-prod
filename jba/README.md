@@ -103,8 +103,10 @@ Optional arguments:
 [This module](./src/jba/test_logs) allows you to run tests and parsed its output to perform further analysis.
 
 **Note**: This module only works with courses that have a structure like in [Kotlin Onboarding](https://github.com/jetbrains-academy/kotlin-onboarding-introduction)!
+This means that your task module name should have a specific format. For example, assume you have a task in the folder `Introduction/LastPush/CompleteTheProject`, 
+then your module should be named `Introduction-LastPush-CompleteTheProject`
 
-1. [tests_runner.py](src/jba/test_logs/tests_runner.py) allows you to run tests and save Gradle logs to perform further parsing.
+1. [tests_runner.py](src/jba/test_logs/tests_runner.py) allows you to run tests via Gradle and save Gradle logs to perform further parsing.
 
 Run the script by one of the following way with the arguments:
 

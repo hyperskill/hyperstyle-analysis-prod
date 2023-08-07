@@ -66,12 +66,10 @@ def _run_tests(course_root_path: Path, task_root_path: Path, output_path: Path, 
     output_path.mkdir(parents=True, exist_ok=True)
 
     if stdout:
-        with open(output_path / GRADLE_STDOUT_LOGS_FILE, 'w+') as file:
-            file.write(stdout)
+        next(create_file(output_path / GRADLE_STDOUT_LOGS_FILE, stdout))
 
     if stderr:
-        with open(output_path / GRADLE_STDERR_LOGS_FILE, 'w+') as file:
-            file.write(stderr)
+        next(create_file(output_path / GRADLE_STDERR_LOGS_FILE, stderr))
 
     test_logs = task_root_path / 'build' / 'reports' / 'tests' / 'test'
     if test_logs.exists():
