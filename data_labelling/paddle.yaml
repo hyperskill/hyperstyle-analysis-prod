@@ -7,7 +7,7 @@ plugins:
 # Prerequisites: https://github.com/pyenv/pyenv/wiki#suggested-build-environment
 environment:
   path: .venv
-  python: 3.8
+  python: 3.9
 
 requirements:
   main:
