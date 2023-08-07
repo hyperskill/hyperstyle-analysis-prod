@@ -34,6 +34,9 @@ class EduColumnName(Enum):
     CHECKER_OUTPUT = 'checker_output'
     VISIBILITY = 'visibility'
 
+    EXCEPTIONS = 'exceptions'
+    TESTS = 'tests'
+
 
 @unique
 class EduTaskStatus(Enum):

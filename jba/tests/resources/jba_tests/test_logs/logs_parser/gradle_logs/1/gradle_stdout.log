@@ -1,0 +1,21 @@
+> Task :utils:compileKotlin UP-TO-DATE
+> Task :utils:compileJava NO-SOURCE
+> Task :utils:processResources UP-TO-DATE
+> Task :utils:classes UP-TO-DATE
+> Task :utils:inspectClassesForKotlinIC UP-TO-DATE
+> Task :utils:jar UP-TO-DATE
+> Task :Introduction-WarmUp-CollectionsPartTwo:processResources NO-SOURCE
+> Task :Introduction-WarmUp-CollectionsPartTwo:processTestResources NO-SOURCE
+
+> Task :Introduction-WarmUp-CollectionsPartTwo:compileKotlin
+w: /private/var/folders/s8/5wp__fwn76g29822xn4f8t6c0000gq/T/tmphxsvx6t5/Introduction/WarmUp/CollectionsPartTwo/src/main/kotlin/Main.kt: (29, 47): Parameter 'maxAttemptsCount' is never used
+
+> Task :Introduction-WarmUp-CollectionsPartTwo:compileJava NO-SOURCE
+> Task :Introduction-WarmUp-CollectionsPartTwo:classes UP-TO-DATE
+> Task :Introduction-WarmUp-CollectionsPartTwo:compileTestKotlin
+> Task :Introduction-WarmUp-CollectionsPartTwo:compileTestJava NO-SOURCE
+> Task :Introduction-WarmUp-CollectionsPartTwo:testClasses UP-TO-DATE
+> Task :Introduction-WarmUp-CollectionsPartTwo:test
+
+BUILD SUCCESSFUL in 4s
+7 actionable tasks: 3 executed, 4 up-to-date

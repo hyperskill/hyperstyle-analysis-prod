@@ -1,0 +1,82 @@
+> Task :utils:compileKotlin UP-TO-DATE
+> Task :utils:compileJava NO-SOURCE
+> Task :utils:processResources UP-TO-DATE
+> Task :utils:classes UP-TO-DATE
+> Task :utils:inspectClassesForKotlinIC UP-TO-DATE
+> Task :utils:jar UP-TO-DATE
+> Task :Introduction-WarmUp-CollectionsPartTwo:compileKotlin UP-TO-DATE
+> Task :Introduction-WarmUp-CollectionsPartTwo:compileJava NO-SOURCE
+> Task :Introduction-WarmUp-CollectionsPartTwo:processResources NO-SOURCE
+> Task :Introduction-WarmUp-CollectionsPartTwo:classes UP-TO-DATE
+> Task :Introduction-WarmUp-CollectionsPartTwo:compileTestKotlin UP-TO-DATE
+> Task :Introduction-WarmUp-CollectionsPartTwo:compileTestJava NO-SOURCE
+> Task :Introduction-WarmUp-CollectionsPartTwo:processTestResources NO-SOURCE
+> Task :Introduction-WarmUp-CollectionsPartTwo:testClasses UP-TO-DATE
+
+> Task :Introduction-WarmUp-CollectionsPartTwo:test FAILED
+#educational_plugin FAILED + Index 4 out of bounds for length 4
+
+
+Test > testCountPartialMatchesImplementation(String, String, int, int) > Test.testCountPartialMatchesImplementation(String, String, int, int)[1] FAILED
+    java.lang.StringIndexOutOfBoundsException at Tests.kt:73
+#educational_plugin FAILED + Index 4 out of bounds for length 4
+
+
+Test > testCountPartialMatchesImplementation(String, String, int, int) > Test.testCountPartialMatchesImplementation(String, String, int, int)[2] FAILED
+    java.lang.StringIndexOutOfBoundsException at Tests.kt:73
+#educational_plugin FAILED + Index 4 out of bounds for length 4
+
+
+Test > testCountPartialMatchesImplementation(String, String, int, int) > Test.testCountPartialMatchesImplementation(String, String, int, int)[3] FAILED
+    java.lang.StringIndexOutOfBoundsException at Tests.kt:73
+#educational_plugin FAILED + Index 4 out of bounds for length 4
+
+
+Test > testCountPartialMatchesImplementation(String, String, int, int) > Test.testCountPartialMatchesImplementation(String, String, int, int)[4] FAILED
+    java.lang.StringIndexOutOfBoundsException at Tests.kt:73
+#educational_plugin FAILED + Index 4 out of bounds for length 4
+
+
+Test > testCountPartialMatchesImplementation(String, String, int, int) > Test.testCountPartialMatchesImplementation(String, String, int, int)[5] FAILED
+    java.lang.StringIndexOutOfBoundsException at Tests.kt:73
+#educational_plugin FAILED + Index 4 out of bounds for length 4
+
+
+Test > testCountPartialMatchesImplementation(String, String, int, int) > Test.testCountPartialMatchesImplementation(String, String, int, int)[6] FAILED
+    java.lang.StringIndexOutOfBoundsException at Tests.kt:73
+#educational_plugin FAILED + Index 4 out of bounds for length 4
+
+
+Test > testCountPartialMatchesImplementation(String, String, int, int) > Test.testCountPartialMatchesImplementation(String, String, int, int)[7] FAILED
+    java.lang.StringIndexOutOfBoundsException at Tests.kt:73
+#educational_plugin FAILED + Index 4 out of bounds for length 4
+
+
+Test > testCountPartialMatchesImplementation(String, String, int, int) > Test.testCountPartialMatchesImplementation(String, String, int, int)[8] FAILED
+    java.lang.StringIndexOutOfBoundsException at Tests.kt:73
+#educational_plugin FAILED + Index 4 out of bounds for length 4
+
+
+Test > testCountPartialMatchesImplementation(String, String, int, int) > Test.testCountPartialMatchesImplementation(String, String, int, int)[9] FAILED
+    java.lang.StringIndexOutOfBoundsException at Tests.kt:73
+#educational_plugin FAILED + Index 4 out of bounds for length 4
+
+
+Test > testCountPartialMatchesImplementation(String, String, int, int) > Test.testCountPartialMatchesImplementation(String, String, int, int)[10] FAILED
+    java.lang.StringIndexOutOfBoundsException at Tests.kt:73
+#educational_plugin FAILED + Index 4 out of bounds for length 4
+
+
+Test > testCountPartialMatchesImplementation(String, String, int, int) > Test.testCountPartialMatchesImplementation(String, String, int, int)[11] FAILED
+    java.lang.StringIndexOutOfBoundsException at Tests.kt:73
+#educational_plugin FAILED + Index 4 out of bounds for length 4
+
+
+Test > testCountPartialMatchesImplementation(String, String, int, int) > Test.testCountPartialMatchesImplementation(String, String, int, int)[12] FAILED
+    java.lang.StringIndexOutOfBoundsException at Tests.kt:73
+#educational_plugin FAILED + Index 4 out of bounds for length 4
+
+
+Test > testCountPartialMatchesImplementation(String, String, int, int) > Test.testCountPartialMatchesImplementation(String, String, int, int)[13] FAILED
+    java.lang.StringIndexOutOfBoundsException at Tests.kt:73
+7 actionable tasks: 1 executed, 6 up-to-date
