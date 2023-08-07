@@ -21,6 +21,10 @@ requirements:
       version: ==1.0.0
     - name: requests
       version: ==2.31.0
+    - name: argparse
+      version: ==1.4.0
+    - name: pandarallel
+      version: ==1.6.5
   dev:
     - name: pytest
       version: ==7.4.0
