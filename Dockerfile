@@ -1,8 +1,31 @@
-FROM registry.jetbrains.team/p/paddle/docker/paddle-py-3-8:0.5.2 as paddle-py-3-8
+FROM python:3.9
 
+# python:
+ENV PYTHONFAULTHANDLER=1 \
+  PYTHONUNBUFFERED=1 \
+  PYTHONHASHSEED=random \
+  PYTHONDONTWRITEBYTECODE=1 \
+  # pip:
+  PIP_NO_CACHE_DIR=1 \
+  PIP_DISABLE_PIP_VERSION_CHECK=1 \
+  PIP_DEFAULT_TIMEOUT=100 \
+  PIP_ROOT_USER_ACTION=ignore \
+  # poetry:
+  POETRY_VERSION=1.5.1
+
+
+# Installing poetry:
+RUN pip install --upgrade "poetry==$POETRY_VERSION"
+
+# Coping repo
 COPY . /hyperstyle-analysis-prod
 WORKDIR /hyperstyle-analysis-prod
 
-RUN paddle install
+# Installing dependencies:
+RUN  poetry  \
+     install \
+     --no-interaction  \
+     --no-ansi  \
+     --with data-collection,data-collection,data-labelling,jba,preprocessing,templates
 
-ENTRYPOINT ["java", "-jar", "/paddle.jar"]
+ENTRYPOINT ["/bin/bash"]

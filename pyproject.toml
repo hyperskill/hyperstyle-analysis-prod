@@ -1,0 +1,71 @@
+[tool.poetry]
+name = "hyperstyle-analysis-prod"
+version = "0.1.0"
+description = "Repository containing several tools-helpers to work with data from the Hyperstyle platform"
+authors = ["Anastasia Birillo <anastasia.birillo@jetbrains.com>"]
+readme = "README.md"
+packages = [
+    { include = "core" },
+    { include = "data_collection" },
+    { include = "data_labelling" },
+    { include = "jba" },
+    { include = "preprocessing" },
+    { include = "templates" },
+]
+
+# Core dependencies
+[tool.poetry.dependencies]
+python = "~3.9"
+pandas = "2.0.3"
+dataclasses-json = "0.5.14"
+hyperstyle = "1.4.2"
+python-dateutil = "2.8.2"
+pyyaml = "6.0"
+argparse = "1.4.0"
+requests = "2.25.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "7.4.0"
+pytest-runner = "6.0.0"
+pytest-subtests = "0.11.0"
+
+# Data collection dependencies
+[tool.poetry.group.data-collection]
+optional = true
+
+[tool.poetry.group.data-collection.dependencies]
+dacite = "1.8.1"
+
+# Data labeling dependencies
+[tool.poetry.group.data-labelling]
+optional = true
+
+[tool.poetry.group.data-labelling.dependencies]
+
+# JBA dependencies
+[tool.poetry.group.jba]
+optional = true
+
+[tool.poetry.group.jba.dependencies]
+numpy = "1.25.0"
+matplotlib = "3.7.2"
+python-dotenv = "1.0.0"
+pandarallel = "1.6.5"
+beautifulsoup4 = "4.12.2"
+
+# Preprocessing dependencies
+[tool.poetry.group.preprocessing]
+optional = true
+
+[tool.poetry.group.preprocessing.dependencies]
+
+# Templates dependencies
+[tool.poetry.group.templates]
+optional = true
+
+[tool.poetry.group.templates.dependencies]
+diff-match-patch = "20230430"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
