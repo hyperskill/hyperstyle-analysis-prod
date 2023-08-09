@@ -30,7 +30,7 @@ Next you just need to run this task.
 
 #### From CLI
 
-Run the [preprocess_submissions.py](./src/preprocessing/preprocess_submissions.py) script with the arguments from command line.
+Run the [preprocess_submissions.py](src/preprocess_submissions.py) script with the arguments from command line.
 
 **Required arguments:**
     
@@ -55,7 +55,7 @@ Output csv file will be saved to `preprocessed_submissions_path` and will contai
 - `attempt` - the number of attempt in the current group, starts from 0;
 - `total_attempts` - the number of total attempts in the current group.
 
-An example of `preprocessed_submissions_path` can be found in the [tests](./tests/resources/preprocessing_tests/preprocessed_submissions_expected.csv):
+An example of `preprocessed_submissions_path` can be found in the [tests](tests/resources/preprocessed_submissions_expected.csv):
 
 | id  | step_id | code                                                                 | group | attempt  | total_attempts |
 |-----|---------|----------------------------------------------------------------------|-------|----------|----------------|
