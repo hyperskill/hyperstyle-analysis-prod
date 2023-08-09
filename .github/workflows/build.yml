@@ -14,4 +14,4 @@ jobs:
         run: docker build -t hyperstyle-analysis-prod .
 
       - name: 'Run tests'
-        run: docker run hyperstyle-analysis-prod poetry pytest -vv
+        run: docker run hyperstyle-analysis-prod poetry run pytest -vv
