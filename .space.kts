@@ -1,4 +1,4 @@
-job("Hyperstyle Analysis Prod | Release base Docker") {
+job("Release base Docker") {
     startOn {
         gitPush {
             enabled = false
@@ -10,7 +10,7 @@ job("Hyperstyle Analysis Prod | Release base Docker") {
 
     kaniko {
         build {
-            file = "./Dockerfile.base"
+            dockerfile = "./Dockerfile.base"
         }
 
         push("registry.jetbrains.team/p/code-quality-for-online-learning-platforms/hyperstyle-analysis-prod/${type}") {
