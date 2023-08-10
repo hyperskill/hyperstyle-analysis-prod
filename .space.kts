@@ -29,16 +29,16 @@ job("Release Docker") {
         }
     }
 
-    val versionRegex = Regex("^version = \"(.*)\"\$")
-    val version = File("./pyproject.toml").useLines { lines ->
-        lines.firstNotNullOf { versionRegex.find(it) }.groupValues.last()
-    }
-
     val type = "hyperstyle-analysis-prod"
 
     kaniko {
         build {
             dockerfile = "./Dockerfile"
+        }
+
+        val versionRegex = Regex("^version = \"(.*)\"\$")
+        val version = File("pyproject.toml").useLines { lines ->
+            lines.firstNotNullOf { versionRegex.find(it) }.groupValues.last()
         }
 
         push("registry.jetbrains.team/p/code-quality-for-online-learning-platforms/hyperstyle-analysis-prod/${type}") {
