@@ -30,7 +30,7 @@ job("Release Docker") {
     }
 
     val versionRegex = Regex("^version = \"(.*)\"\$")
-    val version = File("pyproject.toml").useLines { lines ->
+    val version = File("./pyproject.toml").useLines { lines ->
         lines.firstNotNullOf { versionRegex.find(it) }.groupValues.last()
     }
 
