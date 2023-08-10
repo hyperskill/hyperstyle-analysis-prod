@@ -10,8 +10,7 @@ job("Hyperstyle Analysis Prod | Release base Docker") {
 
     kaniko {
         build {
-            context = "."
-            dockerfile = "Dockerfile.base"
+            file = "./Dockerfile.base"
         }
 
         push("registry.jetbrains.team/p/code-quality-for-online-learning-platforms/hyperstyle-analysis-prod/${type}") {
