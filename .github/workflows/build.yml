@@ -13,5 +13,8 @@ jobs:
       - name: 'Build Docker image'
         run: docker build -t hyperstyle-analysis-prod .
 
+      - name: 'Build project'
+        run: docker exec hyperstyle-analysis-prod poetry build
+
       - name: 'Run tests'
-        run: docker run hyperstyle-analysis-prod poetry run pytest -vv
+        run: docker exec hyperstyle-analysis-prod poetry run pytest -vv

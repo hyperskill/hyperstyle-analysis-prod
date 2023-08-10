@@ -1,4 +1,4 @@
-FROM python:3.9
+FROM registry.jetbrains.team/p/code-quality-for-online-learning-platforms/hyperstyle-analysis-prod/hyperstyle-analysis-prod-base:py3.9.17-java17.0.8.7
 
 # python:
 ENV PYTHONFAULTHANDLER=1 \
