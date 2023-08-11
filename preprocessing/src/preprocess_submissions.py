@@ -200,7 +200,7 @@ def preprocess_submissions(submissions_path: str,
     write_or_pint_df(df_submissions, preprocessed_submissions_path)
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('submissions_path', type=str, help='Path to file with submissions')
@@ -228,3 +228,7 @@ if __name__ == '__main__':
                            args.preprocessed_submissions_path,
                            args.diff_ratio,
                            args.max_attempts)
+
+
+if __name__ == '__main__':
+    main()

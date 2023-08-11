@@ -39,8 +39,8 @@ def get_object_ids_from_file(csv_file_path: str, column_name: str) -> List[int]:
 
 logging.basicConfig(level=logging.DEBUG)
 
-if __name__ == '__main__':
 
+def main():
     parser = configure_parser()
     args = parser.parse_args(sys.argv[1:])
 
@@ -56,3 +56,7 @@ if __name__ == '__main__':
 
     objects = client.get_objects(args.object, ids, args.count)
     save_objects_to_csv(args.output_path, objects, args.object)
+
+
+if __name__ == '__main__':
+    main()

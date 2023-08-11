@@ -139,7 +139,7 @@ def process_repetitive_issues(df_repetitive_issues: pd.DataFrame,
     return df_repetitive_issues_split
 
 
-def main(config: ProcessingConfig):
+def postprocess(config: ProcessingConfig):
     df_repetitive_issues = read_df(config.repetitive_issues_path)
     df_submissions = read_df(config.submissions_path)
 
@@ -186,7 +186,7 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser()
     configure_parser(parser)
 
@@ -197,4 +197,8 @@ if __name__ == '__main__':
         log_file_suffix = args.output_path
     configure_logger(log_file_suffix, 'repetitive_issues_postprocess', args.log_path)
 
-    main(ProcessingConfig.parse_from_args(args))
+    postprocess(ProcessingConfig.parse_from_args(args))
+
+
+if __name__ == '__main__':
+    main()

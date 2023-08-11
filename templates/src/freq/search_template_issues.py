@@ -155,8 +155,9 @@ def search_repetitive_issues(df_submissions: pd.DataFrame,
                                                                             code_comparator=code_comparator))
 
 
-def main(submissions_path: str, steps_path: str, repetitive_issues_path: Optional[str], issues_column: str,
-         equal_type: str, ignore_trailing_comments: bool, ignore_trailing_whitespaces: bool):
+def search_template_issues(submissions_path: str, steps_path: str, repetitive_issues_path: Optional[str],
+                           issues_column: str, equal_type: str, ignore_trailing_comments: bool,
+                           ignore_trailing_whitespaces: bool):
     """ Search for all repetitive issues and save result to `repetitive_issues_path` """
 
     df_submissions = read_df(submissions_path)
@@ -190,7 +191,7 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser()
     configure_parser(parser)
 
@@ -201,5 +202,9 @@ if __name__ == '__main__':
         log_file_suffix = args.output_path
     configure_logger(log_file_suffix, f'repetitive_issues_{args.equal}', args.log_path)
 
-    main(args.submissions_path, args.steps_path, args.output_path, args.issues_column,
-         args.equal, args.ignore_trailing_comments, args.ignore_trailing_whitespaces)
+    search_template_issues(args.submissions_path, args.steps_path, args.output_path, args.issues_column,
+                           args.equal, args.ignore_trailing_comments, args.ignore_trailing_whitespaces)
+
+
+if __name__ == '__main__':
+    main()

@@ -119,7 +119,7 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
     )
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser()
     configure_parser(parser)
 
@@ -130,3 +130,7 @@ if __name__ == '__main__':
     query_storage_info = QueryInfoStorage()
     submissions_df = _get_submissions(query_storage_info, course_df, to_gather_code=args.gather_code)
     write_df(submissions_df, output_path)
+
+
+if __name__ == '__main__':
+    main()

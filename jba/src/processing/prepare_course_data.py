@@ -105,7 +105,7 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument('course_sources_path', type=str, help='Path to course sources to extract course structure.')
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser()
     configure_parser(parser)
 
@@ -113,3 +113,7 @@ if __name__ == '__main__':
     output_path = filter_by_course_id_and_save(args.data_path, args.course_id)
     tasks_info_df = _gather_course_structure(args.course_sources_path)
     write_df(tasks_info_df, f'{output_path}/course_{args.course_id}_structure{AnalysisExtension.CSV.value}')
+
+
+if __name__ == '__main__':
+    main()

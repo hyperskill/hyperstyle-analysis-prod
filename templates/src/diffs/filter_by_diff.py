@@ -211,7 +211,7 @@ def filter_template_issues_using_diff(df_submissions: pd.DataFrame, df_steps: pd
     return df_submissions.apply(lambda submission: apply_filter(submission), axis=1)
 
 
-def main(
+def filter_by_diff(
         submissions_path: str,
         steps_path: str,
         filtered_submissions_path: Optional[str],
@@ -291,7 +291,7 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser()
     configure_parser(parser)
 
@@ -302,10 +302,14 @@ if __name__ == '__main__':
         log_file_suffix = args.output_path
     configure_logger(log_file_suffix, 'template_issues_filtering_by_diff', args.log_path)
 
-    main(
+    filter_by_diff(
         args.submissions_path,
         args.steps_path,
         args.output_path,
         args.issues_column,
         args.templates_issues_path,
     )
+
+
+if __name__ == '__main__':
+    main()

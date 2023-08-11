@@ -60,7 +60,7 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument('--course-name', type=str, default=None, help='Name of the course.')
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser()
     configure_parser(parser)
 
@@ -68,3 +68,7 @@ if __name__ == '__main__':
     course_data = read_df(args.preprocessed_course_data_path)
     tasks_data_df = read_df(args.course_structure_path)
     plot_task_attempts(course_data, tasks_data_df, args.course_name)
+
+
+if __name__ == '__main__':
+    main()

@@ -64,9 +64,13 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument('course_structure_path', type=str, help='Path to .csv with the course structure.')
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser()
     configure_parser(parser)
 
     args = parser.parse_args(sys.argv[1:])
     preprocess_course_data_and_save(args.course_data_path, args.course_structure_path)
+
+
+if __name__ == '__main__':
+    main()
