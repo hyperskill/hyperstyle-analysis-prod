@@ -25,4 +25,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: registry.jetbrains.team/p/code-quality-for-online-learning-platforms/hyperstyle-utilities/hyperstyle-utilities:$DOCKER_TAG
+          tags: registry.jetbrains.team/p/code-quality-for-online-learning-platforms/hyperstyle-analysis-prod/hyperstyle-analysis-prod:$DOCKER_TAG
