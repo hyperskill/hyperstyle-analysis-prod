@@ -1,4 +1,4 @@
-name: docker-release
+name: Docker release
 
 on: [ workflow_dispatch ]
 
@@ -16,10 +16,13 @@ jobs:
           username: ${{ secrets.SPACE_REGISTRY_USERNAME }}
           password: ${{ secrets.SPACE_REGISTRY_PASSWORD }}
 
+      - name: Fetch project version
+        run: echo "DOCKER_TAG=$(grep -m 1 version pyproject.toml | tr -s ' ' | tr -d '"' | tr -d "'" | cut -d ' ' -f 3)" >> "$GITHUB_ENV"
+
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
           context: .
           file: ./Dockerfile
           push: true
-          tags: registry.jetbrains.team/p/code-quality-for-online-learning-platforms/hyperstyle-utilities/hyperstyle-utilities:0.0.1
+          tags: registry.jetbrains.team/p/code-quality-for-online-learning-platforms/hyperstyle-utilities/hyperstyle-utilities:$DOCKER_TAG
