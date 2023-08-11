@@ -29,4 +29,4 @@ RUN  poetry  \
      --no-ansi  \
      --with data-collection,data-collection,data-labelling,jba,preprocessing,templates
 
-ENTRYPOINT ["/bin/bash"]
+CMD ["/bin/bash"]
