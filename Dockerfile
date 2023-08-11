@@ -15,8 +15,8 @@ ENV PYTHONFAULTHANDLER=1 \
 
 
 # Installing poetry and git:
-RUN pip install --upgrade "poetry==$POETRY_VERSION" \
-    apt install git
+RUN pip install --upgrade "poetry==$POETRY_VERSION" && \
+    apt-get install -y git
 
 # Coping repo
 COPY . /hyperstyle-analysis-prod
