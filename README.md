@@ -35,7 +35,8 @@ the code editor. An example of the Hyperstyle user interface:
 This project uses the [Poetry](https://github.com/python-poetry/poetry) build system. To set up everything you need:
 1. [Install](https://python-poetry.org/docs/#installation) poetry.
 2. Clone this repository
-3. Run `poetry install`
+3. Run `poetry install --with <list_of_optional_modules>`, where `<list_of_optional_modules>` is a list of modules what you need to install. Only the [`core`](core) module is not an optional and is always installed.
+   For example, if you want to install the [`data_collection`](data_collection), [`jba`](jba) and [`preprocessing`](preprocessing) modules, then you should run `poetry install --with data-collection,jba,preporcessing`.
 
 To run any script in the repository just execute:
 ```bash
