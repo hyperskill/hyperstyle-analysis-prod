@@ -33,7 +33,7 @@ job("Release Docker") {
         beforeBuildScript {
             content = """
                 echo Hello, World!
-                python3 --version
+                python --version
             """
         }
 
