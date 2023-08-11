@@ -20,9 +20,7 @@ job("Release base Docker") {
 
 job("Release Docker") {
     startOn {
-        gitPush {
-            enabled = false
-        }
+        gitPush { enabled = false }
     }
 
     val type = "hyperstyle-analysis-prod"
