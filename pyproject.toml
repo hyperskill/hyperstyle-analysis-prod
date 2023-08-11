@@ -66,6 +66,26 @@ optional = true
 [tool.poetry.group.templates.dependencies]
 diff-match-patch = "20230430"
 
+[tool.poetry.scripts]
+# Data collection scripts
+collect_data = 'data_collection.src.collect_data:main'
+# Data labelling scripts
+run_hyperstyle = 'data_labelling.src.hyperstyle.evaluate:main'
+# JBA scripts
+prepare_course_data = 'jba.src.processing.prepare_course_data:main'
+process_course_data = 'jba.src.processing.data_processing:main'
+plot_task_attempt = 'jba.src.plots.task_attempt:main'
+plot_task_solving = 'jba.src.plots.task_solving:main'
+submissions_gathering = 'jba.src.gathering.gather_submissions_info:main'
+gradle_tests_runner = 'jba.src.test_logs.tests_runner:main'
+gradle_logs_parser = 'jba.src.test_logs.logs_parser:main'
+# Preprocessing scripts
+preprocess_submissions = 'preprocessing.src.preprocess_submissions:main'
+# Templates scripts
+filter_by_diff = 'templates.src.diffs.filter_by_diff:main'
+search_by_freq = 'templates.src.freq.search_template_issues:main'
+postprocess_by_freq = 'templates.src.freq.postprocess:main'
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
