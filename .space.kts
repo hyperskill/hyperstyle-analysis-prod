@@ -2,9 +2,7 @@ import java.io.File
 
 job("Release base Docker") {
     startOn {
-        gitPush {
-            enabled = false
-        }
+        gitPush { enabled = false }
     }
 
     val version = "py3.9.17-java17.0.8.7"
@@ -34,7 +32,8 @@ job("Release Docker") {
     kaniko {
         beforeBuildScript {
             content = """
-                export TAG=${'$'}(python3 -c "import platform; print(platform.python_version());")
+                echo Hello, World!
+                python3 --version
             """
         }
 
@@ -44,7 +43,7 @@ job("Release Docker") {
 
         push("registry.jetbrains.team/p/code-quality-for-online-learning-platforms/hyperstyle-analysis-prod/${type}") {
             tags {
-                +"\$TAG"
+                +"1.2.3"
             }
         }
     }
