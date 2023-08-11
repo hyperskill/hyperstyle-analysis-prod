@@ -34,7 +34,7 @@ job("Release Docker") {
     kaniko {
         beforeBuildScript {
             content = """
-                export TAG=$(grep -oP 'version = "\K(.*)"' -m 1 pyproject.toml) 
+                export TAG=$(python3 --version)
             """
         }
 
