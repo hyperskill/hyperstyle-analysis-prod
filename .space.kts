@@ -34,7 +34,7 @@ job("Release Docker") {
     kaniko {
         beforeBuildScript {
             content = """
-                export TAG=$(python3 --version)
+                export TAG=${'$'}(python3 -c "import platform; print(platform.python_version());")
             """
         }
 
