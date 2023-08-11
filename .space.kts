@@ -1,5 +1,3 @@
-import java.io.File
-
 job("Release base Docker") {
     startOn {
         gitPush { enabled = false }
@@ -32,8 +30,7 @@ job("Release Docker") {
     kaniko {
         beforeBuildScript {
             content = """
-                echo Hello, World!
-                python --version
+                export DOCKER_TAG=${'$'}(grep -m 1 version pyproject.toml | tr -s ' ' | tr -d '"' | tr -d "'" | cut -d ' ' -f 3)
             """
         }
 
@@ -43,7 +40,7 @@ job("Release Docker") {
 
         push("registry.jetbrains.team/p/code-quality-for-online-learning-platforms/hyperstyle-analysis-prod/${type}") {
             tags {
-                +"1.2.3"
+                +"\$DOCKER_TAG"
             }
         }
     }
