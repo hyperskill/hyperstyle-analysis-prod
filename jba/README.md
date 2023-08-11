@@ -13,9 +13,16 @@ data by the course id and also to collect information about the course structure
 
 ### Usage
 
-Run the script by one of the following way with the arguments:
+Execute one of the following commands with necessary arguments:
+```bash
+poetry run prepare_course_data [arguments]
+```
+or
+```bash
+docker run hyperstyle-analysis-prod:<VERSION> poetry run prepare_course_data [arguments]
+```
 
-Required arguments:
+**Required arguments**:
 
 - `data_path` — Path to .csv file with collected data. The file must contain the following columns: `task_id`, `course_id`, `submission_datetime`, `status`, `task_type`, `user_id`, `task_name` (see [an example](tests/resources/processing/all_data.csv) in the tests).
 - `course_id` — Course id to analyze.
@@ -50,9 +57,16 @@ the [following](tests/resources/processing/course_1_structure_expected.csv) file
 
 ### Usage
 
-Run the script by one of the following way with the arguments:
+Execute one of the following commands with necessary arguments:
+```bash
+poetry run process_course_data [arguments]
+```
+or
+```bash
+docker run hyperstyle-analysis-prod:<VERSION> poetry run process_course_data [arguments]
+```
 
-Required arguments:
+**Required arguments**:
 
 - `course_data_path` — Path to .csv file with preprocessed data by [data_processing.py](src/processing/data_processing.py).
 - `course_structure_path` — Path to .csv file with the course structure gathered by [prepare_course_data.py](src/processing/prepare_course_data.py).
@@ -67,9 +81,16 @@ After this step you will get a new file with course data with `courseId_preproce
 
 1. [task_solving.py](src/plots/task_solving.py) allows you to plot line charts how students solve tasks from the course.
 
-Run the script by one of the following way with the arguments:
+Execute one of the following commands with necessary arguments:
+```bash
+poetry run plot_task_solving [arguments]
+```
+or
+```bash
+docker run hyperstyle-analysis-prod:<VERSION> poetry run plot_task_solving [arguments]
+```
 
-Required arguments:
+**Required arguments**:
 
 - `preprocessed_course_data_path` — Path to .csv file with preprocessed data by [data_processing.py](src/processing/data_processing.py).
 - `course_structure_path` — Path to .csv file with the course structure gathered by [prepare_course_data.py](src/processing/prepare_course_data.py).
@@ -83,14 +104,21 @@ Optional arguments:
 
 2. [task_attempt.py](src/plots/task_attempt.py) allows you to plot line charts how many attempts students spend to solve the tasks from the course.
 
-Run the script by one of the following way with the arguments:
+Execute one of the following commands with necessary arguments:
+```bash
+poetry run plot_task_attempt [arguments]
+```
+or
+```bash
+docker run hyperstyle-analysis-prod:<VERSION> poetry run plot_task_attempt [arguments]
+```
 
-Required arguments:
+**Required arguments**:
 
 - `preprocessed_course_data_path` — Path to .csv file with preprocessed data by [data_processing.py](src/processing/data_processing.py).
 - `course_structure_path` — Path to .csv file with the course structure gathered by [prepare_course_data.py](src/processing/prepare_course_data.py).
 
-Optional arguments:
+**Optional arguments**:
 
 | Argument                            | Description                                 |
 |-------------------------------------|---------------------------------------------|
@@ -108,14 +136,21 @@ then your module should be named `Introduction-LastPush-CompleteTheProject`
 
 1. [tests_runner.py](src/test_logs/tests_runner.py) allows you to run tests via Gradle and save Gradle logs to perform further parsing.
 
-Run the script by one of the following way with the arguments:
+Execute one of the following commands with necessary arguments:
+```bash
+poetry run gradle_tests_runner [arguments]
+```
+or
+```bash
+docker run hyperstyle-analysis-prod:<VERSION> poetry run gradle_tests_runner [arguments]
+```
 
-Required arguments:
+**Required arguments**:
 - `submissions_path` — Path to .csv file with submissions.
 - `course_sources_path` — Path to course sources.
 - `logs_output_path` — Path to the folder to store logs.
 
-Optional arguments:
+**Optional arguments**:
 
 | Argument                      | Description                                       |
 |-------------------------------|---------------------------------------------------|
@@ -147,13 +182,20 @@ Optional arguments:
   }
   ```
 
-Run the script by one of the following way with the arguments:
+Execute one of the following commands with necessary arguments:
+```bash
+poetry run gradle_logs_parser [arguments]
+```
+or
+```bash
+docker run hyperstyle-analysis-prod:<VERSION> poetry run gradle_logs_parser [arguments]
+```
 
-Required arguments:
+**Required arguments**:
 - `submissions_path` — Path to .csv file with submissions.
 - `gradle_logs_path` — Path to a folder with gradle logs.
 
-Optional arguments:
+**Optional arguments**:
 
 | Argument                | Description                  |
 |-------------------------|------------------------------|

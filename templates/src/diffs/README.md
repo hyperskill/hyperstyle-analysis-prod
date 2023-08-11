@@ -42,37 +42,22 @@ code = "x = int(input())\nif x == 5:\n\tprint('hello')" # MagicNumber offset=27
 
 ### Usage
 
-#### From Docker
-
-**TODO**
-
-#### From Paddle
-
-The [Paddle](https://github.com/JetBrains-Research/paddle#tasks-section) build system, you can use it to run this script:
-- add arguments to the `filter_by_diff` task in the [paddle.yaml](../../paddle.yaml) file:
-```yaml
-- id: filter_by_diff
-  entrypoint: templates/diffs/filter_by_diff.py
-  args:
-    - submissions_path
-    - steps_path
-    - issues_column
-    - --templates-issues-path
-    - path_to_templates_issues_csv
+Execute one of the following commands with necessary arguments:
+```bash
+poetry run filter_by_diff [arguments]
 ```
-Next you just need to run this task.
+or
+```bash
+docker run hyperstyle-analysis-prod:<VERSION> poetry run filter_by_diff [arguments]
+```
 
-#### From CLI
-
-Run the [filter_by_diff.py](filter_by_diff.py) script with the arguments from command line.
-
-Required arguments:
+**Required arguments**:
 
 - `submissions_path` — Path to .csv file with submissions. The file must contain the following columns: `id`, `lang`, `step_id`, `code`, `group`, `attempt`, `hyperskill_issues`/`qodana_issues` (please, use [preprocess_submissions.py](../preprocessing/preprocess_submissions.py) script to get  `group` and `attempt` columns).
 - `steps_path` — Path to .csv file with steps. The file must contain the following columns: `id`, and `code_template` OR `code_templates`.
 - `issues_column` — Column name in .csv file with submissions where issues are stored (can be `hyperstyle_issues` ot `qodana_issues`).
 
-Optional arguments:
+**Optional arguments**:
 
 - `--output-path` — Path to resulting .csv file with submissions with filtered issues. If no value was passed, the output will be printed into the console.
 - `--templates-issues-path` — Path `.csv` file with template issues in the user-friendly format. The default value is `None`, in this case this file will not be generated.

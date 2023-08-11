@@ -8,29 +8,14 @@ More information about the platform and the use of Hyperstyle can be found [here
 
 ### Usage
 
-#### From Docker
-
-**TODO**
-
-#### From Paddle
-
-The [Paddle](https://github.com/JetBrains-Research/paddle#tasks-section) build system, you can use it to run this script:
-- add arguments to the `preprocess_submissions` task in the [paddle.yaml](paddle.yaml) file:
-
-```yaml
-- id: preprocess_submissions
-  entrypoint: preprocessing/preprocess_submissions.py
-  args:
-    - submissions_path
-    - preprocessed_submissions_path
-    - --max-attempts
-    - 10
+Execute one of the following commands with necessary arguments:
+```bash
+poetry run preprocess_submissions [arguments]
 ```
-Next you just need to run this task.
-
-#### From CLI
-
-Run the [preprocess_submissions.py](src/preprocess_submissions.py) script with the arguments from command line.
+or
+```bash
+docker run hyperstyle-analysis-prod:<VERSION> poetry run preprocess_submissions [arguments]
+```
 
 **Required arguments:**
     

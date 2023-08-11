@@ -13,13 +13,20 @@ Output file is a new `xlsx` or `csv` file with the all columns from the input fi
 
 ## Usage
 
-Run the [evaluate.py](evaluate.py) with the arguments from command line.
+Execute one of the following commands with necessary arguments:
+```bash
+poetry run run_hyperstyle [arguments]
+```
+or
+```bash
+docker run hyperstyle-analysis-prod:<VERSION> poetry run run_hyperstyle [arguments]
+```
 
-Required arguments:
+**Required arguments**:
 
 `solutions_file_path` — path to xlsx-file or csv-file with code samples to inspect.
 
-Optional arguments:
+**Optional arguments**:
 
 | Argument                                                  | Description                                                                                                                          |
 |-----------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
@@ -31,22 +38,3 @@ Optional arguments:
 | **&#8209;&#8209;allow&#8209;duplicates**                  | Allow duplicate issues found by different linters. By default, duplicates are skipped.                                               |
 | **&#8209;&#8209;with&#8209;all&#8209;categories**         | Without this flag, all issues will be categorized into 5 main categories: CODE_STYLE, BEST_PRACTICES, ERROR_PRONE, COMPLEXITY, INFO. |
 | **&#8209;d**, **&#8209;&#8209;disable**                   | Disable inspectors, example: pylint,flake8.                                                                                          |
-
-### From Paddle
-
-The [Paddle](https://github.com/JetBrains-Research/paddle#tasks-section) build system, you can use it to run this script:
-- add arguments to the `run_hyperstyle` task in the [paddle.yaml](../../paddle.yaml) file:
-
-```yaml
-    - id: run_hyperstyle
-      entrypoint: data_labelling/hyperstyle/evaluate.py
-      args:
-        - path-to-submissions
-        - --output-path path-to-output
-        - --disable pylint,flake8,radon
-        - -cwd path-to-working-directory
-        - --tool-path path-to-hyperstyle
-        - --venv path-to-venv
-        - --with-all-categories
-```
-Next you just need to run this task.

@@ -26,15 +26,22 @@ Finally, it is possible to run a special converter to present the results in a u
 
 ### Usage
 
-Run the script by one of the following way with the arguments:
+Execute one of the following commands with necessary arguments:
+```bash
+poetry run search_by_freq [arguments]
+```
+or
+```bash
+docker run hyperstyle-analysis-prod:<VERSION> poetry run search_by_freq [arguments]
+```
 
-Required arguments:
+**Required arguments**:
 
 - `submissions_path` — Path to .csv file with submissions. The file must contain the following columns: `id`, `lang`, `step_id`, `code`, `group`, `attempt`, `hyperskill_issues`/`qodana_issues` (please, use [preprocess_submissions.py](../../../preprocessing/src/preprocess_submissions.py) script to get  `group` and `attempt` columns).
 - `steps_path` — Path to .csv file with steps. The file must contain the following columns: `id`, and `code_template` OR `code_templates`.
 - `issues_column` — Column name in .csv file with submissions where issues are stored (can be `hyperstyle_issues` ot `qodana_issues`).
 
-Optional arguments:
+**Optional arguments**:
 
 | Argument                                                     | Description                                                                                                                         |
 |--------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|
@@ -42,32 +49,6 @@ Optional arguments:
 | **&#8209;iw**, **&#8209;&#8209;ignore-trailing-whitespaces** | Ignore trailing whitespaces while comparing two code lines.                                                                         |
 | **&#8209;equal**                                             | Function for lines comparing. Possible functions: `edit_distance`, `edit_ratio`, `substring`. The default value is `edit_distance`. |
 | **&#8209;output-path**                                             | Path .csv file with repetitive issues search result. If no value was passed, the output will be printed into the console. |
-
-#### From Docker
-
-**TODO**
-
-#### From Paddle
-
-The [Paddle](https://github.com/JetBrains-Research/paddle#tasks-section) build system, you can use it to run this script:
-- add arguments to the `filter_by_freq` task in the [paddle.yaml](../../paddle.yaml) file:
-```yaml
-- id: search_by_freq
-  entrypoint: templates/freq/search_template_issues.py
-  args:
-    - submissions_path
-    - steps_path
-    - issues_column
-    - --ignore-trailing-comments [optional]
-    - --ignore-trailing-whitespaces [optional]
-    - -equal [optional]
-    - edit_distance
-```
-Next you just need to run this task.
-
-#### From CLI
-
-Run the [search_template_issues.py](search_template_issues.py) script with the arguments from command line.
 
 ### Output format
 
@@ -114,7 +95,14 @@ Also, additional supporting information can be received:
 
 ### Usage
 
-Run the script by one of the following way with the arguments:
+Execute one of the following commands with necessary arguments:
+```bash
+poetry run postprocess_by_freq [arguments]
+```
+or
+```bash
+docker run hyperstyle-analysis-prod:<VERSION> poetry run postprocess_by_freq [arguments]
+```
 
 Required arguments:
 
@@ -133,26 +121,3 @@ Optional arguments:
 | **&#8209;n**, **&#8209;&#8209;solutions-number**                         | Tne number of random students solutions that should be gathered for each task. The default value is 5.               |
 | **&#8209;url**, **&#8209;&#8209;base-task-url**                          | Base url to the tasks on an education platform. The default value is https://hyperskill.org/learn/step.              |
 | **&#8209;&#8209;output-path**                                            | Path to resulting folder with processed issues. If no value was passed, the output will be printed into the console. |
-
-#### From Docker
-
-**TODO**
-
-#### From Paddle
-
-The [Paddle](https://github.com/JetBrains-Research/paddle#tasks-section) build system, you can use it to run this script:
-- add arguments to the `filter_by_freq` task in the [paddle.yaml](../../paddle.yaml) file:
-```yaml
-- id: postprocess_by_freq
-  entrypoint: templates/freq/postprocess.py
-  args:
-    - repetitive_issues_path
-    - result_path
-    - submissions_path
-    - issues_column
-```
-Next you just need to run this task.
-
-#### From CLI
-
-Run the [postprocess.py](postprocess.py) script with the arguments from command line.

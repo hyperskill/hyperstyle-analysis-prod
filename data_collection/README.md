@@ -41,6 +41,15 @@ For more information about api go to [hyperskill api documentation](https://hype
    
 ### Run:
 
+Execute one of the following commands with necessary arguments:
+```bash
+poetry run collect_data [arguments]
+```
+or
+```bash
+docker run hyperstyle-analysis-prod:<VERSION> poetry run collect_data [arguments]
+```
+
 **Required arguments:**
 
 | Argument        | Description                                                                                                                                                                                                                                                                             |
