@@ -55,16 +55,16 @@ poetry run <script_alias> [script_arguments]
 If you don't want to install poetry, you could use our official Docker image where all necessary environment is installed. 
 To do this:
 1. Pull the image:
-```bash
-docker pull registry.jetbrains.team/p/code-quality-for-online-learning-platforms/hyperstyle-analysis-prod/hyperstyle-analysis-prod:<VERSION>
-```
-where `<VERSION>` is the project version you would like to use. You could always find the latest version inside the [pyproject.toml](pyproject.toml) file.
+   ```bash
+   docker pull registry.jetbrains.team/p/code-quality-for-online-learning-platforms/hyperstyle-analysis-prod/hyperstyle-analysis-prod:<VERSION>
+   ```
+   where `<VERSION>` is the project version you would like to use. You could always find the latest version inside the [pyproject.toml](pyproject.toml) file.
 
 2. Run a container with the command you would like to execute.
-```bash
-docker run hyperstyle-analysis-prod:<VERSION> <command>
-```
-For example:
-```bash
-docker run hyperstyle-analysis-prod:<VERSION> poetry run <script_alias> [script_arguments]
-```
+   ```bash
+   docker run hyperstyle-analysis-prod:<VERSION> <command>
+   ```
+   For example:
+   ```bash
+   docker run hyperstyle-analysis-prod:<VERSION> poetry run <script_alias> [script_arguments]
+   ```
