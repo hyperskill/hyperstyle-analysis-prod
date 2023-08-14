@@ -16,10 +16,6 @@ jobs:
       - name: Build project
         run: docker run hyperstyle-analysis-prod poetry build
 
-      - name: Set up git rights
-        run: |
-          git config --global --add safe.directory '*'
-
       - name: Sort the whitelist
         run: LC_ALL=C sort spellcheck_whitelist.txt -o spellcheck_whitelist.txt
 
