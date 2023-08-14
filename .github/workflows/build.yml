@@ -7,14 +7,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 'Checkout'
+      - name: Checkout
         uses: actions/checkout@v2
 
-      - name: 'Build Docker image'
+      - name: Build Docker image
         run: docker build -t hyperstyle-analysis-prod .
 
-      - name: 'Build project'
+      - name: Build project
         run: docker run hyperstyle-analysis-prod poetry build
+
+      - name: Set up git rights
+        run: |
+          git config --global --add safe.directory '*'
 
       - name: Sort the whitelist
         run: LC_ALL=C sort spellcheck_whitelist.txt -o spellcheck_whitelist.txt
@@ -25,8 +29,8 @@ jobs:
           add: "spellcheck_whitelist.txt"
           message: 'Sort whitelist (Github Actions)'
 
-      - name: 'Check code style'
+      - name: Check code style
         run: docker run hyperstyle-analysis-prod poetry run flake8 . --count --statistics --show-source
 
-      - name: 'Run tests'
+      - name: Run tests
         run: docker run hyperstyle-analysis-prod poetry run pytest -vv
