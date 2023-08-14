@@ -22,11 +22,11 @@ jobs:
       - name: Commit the sorted whitelist
         uses: EndBug/add-and-commit@v9
         with:
-          add: "whitelist.txt"
+          add: "spellcheck_whitelist.txt"
           message: 'Sort whitelist (Github Actions)'
 
       - name: 'Check code style'
-        run: docker run hyperstyle-analysis-prod poetry flake8 . --count --statistics --show-source
+        run: docker run hyperstyle-analysis-prod poetry run flake8 . --count --statistics --show-source
 
       - name: 'Run tests'
         run: docker run hyperstyle-analysis-prod poetry run pytest -vv
