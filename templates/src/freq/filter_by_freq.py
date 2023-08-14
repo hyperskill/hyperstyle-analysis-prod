@@ -56,15 +56,14 @@ def filter_template_issues_from_submission(submission: pd.Series,
                     code_issue_position == template_to_code[template_issue_position] and \
                     code_comparator.is_equal(template_line_with_issue, code_line_with_issue):
                 template_issues.append(issue)
-                continue
 
         logging.info(f'Issue {template_issue_name} in line {template_issue_position} is unmatched.')
 
     logging.info(f'{len(template_issues)}/{df_templates_issues.shape[0]} template issues was matched.')
 
     submission[issues_column] = report.filter_issues(lambda i: i not in template_issues).to_json()
-    submission[issues_column + '_diff'] = report.filter_issues(lambda i: i in template_issues).to_json()
-    submission[issues_column + '_all'] = report.to_json()
+    submission[f'{issues_column}_diff'] = report.filter_issues(lambda i: i in template_issues).to_json()
+    submission[f'{issues_column}_all'] = report.to_json()
 
     return submission
 
@@ -79,14 +78,12 @@ def filter_template_issues(df_templates_issues: pd.DataFrame,
     df_templates_issues = df_templates_issues.dropna(subset=[TemplateColumns.POS_IN_TEMPLATE.value])
     df_steps.set_index(StepColumns.ID.value, inplace=True, drop=False)
 
-    df_submissions = df_submissions.apply(filter_template_issues_from_submission,
-                                          df_steps=df_steps,
-                                          df_templates_issues=df_templates_issues,
-                                          issues_column=issues_column,
-                                          code_comparator=code_comparator,
-                                          axis=1)
-
-    return df_submissions
+    return df_submissions.apply(filter_template_issues_from_submission,
+                                df_steps=df_steps,
+                                df_templates_issues=df_templates_issues,
+                                issues_column=issues_column,
+                                code_comparator=code_comparator,
+                                axis=1)
 
 
 def main(templates_issues_path: str,

@@ -1,17 +1,24 @@
 from typing import Callable, List, Optional, Tuple
 
 
-def match_empty_lines(code: List[str], template: List[str],
-                      code_to_template: List[Optional[int]],
-                      template_to_code: List[Optional[int]],
-                      is_empty: Callable[[str], bool]):
-    """ Match empty lines from template with empty lines from submission basing on already matched non-empty lines. """
+StringComparator = Callable[[str, str], bool]
+MatchedIndices = List[Optional[int]]
 
-    for i in range(len(template)):
+
+def match_empty_lines(
+    code: List[str],
+    template: List[str],
+    code_to_template: List[Optional[int]],
+    template_to_code: List[Optional[int]],
+    is_empty: Callable[[str], bool],
+):
+    """Match empty lines from template with empty lines from submission basing on already matched non-empty lines."""
+
+    for i, template_line in enumerate(template):
         if template_to_code[i] is not None:
             continue
 
-        if is_empty(template[i]):
+        if is_empty(template_line):
             left = i
             right = i
 
@@ -33,19 +40,22 @@ def match_empty_lines(code: List[str], template: List[str],
                     break
 
 
-def match_code_lines(code_lines: List[str], template_lines: List[str],
-                     code_to_template: List[Optional[int]],
-                     template_to_code: List[Optional[int]],
-                     is_equal: Callable[[str, str], bool],
-                     is_empty: Callable[[str], bool]):
-    """ Match code with template not empty lines. """
+def match_code_lines(
+    code_lines: List[str],
+    template_lines: List[str],
+    code_to_template: List[Optional[int]],
+    template_to_code: List[Optional[int]],
+    is_equal: Callable[[str, str], bool],
+    is_empty: Callable[[str], bool],
+):
+    """Match code with template not empty lines."""
 
     prev_matched_line = -1
 
-    for i in range(len(template_lines)):
+    for i in range(len(template_lines)):  # noqa: WPS518
         if is_empty(template_lines[i]) or template_to_code[i] is not None:
             continue
-        for j in range(prev_matched_line + 1, len(code_lines)):
+        for j in range(prev_matched_line + 1, len(code_lines)):  # noqa: WPS518
             if is_equal(code_lines[j], template_lines[i]) and code_to_template[j] is None:
                 code_to_template[j] = i
                 template_to_code[i] = j
@@ -53,10 +63,12 @@ def match_code_lines(code_lines: List[str], template_lines: List[str],
                 break
 
 
-def match_code_with_template(code_lines: List[str], template_lines: List[str],
-                             is_equal: Callable[[str, str], bool],
-                             is_empty: Callable[[str], bool]) \
-        -> Tuple[List[Optional[int]], List[Optional[int]]]:
+def match_code_with_template(
+    code_lines: List[str],
+    template_lines: List[str],
+    is_equal: StringComparator,
+    is_empty: Callable[[str], bool],
+) -> Tuple[MatchedIndices, MatchedIndices]:
     """
     Match code with template and return list of matched indices.
 

@@ -16,7 +16,7 @@ from core.src.utils.json_utils import parse_json
 class HyperstyleReport(QualityReport, BaseReport):
     issues: List[HyperstyleIssue]
 
-    def get_issues(self) -> List[HyperstyleIssue]:
+    def get_issues(self) -> List[HyperstyleIssue]:  # noqa: WPS615
         return self.issues
 
     def filter_issues(self, predicate: Callable[[BaseIssue], bool]) -> 'HyperstyleReport':

@@ -1,10 +1,3 @@
-import datetime
-from dataclasses import dataclass, field
-from typing import List, Optional, Union
-
-from core.src.model.api.platform_objects import BaseRequestParams, Object, ObjectResponse
-from data_collection.src.hyperskill.hyperskill_objects import HyperskillPlatform
-
 """
 This file contains classes, which describe submission entity from Hyperskill platform.
 Submission is a user's attempt to solve the step's task and platform's feedback on this solution.
@@ -12,6 +5,13 @@ Steps are available by API requests, described at
     https://hyperskill.org/api/docs/#submissions-list
     https://hyperskill.org/api/docs/#submissions-read
 """
+
+import datetime
+from dataclasses import dataclass, field
+from typing import List, Optional, Union
+
+from core.src.model.api.platform_objects import BaseRequestParams, Object, ObjectResponse
+from data_collection.src.hyperskill.hyperskill_objects import HyperskillPlatform
 
 
 @dataclass
@@ -82,7 +82,7 @@ class Submission(Object):
     url: str = field(init=False)
 
     def __post_init__(self):
-        object.__setattr__(self, 'url', f'{HyperskillPlatform.BASE_URL}/submissions/{self.id}')
+        object.__setattr__(self, 'url', f'{HyperskillPlatform.BASE_URL}/submissions/{self.id}')  # noqa: WPS609
 
 
 @dataclass(frozen=True)

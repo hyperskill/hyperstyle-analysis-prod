@@ -10,7 +10,10 @@ from core.src.utils.df_utils import read_df, write_df
 from core.src.utils.logging_utils import configure_logger
 
 
-def build_topics_tree(df_topics: pd.DataFrame) -> Tuple[Dict[int, List[int]], List[int]]:
+TopicsTree = Dict[int, List[int]]
+
+
+def build_topics_tree(df_topics: pd.DataFrame) -> Tuple[TopicsTree, List[int]]:
     """ Build topic thee for given dataset of topics, setting topic as a parent if it is mentioned in prerequisites. """
 
     logging.info("Building topics tree")
@@ -19,7 +22,7 @@ def build_topics_tree(df_topics: pd.DataFrame) -> Tuple[Dict[int, List[int]], Li
     roots = []
     for _, topic in df_topics.iterrows():
         prerequisites = ast.literal_eval((topic[TopicColumns.PREREQUISITES.value]))
-        if len(prerequisites) == 0:
+        if not prerequisites:
             roots.append(topic[TopicColumns.ID.value])
         for prerequisite in prerequisites:
             if prerequisite not in topics_tree:
@@ -27,7 +30,7 @@ def build_topics_tree(df_topics: pd.DataFrame) -> Tuple[Dict[int, List[int]], Li
             else:
                 topics_tree[prerequisite].append(topic[TopicColumns.ID.value])
 
-    topics_tree = {topic: list(set(children)) for topic, children in topics_tree.items()}
+    topics_tree = {topic_id: list(set(children)) for topic_id, children in topics_tree.items()}
     return topics_tree, roots
 
 
@@ -42,7 +45,7 @@ def get_topics_depth(df_topics: pd.DataFrame) -> Dict[int, int]:
         topics_tree_depth[root] = 0
         queue.append(root)
 
-    while len(queue) != 0:
+    while queue:
         topic_id = queue.pop(0)
         for child_topic_id in topics_tree[topic_id]:
             if child_topic_id not in topics_tree_depth:

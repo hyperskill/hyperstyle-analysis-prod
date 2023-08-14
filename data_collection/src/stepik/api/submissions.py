@@ -1,15 +1,15 @@
-import datetime
-from dataclasses import dataclass
-from typing import List, Optional
-
-from core.src.model.api.platform_objects import BaseRequestParams, Object, ObjectResponse
-
 """
 This file contains classes, which describe submission entity from Stepik platform.
 Submission is a user's attempt to solve the step's task and platform's feedback on this solution.
 Steps are available by API requests, described at
     https://stepic.org/api/docs/#!/submissions
 """
+
+import datetime
+from dataclasses import dataclass
+from typing import List, Optional
+
+from core.src.model.api.platform_objects import BaseRequestParams, Object, ObjectResponse
 
 
 @dataclass

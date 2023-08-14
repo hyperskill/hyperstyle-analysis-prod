@@ -50,7 +50,7 @@ def remove_directory(directory: Union[str, Path]) -> None:
 
 def add_slash(path: str) -> str:
     if not path.endswith('/'):
-        path += '/'
+        path += '/'  # noqa: WPS336
     return path
 
 

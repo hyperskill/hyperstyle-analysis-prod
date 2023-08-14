@@ -122,8 +122,7 @@ def add_additional_info(
         .apply(lambda step_id: f'{config.base_task_url}/{step_id}')
     if df_submissions is not None:
         save_submission_samples(df_repetitive_issues, df_submissions, config)
-    df_repetitive_issues = df_repetitive_issues.sort_values(SubmissionColumns.STEP_ID.value)
-    return df_repetitive_issues
+    return df_repetitive_issues.sort_values(SubmissionColumns.STEP_ID.value)
 
 
 def process_repetitive_issues(df_repetitive_issues: pd.DataFrame,
@@ -133,10 +132,9 @@ def process_repetitive_issues(df_repetitive_issues: pd.DataFrame,
     df_repetitive_issues = filter_by_freq(df_repetitive_issues, config.freq_to_remove)
     if config.with_additional_info:
         df_repetitive_issues = add_additional_info(df_repetitive_issues, df_submissions=df_submissions, config=config)
-    df_repetitive_issues_split = split_by_freq(df_repetitive_issues,
-                                               config.freq_to_separate_template_issues,
-                                               config.freq_to_separate_rare_and_common_issues)
-    return df_repetitive_issues_split
+    return split_by_freq(df_repetitive_issues,
+                         config.freq_to_separate_template_issues,
+                         config.freq_to_separate_rare_and_common_issues)
 
 
 def postprocess(config: ProcessingConfig):

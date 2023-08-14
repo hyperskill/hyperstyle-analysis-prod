@@ -7,26 +7,32 @@ import pandas as pd
 
 from core.src.utils.df_utils import read_df
 from jba.src.models.edu_columns import EduColumnName
-from jba.src.plots.task_stat import TaskStat, _calculate_tasks_stat
-from jba.src.plots.util import _prepare_task_df_for_plots, _plot_name, _make_plot_pretty
+from jba.src.plots.task_stat import TaskStat, calculate_tasks_stat
+from jba.src.plots.util import prepare_task_df_for_plots, plot_name, make_plot_pretty
 
 
 def _calculate_started_amount(tasks_stat: Dict[int, TaskStat], task_id: int) -> int:
-    if task_id in tasks_stat:
-        return tasks_stat[task_id].started
-    return 0
+    stats = tasks_stat.get(task_id)
+    if stats is None:
+        return 0
+
+    return stats.started
 
 
 def _calculate_finished_amount(tasks_stat: Dict[int, TaskStat], task_id: int) -> int:
-    if task_id in tasks_stat:
-        return tasks_stat[task_id].finished
-    return 0
+    stats = tasks_stat.get(task_id)
+    if stats is None:
+        return 0
+
+    return stats.finished
 
 
 def _calculate_unfinished_correct_amount(tasks_stat: Dict[int, TaskStat], task_id: int) -> int:
-    if task_id in tasks_stat:
-        return tasks_stat[task_id].unfinished
-    return 0
+    stats = tasks_stat.get(task_id)
+    if stats is None:
+        return 0
+
+    return stats.unfinished
 
 
 def plot_task_solving(course_data_df: pd.DataFrame, all_tasks_data_df: pd.DataFrame,
@@ -34,9 +40,9 @@ def plot_task_solving(course_data_df: pd.DataFrame, all_tasks_data_df: pd.DataFr
     started_column = 'started&finished'
     finished_correct_column = 'finished_correct'
     unfinished_column = 'unfinished'
-    tasks_stat = _calculate_tasks_stat(course_data_df)
+    tasks_stat = calculate_tasks_stat(course_data_df)
 
-    tasks_df = _prepare_task_df_for_plots(course_data_df, all_tasks_data_df)
+    tasks_df = prepare_task_df_for_plots(course_data_df, all_tasks_data_df)
     tasks_df[started_column] = tasks_df.apply(
         lambda row: _calculate_started_amount(tasks_stat, row[EduColumnName.TASK_ID.value]), axis=1)
     tasks_df[finished_correct_column] = tasks_df.apply(
@@ -48,7 +54,7 @@ def plot_task_solving(course_data_df: pd.DataFrame, all_tasks_data_df: pd.DataFr
     ax = plt.gca()
     tasks_df.plot(kind='line', x=EduColumnName.TASK_NAME.value, y=started_column, color='red', ax=ax)
     tasks_df.plot(kind='line', x=EduColumnName.TASK_NAME.value, y=unfinished_column, color='black', ax=ax)
-    _make_plot_pretty(ax, tasks_df, _plot_name('task solving process', course_name), "number of users")
+    make_plot_pretty(ax, tasks_df, plot_name('task solving process', course_name), "number of users")
     plt.show()
 
 

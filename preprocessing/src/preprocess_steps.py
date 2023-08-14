@@ -13,6 +13,8 @@ from core.src.utils.df_utils  import merge_dfs, read_df, write_df
 from core.src.utils.logging_utils import configure_logger
 from core.src.utils.stats_utils import calculate_code_lines_count
 
+CodeTemplate = Dict[str, str]
+
 
 def get_steps_complexity_tag(depth: int, complexity_borders: Tuple[int, int]) -> str:
     """ Defines step's complexity.
@@ -50,7 +52,7 @@ def get_steps_scope_tag(prerequisites_count: int, scope_borders: Tuple[int, int]
 def get_step_likes_tag(likes_value: int) -> Optional[str]:
     """ Defines step's likes tag according to mapping rule. """
 
-    value_to_tag = {
+    value_to_tag = {  # noqa: WPS417
         -2: LikesColumns.ANGRY.value,
         -1: LikesColumns.SAD.value,
         0: LikesColumns.NEUTRAL.value,
@@ -111,7 +113,7 @@ def check_template(options: Dict) -> bool:
     return code_template_lines_count > 0
 
 
-def get_code_templates(options: Dict) -> Optional[List[Dict[str, str]]]:
+def get_code_templates(options: Dict) -> Optional[List[CodeTemplate]]:
     """ Get code templates. """
 
     return options[StepColumns.CODE_TEMPLATES.value]

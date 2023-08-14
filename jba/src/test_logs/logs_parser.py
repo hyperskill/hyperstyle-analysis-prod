@@ -36,7 +36,7 @@ def parse_gradle_logs(submission: pd.Series, gradle_logs_folder: Path) -> Tuple[
     lesson_name = submission[EduColumnName.LESSON_NAME.value]
     task_name = submission[EduColumnName.TASK_NAME.value]
 
-    relative_task_path = Path('' if section_name is None else section_name) / lesson_name / task_name
+    relative_task_path = Path('' if section_name is None else section_name) / lesson_name / task_name  # noqa: WPS509
 
     parsed_stderr_logs = _parse_stderr_logs(submission_gradle_logs_folder, str(relative_task_path))
     if parsed_stderr_logs is not None:
@@ -119,7 +119,7 @@ def main():
 
     logging.basicConfig(
         level=logging.DEBUG if args.debug else logging.INFO,
-        format='%(asctime)s | %(levelname)s | %(message)s',
+        format='%(asctime)s | %(levelname)s | %(message)s',  # noqa: WPS323
     )
 
     submissions = read_df(args.submissions_path)

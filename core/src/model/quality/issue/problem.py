@@ -57,7 +57,7 @@ class Problem(BaseIssue):
     def get_column_number(self) -> int:
         return self.sources[0].offset
 
-    def get_category(self) -> str:
+    def get_category(self) -> str:  # noqa: WPS615
         return self.category
 
     def get_difficulty(self) -> str:

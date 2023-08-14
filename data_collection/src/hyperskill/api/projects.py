@@ -1,9 +1,3 @@
-from dataclasses import dataclass, field
-from typing import Dict, List, Optional
-
-from core.src.model.api.platform_objects import BaseRequestParams, Object, ObjectResponse
-from data_collection.src.hyperskill.hyperskill_objects import HyperskillPlatform
-
 """
 This file contains classes, which describe project entity from Hyperskill platform. Project contains of big task with
 supportive steps to reach the final result and learn how to implement it.
@@ -11,6 +5,12 @@ Projects are available by API requests, described at
     https://hyperskill.org/api/docs/#projects-list
     https://hyperskill.org/api/docs/#projects-read
 """
+
+from dataclasses import dataclass, field
+from typing import Dict, List, Optional
+
+from core.src.model.api.platform_objects import BaseRequestParams, Object, ObjectResponse
+from data_collection.src.hyperskill.hyperskill_objects import HyperskillPlatform
 
 
 @dataclass
@@ -43,7 +43,7 @@ class Project(Object):
     tracks: Dict[str, Dict[str, str]] = field(default_factory=dict)
 
     def __post_init__(self):
-        object.__setattr__(self, 'url', f'{HyperskillPlatform.BASE_URL}/projects/{self.id}')
+        object.__setattr__(self, 'url', f'{HyperskillPlatform.BASE_URL}/projects/{self.id}')  # noqa: WPS609
 
 
 @dataclass(frozen=True)

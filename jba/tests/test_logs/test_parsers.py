@@ -902,7 +902,7 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
             TestData(
                 class_name='Test',
                 test=dedent(
-                    r"""
+                    """
                     [16] +---+---+
                     | o   o |
                     |   ^   |
@@ -921,7 +921,7 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
             TestData(
                 class_name='Test',
                 test=dedent(
-                    r"""
+                    """
                     [17] +---+---+
                     | o   o |
                     |   ^   |
@@ -940,7 +940,7 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
             TestData(
                 class_name='Test',
                 test=dedent(
-                    r"""
+                    """
                     [18] +---+---+
                     | o   o |
                     |   ^   |
@@ -963,7 +963,7 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
             TestData(
                 class_name='Test',
                 test=dedent(
-                    r"""
+                    """
                     [19] +---+---+
                     | o   o |
                     |   ^   |
@@ -995,7 +995,7 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
             TestData(
                 class_name='Test',
                 test=dedent(
-                    r"""
+                    """
                     [20] +---+---+
                     | o   o |
                     |   ^   |
@@ -1018,7 +1018,7 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
             TestData(
                 class_name='Test',
                 test=dedent(
-                    r"""
+                    """
                     [21]    .+------+
                      .' |    .'|
                     +---+--+'  |
@@ -1041,7 +1041,7 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
             TestData(
                 class_name='Test',
                 test=dedent(
-                    r"""
+                    """
                     [22]    .+------+
                      .' |    .'|
                     +---+--+'  |
@@ -1064,7 +1064,7 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
             TestData(
                 class_name='Test',
                 test=dedent(
-                    r"""
+                    """
                     [23]    .+------+
                      .' |    .'|
                     +---+--+'  |
@@ -1093,7 +1093,7 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
             TestData(
                 class_name='Test',
                 test=dedent(
-                    r"""
+                    """
                     [24]    .+------+
                      .' |    .'|
                     +---+--+'  |
@@ -1117,7 +1117,7 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
             TestData(
                 class_name='Test',
                 test=dedent(
-                    r"""
+                    """
                     [25]    .+------+
                      .' |    .'|
                     +---+--+'  |
@@ -1146,7 +1146,7 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
             ),
             TestData(
                 class_name='Test',
-                test=dedent(
+                test=dedent(  # noqa: WPS462
                     """
                     [3] ○, Filter(width=1, height=2, result=○
                     ○)
@@ -1158,7 +1158,7 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
             ),
             TestData(
                 class_name='Test',
-                test=dedent(
+                test=dedent(  # noqa: WPS462
                     """
                     [4] ○, Filter(width=5, height=7, result=○○○○○
                     ○○○○○
@@ -1175,7 +1175,7 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
             ),
             TestData(
                 class_name='Test',
-                test=dedent(
+                test=dedent(  # noqa: WPS462
                     """
                     [5] ○, Filter(width=6, height=8, result=○○○○○○
                     ○○○○○○
@@ -1382,7 +1382,7 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
             TestData(
                 class_name='Test',
                 test=dedent(
-                    r"""
+                    """
                     [4] +---+---+
                     | o   o |
                     |   ^   |
@@ -1397,7 +1397,7 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
             TestData(
                 class_name='Test',
                 test=dedent(
-                    r"""
+                    """
                     [5]    .+------+
                      .' |    .'|
                     +---+--+'  |

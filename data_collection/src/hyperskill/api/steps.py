@@ -1,10 +1,3 @@
-import datetime
-from dataclasses import dataclass, field
-from typing import Dict, List, Optional
-
-from core.src.model.api.platform_objects import BaseRequestParams, Object, ObjectResponse
-from data_collection.src.hyperskill.hyperskill_objects import HyperskillPlatform
-
 """
 This file contains classes, which describe step entity from Hyperskill platform.
 Step is a task where user needs to solve a problem or answer a question.
@@ -12,6 +5,13 @@ Steps are available by API requests, described at
     https://hyperskill.org/api/docs/#steps-list
     https://hyperskill.org/api/docs/#steps-read
 """
+
+import datetime
+from dataclasses import dataclass, field
+from typing import Dict, List, Optional
+
+from core.src.model.api.platform_objects import BaseRequestParams, Object, ObjectResponse
+from data_collection.src.hyperskill.hyperskill_objects import HyperskillPlatform
 
 
 @dataclass
@@ -100,7 +100,7 @@ class Step(Object):
     url: str = field(init=False)
 
     def __post_init__(self):
-        object.__setattr__(self, 'url', f'{HyperskillPlatform.BASE_URL}/learn/step/{self.id}')
+        object.__setattr__(self, 'url', f'{HyperskillPlatform.BASE_URL}/learn/step/{self.id}')  # noqa: WPS609
 
 
 @dataclass(frozen=True)

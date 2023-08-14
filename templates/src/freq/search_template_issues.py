@@ -71,10 +71,11 @@ def get_repetitive_issues(submission_series: pd.DataFrame,
     total_attempts_count = submission_series.shape[0]
 
     # Repetitive issues are which appear in all attempts
-    repetitive_issues_list = [key_issue for key_issue, repetitive_issues in repetitive_issues_dict.items() if
-                              len(repetitive_issues) == total_attempts_count]
-
-    return repetitive_issues_list
+    return [
+        key_issue
+        for key_issue, repetitive_issues in repetitive_issues_dict.items()
+        if len(repetitive_issues) == total_attempts_count
+    ]
 
 
 def repetitive_issues_to_df(step_id: int,
@@ -129,10 +130,7 @@ def search_repetitive_issues_by_step(df_submissions: pd.DataFrame,
         for issue in submission_series_repetitive_issues:
             repetitive_issues[issue].append(issue)
 
-    df_repetitive_issues = repetitive_issues_to_df(step[StepColumns.ID.value], df_submissions.shape[0],
-                                                   repetitive_issues)
-
-    return df_repetitive_issues
+    return repetitive_issues_to_df(step[StepColumns.ID.value], df_submissions.shape[0], repetitive_issues)
 
 
 def search_repetitive_issues(df_submissions: pd.DataFrame,

@@ -1,14 +1,14 @@
-from dataclasses import dataclass, field
-from typing import List, Optional
-
-from core.src.model.api.platform_objects import BaseRequestParams, Object, ObjectResponse
-from data_collection.src.stepik.stepik_objects import StepikPlatform
-
 """
 This file contains classes, which describe course entity from Stepik platform. Course is a group of lessons.
 Courses are available by API requests, described at
     https://stepic.org/api/docs/#!/courses
 """
+
+from dataclasses import dataclass, field
+from typing import List, Optional
+
+from core.src.model.api.platform_objects import BaseRequestParams, Object, ObjectResponse
+from data_collection.src.stepik.stepik_objects import StepikPlatform
 
 
 @dataclass
@@ -46,7 +46,7 @@ class Course(Object):
     url: str = field(init=False)
 
     def __post_init__(self):
-        object.__setattr__(self, 'url', f'{StepikPlatform.BASE_URL}/course/{self.id}/promo')
+        object.__setattr__(self, 'url', f'{StepikPlatform.BASE_URL}/course/{self.id}/promo')  # noqa: WPS609
 
 
 @dataclass(frozen=True)

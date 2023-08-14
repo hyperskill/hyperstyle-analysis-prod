@@ -45,4 +45,4 @@ class BaseIssue:
                self.get_line_number() == other.get_line_number() and \
                self.get_column_number() == other.get_column_number() and \
                self.get_category() == other.get_category() and \
-               self.get_difficulty() == other.get_difficulty()
+               self.get_difficulty() == other.get_difficulty()  # noqa: WPS222

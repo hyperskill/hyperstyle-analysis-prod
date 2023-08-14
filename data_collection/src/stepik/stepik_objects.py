@@ -2,7 +2,7 @@ from enum import Enum, unique
 
 
 @unique
-class ObjectClass(str, Enum):
+class ObjectClass(str, Enum):  # noqa: WPS600
     SEARCH_RESULT = 'search-result'
     LESSON = 'lesson'
     COURSE = 'course'

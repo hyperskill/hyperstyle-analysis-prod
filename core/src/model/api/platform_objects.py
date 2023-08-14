@@ -4,7 +4,7 @@ from typing import Generic, List, Optional, TypeVar
 
 
 @unique
-class Platform(str, Enum):
+class Platform(str, Enum):  # noqa: WPS600
     HYPERSKILL = 'hyperskill'
     STEPIK = 'stepik'
 
