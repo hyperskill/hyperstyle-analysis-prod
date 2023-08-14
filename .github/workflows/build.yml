@@ -16,5 +16,17 @@ jobs:
       - name: 'Build project'
         run: docker run hyperstyle-analysis-prod poetry build
 
+      - name: Sort the whitelist
+        run: LC_ALL=C sort spellcheck_whitelist.txt -o spellcheck_whitelist.txt
+
+      - name: Commit the sorted whitelist
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: "whitelist.txt"
+          message: 'Sort whitelist (Github Actions)'
+
+      - name: 'Check code style'
+        run: docker run hyperstyle-analysis-prod poetry flake8 . --count --statistics --show-source
+
       - name: 'Run tests'
         run: docker run hyperstyle-analysis-prod poetry run pytest -vv
