@@ -24,7 +24,7 @@ jobs:
         run: LC_ALL=C sort spellcheck_whitelist.txt -o spellcheck_whitelist.txt
 
       - name: Commit the sorted whitelist
-        uses: EndBug/add-and-commit@v9
+        uses: EndBug/add-and-commit@v7.2.1
         with:
           add: "spellcheck_whitelist.txt"
           message: 'Sort whitelist (Github Actions)'
