@@ -42,7 +42,6 @@ iterrows
 itertuples
 jba
 jpg
-kek
 langs
 linkedin
 listdir
