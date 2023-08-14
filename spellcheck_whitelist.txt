@@ -42,6 +42,7 @@ iterrows
 itertuples
 jba
 jpg
+kek
 langs
 linkedin
 listdir
@@ -100,4 +101,3 @@ xticklabels
 xticks
 yaxis
 ylabel
-kek
