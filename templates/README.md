@@ -11,8 +11,8 @@ More information about the platform and the use of Hyperstyle can be found [here
 This module allows running the algorithm of searching code quality issues 
 in the task pre-written templates:
 
-- [an algorithm, based on the diffs analysis](./src/templates/diffs/README.md)
-- [an algorithm, based on the frequency analysis](./src/templates/freq/README.md)
+- [an algorithm, based on the diffs analysis](src/diffs/README.md)
+- [an algorithm, based on the frequency analysis](src/freq/README.md)
 
 Nowadays, many MOOC platforms use predefined templates in their tasks. For example, on
 the [JetBrains Academy](https://www.jetbrains.com/academy/) platform developed by JetBrains, 

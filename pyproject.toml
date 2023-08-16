@@ -1,0 +1,95 @@
+[tool.poetry]
+name = "hyperstyle-analysis-prod"
+version = "0.1.0"
+description = "Repository containing several tools-helpers to work with data from the Hyperstyle platform"
+authors = [
+    "Anastasia Birillo <anastasia.birillo@jetbrains.com>",
+    "Maria Tigina <maria.tigina@jetbrains.com>",
+    "Ilya Vlasov <ilya.vlasov@jetbrains.com>",
+]
+readme = "README.md"
+packages = [
+    { include = "core" },
+    { include = "data_collection" },
+    { include = "data_labelling" },
+    { include = "jba" },
+    { include = "preprocessing" },
+    { include = "templates" },
+]
+
+# Core dependencies
+[tool.poetry.dependencies]
+python = "~3.9"
+pandas = "2.0.3"
+dataclasses-json = "0.5.14"
+hyperstyle = "1.4.2"
+python-dateutil = "2.8.2"
+pyyaml = "6.0"
+argparse = "1.4.0"
+requests = "2.25.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "7.4.0"
+pytest-runner = "6.0.0"
+pytest-subtests = "0.11.0"
+
+# Data collection dependencies
+[tool.poetry.group.data-collection]
+optional = true
+
+[tool.poetry.group.data-collection.dependencies]
+dacite = "1.8.1"
+
+# Data labeling dependencies
+[tool.poetry.group.data-labelling]
+optional = true
+
+[tool.poetry.group.data-labelling.dependencies]
+
+# JBA dependencies
+[tool.poetry.group.jba]
+optional = true
+
+[tool.poetry.group.jba.dependencies]
+numpy = "1.25.0"
+matplotlib = "3.7.2"
+python-dotenv = "1.0.0"
+pandarallel = "1.6.5"
+beautifulsoup4 = "4.12.2"
+
+# Preprocessing dependencies
+[tool.poetry.group.preprocessing]
+optional = true
+
+[tool.poetry.group.preprocessing.dependencies]
+
+# Templates dependencies
+[tool.poetry.group.templates]
+optional = true
+
+[tool.poetry.group.templates.dependencies]
+diff-match-patch = "20230430"
+
+[tool.poetry.scripts]
+# Data collection scripts
+collect_data = 'data_collection.src.collect_data:main'
+# Data labelling scripts
+run_hyperstyle = 'data_labelling.src.hyperstyle.evaluate:main'
+# JBA scripts
+prepare_course_data = 'jba.src.processing.prepare_course_data:main'
+process_course_data = 'jba.src.processing.data_processing:main'
+plot_task_attempt = 'jba.src.plots.task_attempt:main'
+plot_task_solving = 'jba.src.plots.task_solving:main'
+submissions_gathering = 'jba.src.gathering.gather_submissions_info:main'
+gradle_tests_runner = 'jba.src.test_logs.tests_runner:main'
+gradle_logs_parser = 'jba.src.test_logs.logs_parser:main'
+# Preprocessing scripts
+preprocess_submissions = 'preprocessing.src.preprocess_submissions:main'
+# Templates scripts
+filter_by_diff = 'templates.src.diffs.filter_by_diff:main'
+search_by_freq = 'templates.src.freq.search_template_issues:main'
+postprocess_by_freq = 'templates.src.freq.postprocess:main'
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

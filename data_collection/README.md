@@ -25,7 +25,7 @@ This module use platforms' APIs to extract information about following entities 
 | user       | Registered people on platform.                                                    |
 | submission | User's attempt to solve the step's task and platform's feedback on this solution. |
 
-To get data from the education platforms, configure and run [collect_data.py](src/data_collection/collect_data.py) 
+To get data from the education platforms, configure and run [collect_data.py](src/collect_data.py) 
 from command line with following arguments:
 ### Configure:
 
@@ -40,6 +40,15 @@ from command line with following arguments:
 For more information about api go to [hyperskill api documentation](https://hyperskill.org/api/docs/) or [stepik api documentation](https://stepik.org/api/docs/).
    
 ### Run:
+
+Execute one of the following commands with necessary arguments:
+```bash
+poetry run collect_data [arguments]
+```
+or
+```bash
+docker run hyperstyle-analysis-prod:<VERSION> poetry run collect_data [arguments]
+```
 
 **Required arguments:**
 

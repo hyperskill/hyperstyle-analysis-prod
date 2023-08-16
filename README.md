@@ -28,14 +28,43 @@ the code editor. An example of the Hyperstyle user interface:
 ![The Hyperstyle user interface on the JetBrains Academy platform.](./images/hyperstyle.png "The Hyperstyle user interface on the JetBrains Academy platform.")
 
 
-### Getting started
+## Getting started
 
-This project uses the [Paddle](https://github.com/JetBrains-Research/paddle#tasks-section) build system. To set up the project you need:
-1. Clone this repository
-2. Install the [Paddle](https://plugins.jetbrains.com/plugin/17452-paddle) plugin
-3. Open the repository in the [PyCharm](https://www.jetbrains.com/pycharm/) IDE
-4. Import this project as a Paddle project
+### Run via poetry
 
-Each module contains Paddle tasks to configure and run it. Read more in README files in the modules.
+This project uses the [Poetry](https://github.com/python-poetry/poetry) build system. To set up everything you need:
+1. [Install](https://python-poetry.org/docs/#installation) poetry.
+2. Clone this repository
+3. Run `poetry install --with <list_of_optional_modules>`, where `<list_of_optional_modules>` is a list of modules what you need to install. Only the [`core`](core) module is not an optional and is always installed.
+   For example, if you want to install the [`data_collection`](data_collection), [`jba`](jba) and [`preprocessing`](preprocessing) modules, then you should run `poetry install --with data-collection,jba,preporcessing`.
 
-Also, each module contains tests that run the entry points of the module. These tests are called with `test_run` prefix. You can see these tests to see the format of the arguments and the input data.
+To run any script in the repository just execute:
+```bash
+poetry run python /path/to/the/script.py [script_arguments]
+```
+
+There are also several aliases for main scripts. 
+You could find them inside the [pyproject.toml](pyproject.toml) file in the `[tool.poetry.scripts]` section. 
+To run any script using its alias just execute:
+```bash
+poetry run <script_alias> [script_arguments]
+```
+
+### Run via Docker
+
+If you don't want to install poetry, you could use our official Docker image where all necessary environment is installed. 
+To do this:
+1. Pull the image:
+   ```bash
+   docker pull registry.jetbrains.team/p/code-quality-for-online-learning-platforms/hyperstyle-analysis-prod/hyperstyle-analysis-prod:<VERSION>
+   ```
+   where `<VERSION>` is the project version you would like to use. You could always find the latest version inside the [pyproject.toml](pyproject.toml) file.
+
+2. Run a container with the command you would like to execute.
+   ```bash
+   docker run hyperstyle-analysis-prod:<VERSION> <command>
+   ```
+   For example:
+   ```bash
+   docker run hyperstyle-analysis-prod:<VERSION> poetry run <script_alias> [script_arguments]
+   ```
