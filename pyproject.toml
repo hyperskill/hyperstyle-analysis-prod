@@ -2,7 +2,11 @@
 name = "hyperstyle-analysis-prod"
 version = "0.1.0"
 description = "Repository containing several tools-helpers to work with data from the Hyperstyle platform"
-authors = ["Anastasia Birillo <anastasia.birillo@jetbrains.com>"]
+authors = [
+    "Anastasia Birillo <anastasia.birillo@jetbrains.com>",
+    "Maria Tigina <maria.tigina@jetbrains.com>",
+    "Ilya Vlasov <ilya.vlasov@jetbrains.com>",
+]
 readme = "README.md"
 packages = [
     { include = "core" },
