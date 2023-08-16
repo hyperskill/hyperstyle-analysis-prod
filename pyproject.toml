@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hyperstyle-analysis-prod"
-version = "0.1.0"
+version = "0.1.1"
 description = "Repository containing several tools-helpers to work with data from the Hyperstyle platform"
 authors = ["Anastasia Birillo <anastasia.birillo@jetbrains.com>"]
 readme = "README.md"
@@ -78,6 +78,7 @@ prepare_course_data = 'jba.src.processing.prepare_course_data:main'
 process_course_data = 'jba.src.processing.data_processing:main'
 plot_task_attempt = 'jba.src.plots.task_attempt:main'
 plot_task_solving = 'jba.src.plots.task_solving:main'
+plot_task_duplicates = 'jba.src.plots.task_duplicates:main'
 submissions_gathering = 'jba.src.gathering.gather_submissions_info:main'
 gradle_tests_runner = 'jba.src.test_logs.tests_runner:main'
 gradle_logs_parser = 'jba.src.test_logs.logs_parser:main'
