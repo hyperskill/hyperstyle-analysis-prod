@@ -76,6 +76,7 @@ splitext
 src
 stepic
 stepik
+styleguide
 substring
 svg
 textwrap
@@ -88,8 +89,12 @@ utils
 venv
 webbrowser
 webp
+wemake
 wfile
 whitespaces
+wps508
+wps518
+wps615
 writeheader
 writelines
 writerow
@@ -100,8 +105,3 @@ xticklabels
 xticks
 yaxis
 ylabel
-wps615
-wps518
-wps508
-wemake
-styleguide
