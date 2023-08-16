@@ -32,6 +32,7 @@ gradle
 groupby
 hyperskill
 hyperstyle
+iloc
 inplace
 isfile
 isin
@@ -100,4 +101,3 @@ xticklabels
 xticks
 yaxis
 ylabel
-iloc
