@@ -7,6 +7,10 @@ from core.src.model.column_name import StepColumns
 from core.src.utils.quality.code_utils import split_code_to_lines
 
 
+class TemplateCodeParseException(Exception):
+    pass
+
+
 def parse_template_code_from_step(step: pd.Series, lang: Optional[str] = None, keep_ends: bool = False) -> List[str]:
     # Steps gathered from Database in format of str
     code_template = step.get(StepColumns.CODE_TEMPLATE.value)
@@ -17,7 +21,7 @@ def parse_template_code_from_step(step: pd.Series, lang: Optional[str] = None, k
     if StepColumns.CODE_TEMPLATES.value in step and lang is not None:
         return parse_template_from_dict(step[StepColumns.CODE_TEMPLATES.value], lang=lang, keep_ends=keep_ends)
 
-    raise Exception(  # noqa: WPS454
+    raise TemplateCodeParseException(
         'Can not parse template code! Check the language is specified and dataset has corresponding columns!',
     )
 
