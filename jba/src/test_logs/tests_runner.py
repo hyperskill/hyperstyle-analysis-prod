@@ -101,7 +101,10 @@ def _check_submission(
     lesson_name = submission[EduColumnName.LESSON_NAME.value]
     task_name = submission[EduColumnName.TASK_NAME.value]
 
-    task_root_path = course_root_path / ('' if section_name is None else section_name) / lesson_name / task_name  # noqa: WPS509
+    # The nested ternary operator is justified here
+    task_root_path = (
+        course_root_path / ('' if section_name is None else section_name) / lesson_name / task_name  # noqa: WPS509
+    )
 
     task_config = parse_course_config(task_root_path, f'task-info{AnalysisExtension.YAML.value}')
     visible_files = {
@@ -199,7 +202,7 @@ def main():
 
     logging.basicConfig(
         level=logging.DEBUG if args.debug else logging.INFO,
-        format='%(asctime)s | %(levelname)s | %(message)s',  # noqa: WPS323
+        format='%(asctime)s | %(levelname)s | %(message)s',  # noqa: WPS323 You must use % here to format logger.
     )
     pandarallel.initialize(nb_workers=args.n_cpu)
 

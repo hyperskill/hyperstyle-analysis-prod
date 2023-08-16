@@ -57,7 +57,7 @@ class Problem(BaseIssue):
     def get_column_number(self) -> int:
         return self.sources[0].offset
 
-    def get_category(self) -> str:  # noqa: WPS615
+    def get_category(self) -> str:  # noqa: WPS615 Disabled because we're using getters here intentionally
         return self.category
 
     def get_difficulty(self) -> str:

@@ -1146,7 +1146,7 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
             ),
             TestData(
                 class_name='Test',
-                test=dedent(  # noqa: WPS462
+                test=dedent(  # noqa: WPS462 Disabled because you can use multiline string with the dedent function
                     """
                     [3] ○, Filter(width=1, height=2, result=○
                     ○)
@@ -1158,7 +1158,7 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
             ),
             TestData(
                 class_name='Test',
-                test=dedent(  # noqa: WPS462
+                test=dedent(  # noqa: WPS462 Disabled because you can use multiline string with the dedent function
                     """
                     [4] ○, Filter(width=5, height=7, result=○○○○○
                     ○○○○○
@@ -1175,7 +1175,7 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
             ),
             TestData(
                 class_name='Test',
-                test=dedent(  # noqa: WPS462
+                test=dedent(  # noqa: WPS462 Disabled because you can use multiline string with the dedent function
                     """
                     [5] ○, Filter(width=6, height=8, result=○○○○○○
                     ○○○○○○

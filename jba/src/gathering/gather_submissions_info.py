@@ -24,7 +24,7 @@ def _get_submissions_by_course_and_user_id(query_storage_info: QueryInfoStorage,
     page = 0
     submissions_dfs = []
     logger.info(f'Start getting submissions for course {course_id}, user {user_id}')
-    while has_next:  # noqa: WPS426
+    while has_next:  # noqa: WPS426 Disabled because it's convenient to use lambda inside the apply function
         endpoint = f'{query_storage_info.base_end_point}/admin/course/{course_id}/user/{user_id}/submissions/all?page={page}'
         response = requests.get(endpoint, headers=query_storage_info.get_auth_headers())
         if response.status_code != 200:

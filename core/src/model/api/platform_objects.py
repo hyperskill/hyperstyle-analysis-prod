@@ -4,7 +4,7 @@ from typing import Generic, List, Optional, TypeVar
 
 
 @unique
-class Platform(str, Enum):  # noqa: WPS600
+class Platform(str, Enum):  # noqa: WPS600 We can inherit from str in Enums
     HYPERSKILL = 'hyperskill'
     STEPIK = 'stepik'
 

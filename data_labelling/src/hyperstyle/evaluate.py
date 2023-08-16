@@ -27,7 +27,7 @@ def parse_hyperstyle_result(results_path: Path) -> pd.Series:
         report = HyperstyleReport.from_file(results_path)
     except Exception as e:
         logging.error(f"Can not parse new format report from hyperstyle output: {e}")
-        raise Exception(e)  # noqa: WPS454
+        raise Exception(e)  # noqa: WPS454 Disabled because we want to log the exception
 
     return pd.Series({SubmissionColumns.HYPERSTYLE_ISSUES.value: report.to_json()})
 

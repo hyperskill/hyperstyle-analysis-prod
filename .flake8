@@ -108,7 +108,9 @@ ignore =
 per-file-ignores =
     */tests/*:WPS118,WPS436,WPS442,WPS450
     ./jba/tests/test_logs/test_parsers.py:WPS355,WPS462
+    # Disabled because BaseIssue is an abstract class
     ./core/src/model/quality/issue/issue.py:WPS463
+    # Disabled because we're using getters here intentionally
     ./core/src/model/quality/issue/hyperstyle_issue.py:WPS615
 
 exclude = .git, .github, venv, .venv, .pytest_cache

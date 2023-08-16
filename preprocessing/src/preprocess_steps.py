@@ -52,6 +52,7 @@ def get_steps_scope_tag(prerequisites_count: int, scope_borders: Tuple[int, int]
 def get_step_likes_tag(likes_value: int) -> Optional[str]:
     """ Defines step's likes tag according to mapping rule. """
 
+    # Disabled because it's a bug (https://github.com/wemake-services/wemake-python-styleguide/issues/2711)
     value_to_tag = {  # noqa: WPS417
         -2: LikesColumns.ANGRY.value,
         -1: LikesColumns.SAD.value,

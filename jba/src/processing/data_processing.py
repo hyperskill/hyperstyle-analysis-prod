@@ -28,6 +28,7 @@ def filter_submissions_series(submissions_series: pd.DataFrame) -> pd.DataFrame:
 
     group_size = submissions_series.shape[0]
     submissions_series[SubmissionColumns.ATTEMPT.value] = list(range(1, group_size + 1))
+    # List multiplication is allowed here because the list contains only integer values
     submissions_series[SubmissionColumns.TOTAL_ATTEMPTS.value] = [group_size] * group_size  # noqa: WPS435
 
     return submissions_series
