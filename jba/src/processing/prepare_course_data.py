@@ -39,13 +39,14 @@ def _parse_edu_config_item(base_path: str, nested_folder_name: str, item_type: s
     item_id = _parse_yaml_section(item_remote_info_parsed, ID_FIELD,
                                   f'{current_path}/{item_remote_info_file_name}')
 
-    if not is_terminal:
+    if is_terminal:
+        nested_items = None
+    else:
         item_info_file_name = f'{item_type}-info{AnalysisExtension.YAML.value}'
         item_info_parsed = parse_course_config(current_path, item_info_file_name)
         nested_items = _parse_yaml_section(item_info_parsed, CONTENT_FIELD,
                                            f'{current_path}/{item_info_file_name}')
-    else:
-        nested_items = None
+
     return EduConfigItem(item_id, nested_folder_name, item_type, nested_items)
 
 
@@ -84,7 +85,7 @@ def _gather_course_structure(course_root_path: str) -> pd.DataFrame:
             current_lesson_path = f'{current_section_path}/{lesson}'
             tasks_amount = len(lesson_parsed.nested_items)
             for k, task in enumerate(lesson_parsed.nested_items):
-                task_parsed = _parse_edu_config_item(current_lesson_path, task, 'task', True)
+                task_parsed = _parse_edu_config_item(current_lesson_path, task, 'task', is_terminal=True)
                 # task_global_number
                 # task_id, task_name, task_number, tasks_amount,
                 # lesson_id, lesson_name, lesson_number, lessons_amount,

@@ -1,9 +1,3 @@
-from dataclasses import dataclass, field
-from typing import List, Optional
-
-from core.src.model.api.platform_objects import BaseRequestParams, Object, ObjectResponse
-from data_collection.src.hyperskill.hyperskill_objects import HyperskillPlatform
-
 """
 This file contains classes, which describe topic entity from Hyperskill platform.
 Topic is a theme of knowledge area of steps. Several steps can be related to one topic. Topics have hierarchy
@@ -12,6 +6,12 @@ Topics are available by API requests, described at
     https://hyperskill.org/api/docs/#topics-list
     https://hyperskill.org/api/docs/#topics-read
 """
+
+from dataclasses import dataclass, field
+from typing import List, Optional
+
+from core.src.model.api.platform_objects import BaseRequestParams, Object, ObjectResponse
+from data_collection.src.hyperskill.hyperskill_objects import HyperskillPlatform
 
 
 @dataclass
@@ -43,7 +43,8 @@ class Topic(Object):
     url: str = field(init=False)
 
     def __post_init__(self):
-        object.__setattr__(self, 'url', f'{HyperskillPlatform.BASE_URL}/topics/{self.id}')
+        # Disabled because I don't know how to fix it while not breaking everything accidentally :-)
+        object.__setattr__(self, 'url', f'{HyperskillPlatform.BASE_URL}/topics/{self.id}')  # noqa: WPS609
 
 
 @dataclass(frozen=True)

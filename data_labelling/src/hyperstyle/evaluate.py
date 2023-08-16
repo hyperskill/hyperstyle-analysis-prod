@@ -27,16 +27,15 @@ def parse_hyperstyle_result(results_path: Path) -> pd.Series:
         report = HyperstyleReport.from_file(results_path)
     except Exception as e:
         logging.error(f"Can not parse new format report from hyperstyle output: {e}")
-        raise Exception(e)
+        raise Exception(e)  # noqa: WPS454 Disabled because we want to log the exception
 
     return pd.Series({SubmissionColumns.HYPERSTYLE_ISSUES.value: report.to_json()})
 
 
 def evaluate_hyperstyle(df_solutions: pd.DataFrame, config: HyperstyleEvaluationConfig) -> pd.DataFrame:
     """ Run hyperstyle tool on solutions. """
-    df_solutions = evaluate_by_solution(df_solutions, config, parse_hyperstyle_result,
-                                        working_directory=config.working_directory)
-    return df_solutions
+    return evaluate_by_solution(df_solutions, config, parse_hyperstyle_result,
+                                working_directory=config.working_directory)
 
 
 def main():

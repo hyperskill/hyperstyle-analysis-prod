@@ -2,7 +2,7 @@ from enum import Enum, unique
 
 
 @unique
-class ObjectClass(str, Enum):
+class ObjectClass(str, Enum):  # noqa: WPS600 We can inherit from str in Enums
     STEP = 'step'
     SEARCH_RESULT = 'search-result'
     TRACK = 'track'

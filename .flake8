@@ -1,0 +1,121 @@
+[flake8]
+ignore =
+    # Disable flake8-isort because we have flake8-import-order
+    I0,
+    # Forbid blacklisted module names
+    WPS100,
+    # Forbid blacklisted variable names
+    WPS110,
+    # Forbid short variable or module names
+    WPS111,
+    # Forbid names with underscored numbers pattern
+    WPS114,
+    # Require snake_case for naming class attributes. Disabled due to false-positives with enums
+    WPS115,
+    # Forbid modules with too many imports
+    WPS201,
+    # Forbid too many classes and functions in a single module
+    WPS202,
+    # Forbid overused expressions in a module, function or method
+    WPS204,
+    # Forbid too many arguments for a function or method
+    WPS211,
+    # Forbid putting too many expressions in a single function
+    WPS213,
+    # Forbid too many methods in a single class
+    WPS214,
+    # Forbid instances with too many public attributes
+    WPS230,
+    # Forbid functions with too much cognitive complexity
+    WPS231,
+    # Forbid modules with average cognitive complexity that is too high
+    WPS232,
+    # Forbids f strings that are too complex
+    WPS237,
+    # Forbid imports like import os.path.
+    WPS301,
+    # Forbid f strings
+    WPS305,
+    # Forbid writing classes without base classes
+    WPS306,
+    # Forbid implicit string concatenation
+    WPS326,
+    # Forbid wrong for loop iter targets
+    WPS335,
+    # Forbid multiline conditions
+    WPS337,
+    # Forbid imports that may cause confusion outside of the module
+    WPS347,
+    # Forbid starting lines with a dot
+    WPS348,
+    # Forbid mutable constants on a module level
+    WPS407,
+    # Forbid logic inside __init__ module
+    WPS412,
+    # Forbid some python keywords. Disabled due to false-positives
+    WPS420,
+    # Forbid calling some built-in functions
+    WPS421,
+    # Forbid nested functions
+    WPS430,
+    # Forbid magic numbers
+    WPS432,
+    # Forbid overlapping local and block variables. Disabled due to false-positives
+    WPS440,
+    # Forbid @staticmethod decorator
+    WPS602,
+    # Forbid incorrect nodes inside class definitions. Disabled due to false-positives with the pass keyword
+    WPS604,
+    # Forbid methods without any arguments
+    WPS605,
+    # TODO: remove from the ignore list
+    A003,
+    B007,
+    C812,
+    D1,
+    D2,
+    D3,
+    D4,
+    DAR,
+    E126,
+    E203,
+    E272,
+    E501,
+    F541,
+    F811,
+    F821,
+    H601,
+    I1,
+    I2,
+    N400,
+    Q000,
+    Q003,
+    R504,
+    RST301,
+    S1,
+    S404,
+    S603,
+    W291,
+    W391,
+    W503,
+    WPS210,
+    WPS221,
+    WPS226,
+    WPS317,
+    WPS318,
+    WPS319
+
+per-file-ignores =
+    */tests/*:WPS118,WPS436,WPS442,WPS450
+    ./jba/tests/test_logs/test_parsers.py:WPS355,WPS462
+    # Disabled because BaseIssue is an abstract class
+    ./core/src/model/quality/issue/issue.py:WPS463
+    # Disabled because we're using getters here intentionally
+    ./core/src/model/quality/issue/hyperstyle_issue.py:WPS615
+
+exclude = .git, .github, venv, .venv, .pytest_cache
+max-line-length = 120
+
+# flake8-spellcheck
+dictionaries = en_US,python,technical
+whitelist = spellcheck_whitelist.txt

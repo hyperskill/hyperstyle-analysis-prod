@@ -158,7 +158,7 @@ def test_check_submission_empty_snippets(repo: Path):
             Path(tmp_dir),
         )
 
-        assert len(os.listdir(tmp_dir)) == 0
+        assert not os.listdir(tmp_dir)
 
 
 def test_check_submission(repo: Path):
@@ -178,7 +178,7 @@ def test_check_submission(repo: Path):
         try:
             modification_time_before[file_path] = os.path.getmtime(task_root_path / file_path)
         except FileNotFoundError:
-            continue
+            pass
 
     with TemporaryDirectory() as tmp_dir:
         _check_submission(
@@ -198,7 +198,7 @@ def test_check_submission(repo: Path):
         try:
             modification_time_after[file_path] = os.path.getmtime(task_root_path / file_path)
         except FileNotFoundError:
-            continue
+            pass
 
     main_kt_path = 'src/main/kotlin/Main.kt'
     assert modification_time_before.pop(main_kt_path) != modification_time_after.pop(main_kt_path)

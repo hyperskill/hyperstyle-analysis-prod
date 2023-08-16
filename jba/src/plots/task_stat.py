@@ -20,7 +20,7 @@ class TaskStat:
     max_attempts: int
 
 
-def _calculate_tasks_stat(course_data_df: pd.DataFrame) -> Dict[int, TaskStat]:
+def calculate_tasks_stat(course_data_df: pd.DataFrame) -> Dict[int, TaskStat]:
     tasks = course_data_df[EduColumnName.TASK_ID.value].unique()
     stat = {}
     for task_id in tasks:

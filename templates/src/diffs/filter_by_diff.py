@@ -208,7 +208,7 @@ def filter_template_issues_using_diff(df_submissions: pd.DataFrame, df_steps: pd
                                            issues_column=issues_column,
                                            step=df_steps.loc[submission[SubmissionColumns.STEP_ID.value]])
 
-    return df_submissions.apply(lambda submission: apply_filter(submission), axis=1)
+    return df_submissions.apply(apply_filter, axis=1)
 
 
 def filter_by_diff(
@@ -260,7 +260,7 @@ def create_templates_issues_df(df_filtered_issues: pd.DataFrame, issues_column: 
             issues_dict[row_number_column].append(row_number)
             issues_dict[offset_column].append(offset)
 
-    df_filtered_issues.apply(lambda row: unzip_issue(row), axis=1)
+    df_filtered_issues.apply(unzip_issue, axis=1)
     return pd.DataFrame.from_dict(issues_dict).drop_duplicates(subset=[
         SubmissionColumns.STEP_ID.value,
         IssuesColumns.NAME.value,

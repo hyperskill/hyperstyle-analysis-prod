@@ -28,7 +28,7 @@ T = TypeVar('T', bound=Object)
 
 
 def save_objects_to_csv(output_path: str, objects: List[T], obj_class: str):
-    if len(objects) == 0:
+    if not objects:
         return
 
     if not os.path.exists(output_path):

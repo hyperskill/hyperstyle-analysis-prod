@@ -14,6 +14,9 @@ from data_collection.src.hyperskill.api.users import User, UserResponse
 from data_collection.src.hyperskill.hyperskill_objects import HyperskillPlatform, ObjectClass
 
 
+ObjectRequestor = Callable[[Optional[List[int]], Optional[int]], List[Object]]
+
+
 class HyperskillClient(PlatformClient):
     """
     Client for Hyperskill educational platform which allows to get information about
@@ -26,8 +29,7 @@ class HyperskillClient(PlatformClient):
         client_secret = os.environ.get(HyperskillPlatform.CLIENT_SECRET)
         super().__init__(HyperskillPlatform.BASE_URL, client_id, client_secret, port)
 
-        self._get_objects_by_class: Dict[
-            ObjectClass, Callable[[Optional[List[int]], Optional[int]], List[Object]]] = {
+        self._get_objects_by_class: Dict[ObjectClass, ObjectRequestor] = {
             ObjectClass.TOPIC: self.get_topics,
             ObjectClass.TRACK: self.get_tracks,
             ObjectClass.PROJECT: self.get_projects,
@@ -39,8 +41,8 @@ class HyperskillClient(PlatformClient):
     def get_objects(self, obj: str, ids: Optional[List[int]] = None, count: Optional[int] = None) -> List[Object]:
         if obj not in ObjectClass.values():
             return self.get_search_result(obj, count)
-        else:
-            return self._get_objects_by_class[ObjectClass(obj)](ids, count)
+
+        return self._get_objects_by_class[ObjectClass(obj)](ids, count)
 
     def get_search_result(self, query: str, count: Optional[int] = None) -> List[SearchResult]:
         """ Returns objects which are best matched the query."""

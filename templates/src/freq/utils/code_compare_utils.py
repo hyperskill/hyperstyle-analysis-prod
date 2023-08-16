@@ -38,9 +38,9 @@ def equal_substring(code_line: str, template_line: str) -> bool:
     return template_line in code_line
 
 
-SINGLE_TRAILING_PYTHON_COMMENT = re.compile(r'^(.+)(#.*)$')
+SINGLE_TRAILING_PYTHON_COMMENT = re.compile('^(.+)(#.*)$')
 DOUBLE_TRAILING_PYTHON_COMMENT = re.compile(r'^(.+)(\"\"\".*\"\"\")$')
-SINGLE_TRAILING_JAVA_COMMENT = re.compile(r'^(.+)(//.*)$')
+SINGLE_TRAILING_JAVA_COMMENT = re.compile('^(.+)(//.*)$')
 DOUBLE_TRAILING_JAVA_COMMENT = re.compile(r'^(.+)(/\*.*\*/)$')
 
 COMMENT_REGEX = [SINGLE_TRAILING_PYTHON_COMMENT,

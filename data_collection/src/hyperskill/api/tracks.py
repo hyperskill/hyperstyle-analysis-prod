@@ -1,9 +1,3 @@
-from dataclasses import dataclass, field
-from typing import List, Optional
-
-from core.src.model.api.platform_objects import BaseRequestParams, Object, ObjectResponse
-from data_collection.src.hyperskill.hyperskill_objects import HyperskillPlatform
-
 """
 This file contains classes, which describe track entity from Hyperskill platform.
 Track is a series of steps to get knowledge on some specific theme (programming language, data analysis, ect.).
@@ -11,6 +5,12 @@ Tracks are available by API requests, described at
     https://hyperskill.org/api/docs/#tracks-list
     https://hyperskill.org/api/docs/#tracks-read
 """
+
+from dataclasses import dataclass, field
+from typing import List, Optional
+
+from core.src.model.api.platform_objects import BaseRequestParams, Object, ObjectResponse
+from data_collection.src.hyperskill.hyperskill_objects import HyperskillPlatform
 
 
 @dataclass
@@ -49,7 +49,8 @@ class Track(Object):
     url: str = field(init=False)
 
     def __post_init__(self):
-        object.__setattr__(self, 'url', f'{HyperskillPlatform.BASE_URL}/tracks/{self.id}')
+        # Disabled because I don't know how to fix it while not breaking everything accidentally :-)
+        object.__setattr__(self, 'url', f'{HyperskillPlatform.BASE_URL}/tracks/{self.id}')  # noqa: WPS609
 
 
 @dataclass(frozen=True)

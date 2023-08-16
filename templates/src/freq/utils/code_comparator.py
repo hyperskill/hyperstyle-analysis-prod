@@ -37,7 +37,7 @@ class CodeComparator:
             if preprocess is not None:
                 code_line = preprocess(code_line)
 
-            return len(code_line) == 0
+            return not code_line
 
         return is_empty
 

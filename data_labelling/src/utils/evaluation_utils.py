@@ -70,7 +70,7 @@ def evaluate_command(command: List[str], working_directory: Optional[str] = None
     logger.info('Start evaluation')
     start = time.time()
 
-    logger.info('Executing command: ' + (' '.join(command)))
+    logger.info(f'Executing command: {" ".join(command)}')
     output, _ = run_in_subprocess(command, working_directory=working_directory)
 
     end = time.time()

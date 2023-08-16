@@ -19,7 +19,7 @@ class BaseReport:
         return False
 
     @abstractmethod
-    def get_issues(self) -> List[BaseIssue]:
+    def get_issues(self) -> List[BaseIssue]:  # noqa: WPS463 Disabled because it's an abstract method
         """ Returns a list of issues which report contains. """
         pass
 

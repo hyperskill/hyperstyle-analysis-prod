@@ -24,7 +24,7 @@ def _get_submissions_by_course_and_user_id(query_storage_info: QueryInfoStorage,
     page = 0
     submissions_dfs = []
     logger.info(f'Start getting submissions for course {course_id}, user {user_id}')
-    while has_next:
+    while has_next:  # noqa: WPS426 Disabled because it's convenient to use lambda inside the apply function
         endpoint = f'{query_storage_info.base_end_point}/admin/course/{course_id}/user/{user_id}/submissions/all?page={page}'
         response = requests.get(endpoint, headers=query_storage_info.get_auth_headers())
         if response.status_code != 200:
@@ -42,7 +42,7 @@ def _get_submissions_by_course_and_user_id(query_storage_info: QueryInfoStorage,
         has_next = submissions['has_next']
         page += 1
     logger.info(f'Submissions for course {course_id}, user {user_id} were gathered successfully')
-    if len(submissions_dfs) == 0:
+    if not submissions_dfs:
         return pd.DataFrame([
             EduColumnName.ID.value,
             EduColumnName.TASK_ID.value,
@@ -74,7 +74,7 @@ def _get_solution_from_s3(query_storage_info: QueryInfoStorage, row: pd.DataFram
     if solution_response.status_code != 200:
         logger.error(f'Can not gather code for s3 link: {s3_link}')
         return None
-    if len(solution_response.content.decode('utf-8')) == 0:
+    if not solution_response.content.decode('utf-8'):
         return ''
     solution = json.dumps(list(map(lambda s: {key: s[key] for key in ['name', 'text']}, solution_response.json())))
     logger.info(f'User solution is {solution}')

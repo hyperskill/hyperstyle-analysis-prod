@@ -1,15 +1,15 @@
+"""
+This file contains classes, which describe lesson entity from Stepik platform. Lesson is a group of steps.
+Lessons are available by API requests, described at
+    https://stepic.org/api/docs/#!/lessons
+"""
+
 import datetime
 from dataclasses import dataclass, field
 from typing import List, Optional
 
 from core.src.model.api.platform_objects import BaseRequestParams, Object, ObjectResponse
 from data_collection.src.stepik.stepik_objects import StepikPlatform
-
-"""
-This file contains classes, which describe lesson entity from Stepik platform. Lesson is a group of steps.
-Lessons are available by API requests, described at
-    https://stepic.org/api/docs/#!/lessons
-"""
 
 
 @dataclass
@@ -63,7 +63,8 @@ class Lesson(Object):
     url: str = field(init=False)
 
     def __post_init__(self):
-        object.__setattr__(self, 'url', f'{StepikPlatform.BASE_URL}/lesson/{self.id}')
+        # Disabled because I don't know how to fix it while not breaking everything accidentally :-)
+        object.__setattr__(self, 'url', f'{StepikPlatform.BASE_URL}/lesson/{self.id}')  # noqa: WPS609
 
 
 @dataclass(frozen=True)

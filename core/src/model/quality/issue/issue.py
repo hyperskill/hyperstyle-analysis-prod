@@ -40,9 +40,10 @@ class BaseIssue:
         pass
 
     def __eq__(self, other):
+        # This condition justifiably contains many logical operators
         return self.get_name() == other.get_name() and \
                self.get_text() == other.get_text() and \
                self.get_line_number() == other.get_line_number() and \
                self.get_column_number() == other.get_column_number() and \
                self.get_category() == other.get_category() and \
-               self.get_difficulty() == other.get_difficulty()
+               self.get_difficulty() == other.get_difficulty()  # noqa: WPS222

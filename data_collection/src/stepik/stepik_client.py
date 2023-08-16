@@ -13,6 +13,7 @@ from data_collection.src.stepik.api.users import User, UsersResponse
 from data_collection.src.stepik.stepik_objects import ObjectClass, StepikPlatform
 
 T = TypeVar('T', bound=Object)
+ObjectRequestor = Callable[[Optional[List[int]], Optional[int]], List[Object]]
 
 
 class StepikClient(PlatformClient):
@@ -22,8 +23,7 @@ class StepikClient(PlatformClient):
         client_secret = os.environ.get(StepikPlatform.CLIENT_SECRET)
         super().__init__(StepikPlatform.BASE_URL, client_id, client_secret, port)
 
-        self._get_objects_by_class: Dict[
-            ObjectClass, Callable[[Optional[List[int]], Optional[int]], List[Object]]] = {
+        self._get_objects_by_class: Dict[ObjectClass, ObjectRequestor] = {
             ObjectClass.COURSE: self.get_courses,
             ObjectClass.LESSON: self.get_lessons,
             ObjectClass.STEP: self.get_steps,
@@ -34,8 +34,8 @@ class StepikClient(PlatformClient):
     def get_objects(self, obj: str, ids: Optional[List[int]] = None, count: Optional[int] = None) -> List[Object]:
         if obj not in ObjectClass.values():
             return self.get_search_result(obj, count)
-        else:
-            return self._get_objects_by_class[ObjectClass(obj)](ids, count)
+
+        return self._get_objects_by_class[ObjectClass(obj)](ids, count)
 
     def get_search_result(self, query: str, count: Optional[int] = None) -> List[SearchResult]:
         return self._get_objects(ObjectClass.SEARCH_RESULT, SearchResultsResponse,

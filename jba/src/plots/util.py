@@ -16,7 +16,7 @@ def _get_tasks_colors(tasks_df: pd.DataFrame) -> List[str]:
             return 'gray'
         return 'black'
 
-    return list(map(lambda status: _calculate_color(status), tasks_df[EduColumnName.TASK_TYPE.value]))
+    return list(map(_calculate_color, tasks_df[EduColumnName.TASK_TYPE.value]))
 
 
 def _calculate_task_type(course_data_df: pd.DataFrame, task_id: str) -> str:
@@ -28,7 +28,7 @@ def _calculate_task_type(course_data_df: pd.DataFrame, task_id: str) -> str:
     return EduTaskType.UNDEFINED.value
 
 
-def _prepare_task_df_for_plots(course_data_df: pd.DataFrame, all_tasks_data_df: pd.DataFrame) -> pd.DataFrame:
+def prepare_task_df_for_plots(course_data_df: pd.DataFrame, all_tasks_data_df: pd.DataFrame) -> pd.DataFrame:
     tasks_df = all_tasks_data_df[
         [EduColumnName.TASK_GLOBAL_NUMBER.value, EduColumnName.TASK_ID.value, EduColumnName.TASK_NAME.value]
     ].drop_duplicates().sort_values(EduColumnName.TASK_GLOBAL_NUMBER.value)
@@ -37,20 +37,23 @@ def _prepare_task_df_for_plots(course_data_df: pd.DataFrame, all_tasks_data_df: 
     return tasks_df
 
 
-def _plot_name(base_name: str, course_name: Optional[str] = None) -> str:
+def plot_name(base_name: str, course_name: Optional[str] = None) -> str:
     if course_name is not None:
         return f'{course_name} - {base_name}'
     return base_name
 
 
-def _make_plot_pretty(ax, tasks_df: pd.DataFrame, course_name: Optional[str], ylabel: str):
+def make_plot_pretty(ax, tasks_df: pd.DataFrame, course_name: Optional[str], ylabel: str):
     ax.set_xticks(np.arange(len(tasks_df[EduColumnName.TASK_NAME.value].values)))
     ax.set_xticklabels(tasks_df[EduColumnName.TASK_NAME.value])
+
     plt.xticks(rotation=90)
     plt.ylabel(ylabel)
     plt.xlabel("tasks")
     plt.title(course_name)
-    [t.set_color(c) for t, c in zip(ax.xaxis.get_ticklabels(), _get_tasks_colors(tasks_df))]
+
+    for tick_label, task_color in zip(ax.xaxis.get_ticklabels(), _get_tasks_colors(tasks_df)):
+        tick_label.set_color(task_color)
+
     ax.margins(x=0)
-    # plt.tick_params(axis='x', which='major', labelsize=7)
     plt.tight_layout()

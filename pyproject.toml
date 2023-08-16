@@ -32,6 +32,8 @@ requests = "2.25.1"
 pytest = "7.4.0"
 pytest-runner = "6.0.0"
 pytest-subtests = "0.11.0"
+wemake-python-styleguide = "0.16.1"
+flake8-import-order = "0.18.1"
 
 # Data collection dependencies
 [tool.poetry.group.data-collection]

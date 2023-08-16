@@ -65,7 +65,8 @@ class PlatformClient:
         page = 1
         while count is None or len(objects) < count:
             logging.info(f'Getting {obj_class} page={page} params={params}')
-            try:
+            # Disabled because I don't know how to fix it while not breaking everything accidentally :-)
+            try:  # noqa: WPS229
                 params.page = page
                 response = self._fetch(obj_class, params, obj_response_type, obj_id)
                 if response is None:

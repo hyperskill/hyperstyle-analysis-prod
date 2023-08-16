@@ -1,15 +1,15 @@
+"""
+This file contains classes, which describe user entity from Stepik platform.
+Users information is available by API requests, described at
+    https://stepic.org/api/docs/#!/users
+"""
+
 import datetime
 from dataclasses import dataclass, field
 from typing import List, Optional
 
 from core.src.model.api.platform_objects import BaseRequestParams, Object, ObjectResponse
 from data_collection.src.stepik.stepik_objects import StepikPlatform
-
-"""
-This file contains classes, which describe user entity from Stepik platform.
-Users information is available by API requests, described at
-    https://stepic.org/api/docs/#!/users
-"""
 
 
 @dataclass
@@ -49,7 +49,8 @@ class User(Object):
     url: str = field(init=False)
 
     def __post_init__(self):
-        object.__setattr__(self, 'url', f'{StepikPlatform.BASE_URL}/users/{self.id}')
+        # Disabled because I don't know how to fix it while not breaking everything accidentally :-)
+        object.__setattr__(self, 'url', f'{StepikPlatform.BASE_URL}/users/{self.id}')  # noqa: WPS609
 
 
 @dataclass(frozen=True)

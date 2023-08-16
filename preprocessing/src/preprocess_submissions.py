@@ -26,7 +26,8 @@ def check_different_code(submission_0: pd.Series, submission_1: pd.Series, diff_
     code_0 = submission_0[SubmissionColumns.CODE.value]
     code_1 = submission_1[SubmissionColumns.CODE.value]
     code_lines_diff = len(code_0) / len(code_1)
-    return not (1 / diff_ratio <= code_lines_diff <= diff_ratio)
+    # Disabled because this condition looks simpler then what will be obtained after fixing WPS508
+    return not (1 / diff_ratio <= code_lines_diff <= diff_ratio)  # noqa: WPS508
 
 
 @unique
@@ -77,7 +78,8 @@ def filter_submissions_series(submissions_series: pd.DataFrame, diff_ratio: floa
     submissions_series = submissions_series[(pd.Series(status) == SubmissionsCheckStatus.OK.value).values].copy()
     group_size = submissions_series.shape[0]
     submissions_series[SubmissionColumns.ATTEMPT.value] = list(range(1, group_size + 1))
-    submissions_series[SubmissionColumns.TOTAL_ATTEMPTS.value] = [group_size] * group_size
+    # List multiplication is allowed here because the list contains only integer values
+    submissions_series[SubmissionColumns.TOTAL_ATTEMPTS.value] = [group_size] * group_size  # noqa: WPS435
 
     logging.info(f'Final group shape {submissions_series.shape}')
 

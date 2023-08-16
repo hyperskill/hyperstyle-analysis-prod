@@ -1,18 +1,17 @@
-import bs4
 import re
 
 import pandas as pd
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 from pathlib import Path
 from typing import List
 
 from jba.src.models.edu_logs import TestData, TestDataField, ExceptionData
 
 EXCEPTION_REGEXP = re.compile(r'^e: (.*): \((\d+), (\d+)\): (.*)$')
-CLASS_NAME_REGEXP = re.compile(r'^Class (.*)$')
+CLASS_NAME_REGEXP = re.compile('^Class (.*)$')
 
 
-def _parse_gradle_test_table(html_table: bs4.Tag) -> pd.DataFrame:
+def _parse_gradle_test_table(html_table: Tag) -> pd.DataFrame:
     header_row = html_table.find('thead').find('tr')
     test_table_header = [column.text.lower().replace(' ', '_') for column in header_row.find_all('th')]
 

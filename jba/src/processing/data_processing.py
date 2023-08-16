@@ -28,7 +28,8 @@ def filter_submissions_series(submissions_series: pd.DataFrame) -> pd.DataFrame:
 
     group_size = submissions_series.shape[0]
     submissions_series[SubmissionColumns.ATTEMPT.value] = list(range(1, group_size + 1))
-    submissions_series[SubmissionColumns.TOTAL_ATTEMPTS.value] = [group_size] * group_size
+    # List multiplication is allowed here because the list contains only integer values
+    submissions_series[SubmissionColumns.TOTAL_ATTEMPTS.value] = [group_size] * group_size  # noqa: WPS435
 
     return submissions_series
 
@@ -36,11 +37,11 @@ def filter_submissions_series(submissions_series: pd.DataFrame) -> pd.DataFrame:
 def get_submissions_attempt(df_submissions: pd.DataFrame) -> pd.DataFrame:
     """ Group submissions by user and step and set submissions from one group same identifier. """
 
-    df_submissions = df_submissions \
-        .groupby([SubmissionColumns.GROUP.value], as_index=False, group_keys=True) \
-        .apply(lambda g: filter_submissions_series(g))
-
-    return df_submissions
+    return (
+        df_submissions
+        .groupby([SubmissionColumns.GROUP.value], as_index=False, group_keys=True)
+        .apply(filter_submissions_series)
+    )
 
 
 # 1. Merge course data with task info
