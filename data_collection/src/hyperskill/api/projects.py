@@ -43,6 +43,7 @@ class Project(Object):
     tracks: Dict[str, Dict[str, str]] = field(default_factory=dict)
 
     def __post_init__(self):
+        # Disabled because I don't know how to fix it while not breaking everything accidentally :-)
         object.__setattr__(self, 'url', f'{HyperskillPlatform.BASE_URL}/projects/{self.id}')  # noqa: WPS609
 
 

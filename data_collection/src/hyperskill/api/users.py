@@ -63,6 +63,7 @@ class User(Object):
     url: str = field(init=False)
 
     def __post_init__(self):
+        # Disabled because I don't know how to fix it while not breaking everything accidentally :-)
         object.__setattr__(self, 'url', f'{HyperskillPlatform.BASE_URL}/profile/{self.id}')  # noqa: WPS609
 
 
