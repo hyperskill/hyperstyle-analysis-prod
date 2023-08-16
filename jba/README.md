@@ -102,7 +102,7 @@ Optional arguments:
 | **&#8209;&#8209;course&#8209;name** | Name of the course to display on the chart. |
 
 
-2. [task_attempt.py](src/plots/task_attempt.py) allows you to plot line charts how many attempts students spend to solve the tasks from the course.
+2. [task_attempt.py](src/plots/task_attempt.py) allows you to plot lines charts how many attempts students spend to solve the tasks from the course.
 
 Execute one of the following commands with necessary arguments:
 ```bash
