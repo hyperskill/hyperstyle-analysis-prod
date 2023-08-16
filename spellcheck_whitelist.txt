@@ -100,3 +100,8 @@ xticklabels
 xticks
 yaxis
 ylabel
+wps615
+wps518
+wps508
+wemake
+styleguide

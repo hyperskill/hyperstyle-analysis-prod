@@ -52,7 +52,7 @@ def match_code_lines(
 
     prev_matched_line = -1
 
-    # Ignoring WPS518 because it's a C-style algorythm
+    # Ignoring WPS518 because it's a C-style algorithm
     for i in range(len(template_lines)):  # noqa: WPS518
         if is_empty(template_lines[i]) or template_to_code[i] is not None:
             continue
