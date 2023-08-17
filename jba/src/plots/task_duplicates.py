@@ -1,4 +1,5 @@
 import argparse
+import logging
 from functools import partial
 from typing import Optional, List
 
@@ -9,6 +10,9 @@ from core.src.model.column_name import SubmissionColumns
 from core.src.utils.df_utils import read_df
 from jba.src.models.edu_columns import EduColumnName, EduTaskType
 from jba.src.plots.util import prepare_task_df_for_plots, make_plot_pretty, plot_name
+
+
+logger = logging.getLogger(__name__)
 
 
 def _count_duplicates_submissions(group: pd.DataFrame) -> List[int]:
@@ -26,6 +30,9 @@ def _count_duplicates_submissions(group: pd.DataFrame) -> List[int]:
 
     if number_of_duplicates != 0:
         duplicate_submissions.append(number_of_duplicates)
+
+    if duplicate_submissions:
+        logger.info(f'{group.name}: {duplicate_submissions}')
 
     return duplicate_submissions
 
@@ -111,6 +118,8 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
 def main():
     parser = argparse.ArgumentParser()
     configure_parser(parser)
+
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s | %(levelname)s | %(message)s')  # noqa: WPS323
 
     args = parser.parse_args()
 
