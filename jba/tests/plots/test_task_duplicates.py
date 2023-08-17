@@ -20,4 +20,5 @@ COUNT_DUPLICATES_TEST_DATA = [
 
 @pytest.mark.parametrize(('group', 'expected_duplicates'), COUNT_DUPLICATES_TEST_DATA)
 def test_count_duplicates(group: pd.DataFrame, expected_duplicates: List[int]):
+    group.name = 0
     assert _count_duplicates_submissions(group) == expected_duplicates
