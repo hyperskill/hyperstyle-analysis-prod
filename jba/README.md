@@ -124,6 +124,28 @@ docker run hyperstyle-analysis-prod:<VERSION> poetry run plot_task_attempt [argu
 |-------------------------------------|---------------------------------------------|
 | **&#8209;&#8209;course&#8209;name** | Name of the course to display on the chart. |
 
+3. [task_duplicates.py](src/plots/task_duplicates.py) allows you to plot line charts how many duplicate submissions students sent during tasks solving.
+
+Execute one of the following commands with necessary arguments:
+```bash
+poetry run plot_task_duplicates [arguments]
+```
+or
+```bash
+docker run hyperstyle-analysis-prod:<VERSION> poetry run plot_task_duplicates [arguments]
+```
+
+**Required arguments**:
+
+- `preprocessed_course_data_path` — Path to .csv file with preprocessed data by [data_processing.py](src/processing/data_processing.py).
+- `course_structure_path` — Path to .csv file with the course structure gathered by [prepare_course_data.py](src/processing/prepare_course_data.py).
+
+**Optional arguments**:
+
+| Argument                            | Description                                 |
+|-------------------------------------|---------------------------------------------|
+| **&#8209;&#8209;course&#8209;name** | Name of the course to display on the chart. |
+
 ----
 
 # Run tests
