@@ -9,6 +9,8 @@ from jba.src.models.edu_logs import TestData, TestDataField, ExceptionData
 
 EXCEPTION_REGEXP = re.compile(r'^e: (.*): \((\d+), (\d+)\): (.*)$')
 CLASS_NAME_REGEXP = re.compile('^Class (.*)$')
+PARAMETRIZED_TEST = re.compile(r'^\[(\d+)] (.*)$', re.DOTALL)
+PARAMETRIZED_METHOD_NAME = re.compile(r'(.*)\[(\d+)]')
 
 
 def _parse_gradle_test_table(html_table: Tag) -> pd.DataFrame:
@@ -47,14 +49,13 @@ def parse_gradle_test_logs(test_logs_path: Path) -> List[TestData]:
 
         for failed_test in soup.find('div', {'id': failed_test_tab_id}).find_all('div', {'class': 'test'}):
             method_name = failed_test.find('a')['name']
-            test = failed_test.find('h3', {'class': 'failures'}).text
             logs = failed_test.find('span', {'class': 'code'}).text
 
             delimiter_index = logs.find(':')
             error_class = logs[:delimiter_index].strip()
             message = logs[delimiter_index + 1 : logs.find('\tat ')].strip()
 
-            failed_tests[(test, method_name)] = {
+            failed_tests[method_name] = {
                 TestDataField.ERROR_CLASS.value: error_class,
                 TestDataField.MESSAGE.value: message,
             }
@@ -74,7 +75,15 @@ def parse_gradle_test_logs(test_logs_path: Path) -> List[TestData]:
     tests = []
     for row in test_table.itertuples():
         test = getattr(row, TestDataField.TEST.value)
-        method_name = getattr(row, TestDataField.METHOD_NAME.value, test)
+        raw_method_name = getattr(row, TestDataField.METHOD_NAME.value, test)
+
+        method_name = raw_method_name
+        test_number = None
+        parametrized_test_match = re.match(PARAMETRIZED_TEST, test)
+        if parametrized_test_match is not None:
+            test_number = int(parametrized_test_match.group(1))
+            test = parametrized_test_match.group(2)
+            method_name = re.match(PARAMETRIZED_METHOD_NAME, raw_method_name).group(1)
 
         tests.append(
             TestData(
@@ -83,8 +92,9 @@ def parse_gradle_test_logs(test_logs_path: Path) -> List[TestData]:
                 method_name=method_name,
                 duration=getattr(row, TestDataField.DURATION.value),
                 result=getattr(row, TestDataField.RESULT.value),
-                error_class=(failed_tests.get((test, method_name), {}).get(TestDataField.ERROR_CLASS.value)),
-                message=failed_tests.get((test, method_name), {}).get(TestDataField.MESSAGE.value),
+                test_number=test_number,
+                error_class=(failed_tests.get(raw_method_name, {}).get(TestDataField.ERROR_CLASS.value)),
+                message=failed_tests.get(raw_method_name, {}).get(TestDataField.MESSAGE.value),
             )
         )
 

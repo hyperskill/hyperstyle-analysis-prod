@@ -13,6 +13,7 @@ class TestDataField(Enum):
     METHOD_NAME = 'method_name'
     DURATION = 'duration'
     RESULT = 'result'
+    TEST_NUMBER = 'test_number'
     ERROR_CLASS = 'error_class'
     MESSAGE = 'message'
 
@@ -25,6 +26,8 @@ class TestData:
     method_name: str
     duration: str = field(compare=False)
     result: str
+
+    test_number: Optional[int] = None
 
     error_class: Optional[str] = None
     message: Optional[str] = None
