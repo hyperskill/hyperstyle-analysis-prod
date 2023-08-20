@@ -106,3 +106,5 @@ xticklabels
 xticks
 yaxis
 ylabel
+dotall
+parametrized

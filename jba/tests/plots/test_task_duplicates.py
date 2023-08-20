@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Dict
 
 import pandas as pd
 import pytest
@@ -81,19 +81,20 @@ COURSE_DATA = pd.DataFrame(
 )
 
 
-COMPUTE_STATA_TEST_DATA = [
+COMPUTE_STATS_TEST_DATA = [
     (0, None),
-    (1, pd.Series({MIN_STATS_COLUMN: 0.0, MAX_STATS_COLUMN: 0.0, MEAN_STATS_COLUMNS: 0.0, MEDIAN_STATS_COLUMN: 0.0})),
-    (2, pd.Series({MIN_STATS_COLUMN: 0.0, MAX_STATS_COLUMN: 0.0, MEAN_STATS_COLUMNS: 0.0, MEDIAN_STATS_COLUMN: 0.0})),
-    (3, pd.Series({MIN_STATS_COLUMN: 0.0, MAX_STATS_COLUMN: 4.0, MEAN_STATS_COLUMNS: 2.0, MEDIAN_STATS_COLUMN: 2.0})),
-    (4, pd.Series({MIN_STATS_COLUMN: 1.0, MAX_STATS_COLUMN: 3.0, MEAN_STATS_COLUMNS: 5/3, MEDIAN_STATS_COLUMN: 1.0})),
+    (1, {MIN_STATS_COLUMN: 0, MAX_STATS_COLUMN: 0, MEAN_STATS_COLUMNS: 0, MEDIAN_STATS_COLUMN: 0}),
+    (2, {MIN_STATS_COLUMN: 0, MAX_STATS_COLUMN: 0, MEAN_STATS_COLUMNS: 0, MEDIAN_STATS_COLUMN: 0}),
+    (3, {MIN_STATS_COLUMN: 0, MAX_STATS_COLUMN: 4, MEAN_STATS_COLUMNS: 2, MEDIAN_STATS_COLUMN: 2}),
+    (4, {MIN_STATS_COLUMN: 1, MAX_STATS_COLUMN: 3, MEAN_STATS_COLUMNS: 5 / 3, MEDIAN_STATS_COLUMN: 1}),
 ]
 
 
-@pytest.mark.parametrize(('task_id', 'expected_stats'), COMPUTE_STATA_TEST_DATA)
-def test_compute_stats(task_id: int, expected_stats: Optional[pd.Series]):
+@pytest.mark.parametrize(('task_id', 'expected_data'), COMPUTE_STATS_TEST_DATA)
+def test_compute_stats(task_id: int, expected_data: Dict[str, float]):
     actual_stats = _compute_stats(task_id, COURSE_DATA)
-    if expected_stats is None:
+    if expected_data is None:
         assert actual_stats is None
     else:
-        assert_series_equal(actual_stats, expected_stats)
+        expected_stats = pd.Series(expected_data, dtype=float)
+        assert_series_equal(expected_stats, expected_stats)

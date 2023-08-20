@@ -1,6 +1,5 @@
 import argparse
 import logging
-from functools import partial
 from typing import Optional, List
 
 import pandas as pd
@@ -8,9 +7,8 @@ from matplotlib import pyplot as plt
 
 from core.src.model.column_name import SubmissionColumns
 from core.src.utils.df_utils import read_df
-from jba.src.models.edu_columns import EduColumnName, EduTaskType
+from jba.src.models.edu_columns import EduColumnName
 from jba.src.plots.util import prepare_task_df_for_plots, make_plot_pretty, plot_name
-
 
 logger = logging.getLogger(__name__)
 
