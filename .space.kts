@@ -3,7 +3,7 @@ job("Release base Docker") {
         gitPush { enabled = false }
     }
 
-    val version = "py3.9.17-java17.0.8.7"
+    val version = "py3.11.4-java20.0.2.9"
     val type = "hyperstyle-analysis-prod-base"
 
     kaniko {

@@ -1,4 +1,4 @@
-FROM fa084acdc74bce01e02040dafe3723d77e05b33164e289c9513c9579e184daed
+FROM registry.jetbrains.team/p/code-quality-for-online-learning-platforms/hyperstyle-analysis-prod/hyperstyle-analysis-prod-base:py3.11.4-java20.0.2.9
 
 # python:
 ENV PYTHONFAULTHANDLER=1 \
