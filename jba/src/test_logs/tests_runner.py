@@ -1,15 +1,16 @@
 import argparse
 import json
 import logging
-import pandas as pd
 import subprocess
 import time
-from pandarallel import pandarallel
-from pandarallel.core import NB_PHYSICAL_CORES
 from pathlib import Path
 from shutil import copytree
 from tempfile import TemporaryDirectory
 from typing import Optional
+
+import pandas as pd
+from pandarallel import pandarallel
+from pandarallel.core import NB_PHYSICAL_CORES
 
 from core.src.utils.df_utils import read_df
 from core.src.utils.file.extension_utils import AnalysisExtension
@@ -36,19 +37,20 @@ def _run_tests(course_root_path: Path, task_root_path: Path, output_path: Path, 
     :param timeout: Timeout in seconds for subprocess to be executed.
     """
     module_name = "-".join(task_root_path.relative_to(course_root_path).parts)
+    submission_id = output_path.name
 
     start = time.time()
 
     gradle_clean_task = f':{module_name}:clean'
-    logger.info(f'Running {gradle_clean_task}')
+    logger.info(f'Running {gradle_clean_task} for submission#{submission_id}')
     try:
         run_in_subprocess(['./gradlew', gradle_clean_task], working_directory=course_root_path, timeout=timeout)
     except subprocess.TimeoutExpired:
-        logger.error(f'Timeout expired while running {gradle_clean_task}')
+        logger.error(f'Timeout expired while running {gradle_clean_task} for submission#{submission_id}')
         return
 
     gradle_test_task = f':{module_name}:test'
-    logger.info(f'Running {gradle_test_task}')
+    logger.info(f'Running {gradle_test_task} for submission#{submission_id}')
     try:
         stdout, stderr = run_in_subprocess(
             ['./gradlew', gradle_test_task],
@@ -56,12 +58,12 @@ def _run_tests(course_root_path: Path, task_root_path: Path, output_path: Path, 
             timeout=timeout,
         )
     except subprocess.TimeoutExpired:
-        logger.error(f'Timeout expired while running {gradle_test_task}')
+        logger.error(f'Timeout expired while running {gradle_test_task} for submission#{submission_id}')
         return
 
     finish = time.time()
 
-    logger.info(f'Run in {finish - start}s')
+    logger.info(f'Submission#{submission_id} run in {finish - start}s')
 
     output_path.mkdir(parents=True, exist_ok=True)
 
@@ -91,10 +93,10 @@ def _check_submission(
     :param timeout: Timeout in seconds for subprocess to be executed.
     """
     submission_id = submission.at[EduColumnName.ID.value]
-    logger.info(f'Checking submission#{submission_id} (status: {submission[EduColumnName.STATUS.value]})')
+    logger.info(f'Checking submission#{submission_id}')
 
     if pd.isna(submission[EduColumnName.CODE_SNIPPETS.value]):
-        logger.warning(f'Code snippets are missing')
+        logger.warning(f'Code snippets are missing for submission#{submission_id}')
         return
 
     section_name = submission.get(EduColumnName.SECTION_NAME.value)
@@ -112,17 +114,17 @@ def _check_submission(
         for file_info in task_config[EduConfigField.FILES.value]
         if file_info[EduConfigField.VISIBLE.value]
     }
-    logger.debug(f'Visible files: {visible_files}')
+    logger.debug(f'Visible files for submission#{submission_id}: {visible_files}')
 
     snippets = {
         task_root_path / snippet[EduCodeSnippetField.NAME.value]: snippet[EduCodeSnippetField.TEXT.value]
         for snippet in json.loads(submission[EduColumnName.CODE_SNIPPETS.value])
         if snippet[EduCodeSnippetField.NAME.value] in visible_files
     }
-    logger.debug(f'Snippets: {snippets.keys()}')
+    logger.debug(f'Snippets for submissions#{submission_id}: {snippets.keys()}')
 
     for snippet_path, snippet_content in snippets.items():
-        logger.debug(f'Replacing {snippet_path} with the snippet content')
+        logger.debug(f'Replacing {snippet_path} with the snippet content for submissions#{submission_id}')
         next(create_file(snippet_path, snippet_content))
 
     _run_tests(course_root_path, task_root_path, output_path / str(submission_id), timeout=timeout)
@@ -142,12 +144,12 @@ def check_user(
     :param output_path: Path to the folder to store logs.
     :param timeout: Timeout in seconds for subprocess to be executed.
     """
-    logger.info(
-        f'Checking user#{user_submissions.iat[0, user_submissions.columns.get_loc(EduColumnName.USER_ID.value)]}',
-    )
+    user_id = user_submissions.iat[0, user_submissions.columns.get_loc(EduColumnName.USER_ID.value)]
+
+    logger.info(f'Checking user#{user_id}')
 
     with TemporaryDirectory() as tmpdir:
-        logger.info(f'Coping the course')
+        logger.info(f'Coping the course for user#{user_id}')
         copytree(course_root_path, tmpdir, dirs_exist_ok=True)
 
         user_submissions[EduColumnName.SUBMISSION_DATETIME.value] = user_submissions[
@@ -194,6 +196,12 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
         action='store_true',
     )
 
+    parser.add_argument(
+        '--script-logs-path',
+        type=lambda value: Path(value).absolute(),
+        help='Path to a file where to save script logs.',
+    )
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -201,10 +209,17 @@ def main():
     args = parser.parse_args()
 
     logging.basicConfig(
+        filename=args.script_logs_path,
         level=logging.DEBUG if args.debug else logging.INFO,
         format='%(asctime)s | %(levelname)s | %(message)s',  # noqa: WPS323 You must use % here to format logger.
     )
     pandarallel.initialize(nb_workers=args.n_cpu)
+
+    if args.timeout is None:
+        logger.warning(
+            f"The timeout arguments is not specified. "
+            f"If some solution has an infinite loop, the script will never complete!"
+        )
 
     submissions = read_df(args.submissions_path)
 
