@@ -1,9 +1,8 @@
-from dataclasses_json import dataclass_json
+from dataclasses import dataclass, field
+from enum import unique, Enum
 from typing import Optional
 
-from dataclasses import dataclass, field
-
-from enum import unique, Enum
+from dataclasses_json import dataclass_json
 
 
 @unique
@@ -18,6 +17,12 @@ class TestDataField(Enum):
     MESSAGE = 'message'
 
 
+class TestResult(Enum):
+    PASSED = 'passed'
+    FAILED = 'failed'
+    IGNORED = 'ignored'
+
+
 @dataclass_json
 @dataclass
 class TestData:
@@ -25,7 +30,7 @@ class TestData:
     test: str
     method_name: str
     duration: str = field(compare=False)
-    result: str
+    result: TestResult
 
     test_number: Optional[int] = None
 

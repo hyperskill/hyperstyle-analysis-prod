@@ -1,11 +1,11 @@
 import re
-
-import pandas as pd
-from bs4 import BeautifulSoup, Tag
 from pathlib import Path
 from typing import List
 
-from jba.src.models.edu_logs import TestData, TestDataField, ExceptionData
+import pandas as pd
+from bs4 import BeautifulSoup, Tag
+
+from jba.src.models.edu_logs import TestData, TestDataField, ExceptionData, TestResult
 
 EXCEPTION_REGEXP = re.compile(r'^e: (.*): \((\d+), (\d+)\): (.*)$')
 CLASS_NAME_REGEXP = re.compile('^Class (.*)$')
@@ -91,7 +91,7 @@ def parse_gradle_test_logs(test_logs_path: Path) -> List[TestData]:
                 test=test,
                 method_name=method_name,
                 duration=getattr(row, TestDataField.DURATION.value),
-                result=getattr(row, TestDataField.RESULT.value),
+                result=TestResult(getattr(row, TestDataField.RESULT.value)),
                 test_number=test_number,
                 error_class=(failed_tests.get(raw_method_name, {}).get(TestDataField.ERROR_CLASS.value)),
                 message=failed_tests.get(raw_method_name, {}).get(TestDataField.MESSAGE.value),
