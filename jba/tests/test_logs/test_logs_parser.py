@@ -1,15 +1,16 @@
-import pandas as pd
-import pytest
 import shutil
 import sys
-from pandas._testing import assert_frame_equal
 from pathlib import Path
 from tempfile import TemporaryDirectory
+
+import pandas as pd
+import pytest
+from pandas._testing import assert_frame_equal
 
 from core.src.utils.subprocess_runner import run_in_subprocess
 from jba.src import MAIN_FOLDER
 from jba.src.models.edu_columns import EduColumnName
-from jba.src.models.edu_logs import ExceptionData, TestData
+from jba.src.models.edu_logs import ExceptionData, TestData, TestResult
 from jba.src.test_logs.logs_parser import _parse_stderr_logs, _parse_test_logs, parse_gradle_logs
 from jba.tests.test_logs import TEST_LOGS_FOLDER
 
@@ -86,14 +87,14 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='testCountExactMatchesFunction()',
             method_name='testCountExactMatchesFunction()',
             duration='0s',
-            result='passed',
+            result=TestResult.PASSED,
         ),
         TestData(
             class_name='Test',
             test='ABBA, ABCD, 2, 0',
             method_name='testCountExactMatchesImplementation(String, String, int, int)',
             duration='0.001s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=10,
         ),
         TestData(
@@ -101,7 +102,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='AAAA, ABBB, 1, 0',
             method_name='testCountExactMatchesImplementation(String, String, int, int)',
             duration='0s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=11,
         ),
         TestData(
@@ -109,7 +110,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='BBBB, BBDH, 2, 0',
             method_name='testCountExactMatchesImplementation(String, String, int, int)',
             duration='0.001s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=12,
         ),
         TestData(
@@ -117,7 +118,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='AAAA, ABCD, 1, 0',
             method_name='testCountExactMatchesImplementation(String, String, int, int)',
             duration='0s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=13,
         ),
         TestData(
@@ -125,7 +126,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='ACEB, BCDF, 1, 1',
             method_name='testCountExactMatchesImplementation(String, String, int, int)',
             duration='0.013s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=1,
         ),
         TestData(
@@ -133,7 +134,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='ABCD, ABCD, 4, 0',
             method_name='testCountExactMatchesImplementation(String, String, int, int)',
             duration='0.001s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=2,
         ),
         TestData(
@@ -141,7 +142,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='ABCD, DCBA, 0, 4',
             method_name='testCountExactMatchesImplementation(String, String, int, int)',
             duration='0.001s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=3,
         ),
         TestData(
@@ -149,7 +150,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='ABCD, DBCA, 2, 2',
             method_name='testCountExactMatchesImplementation(String, String, int, int)',
             duration='0.001s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=4,
         ),
         TestData(
@@ -157,7 +158,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='ABCD, EBCF, 2, 0',
             method_name='testCountExactMatchesImplementation(String, String, int, int)',
             duration='0.001s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=5,
         ),
         TestData(
@@ -165,7 +166,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='AAAA, AAAA, 4, 0',
             method_name='testCountExactMatchesImplementation(String, String, int, int)',
             duration='0.001s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=6,
         ),
         TestData(
@@ -173,7 +174,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='AAAA, BBBB, 0, 0',
             method_name='testCountExactMatchesImplementation(String, String, int, int)',
             duration='0.001s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=7,
         ),
         TestData(
@@ -181,7 +182,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='AABB, BBAA, 0, 4',
             method_name='testCountExactMatchesImplementation(String, String, int, int)',
             duration='0.001s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=8,
         ),
         TestData(
@@ -189,7 +190,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='ABCD, ABBA, 2, 0',
             method_name='testCountExactMatchesImplementation(String, String, int, int)',
             duration='0s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=9,
         ),
         TestData(
@@ -197,21 +198,21 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='testCountGenerateSecretFunction()',
             method_name='testCountGenerateSecretFunction()',
             duration='0.001s',
-            result='passed',
+            result=TestResult.PASSED,
         ),
         TestData(
             class_name='Test',
             test='testCountPartialMatchesFunction()',
             method_name='testCountPartialMatchesFunction()',
             duration='0.071s',
-            result='passed',
+            result=TestResult.PASSED,
         ),
         TestData(
             class_name='Test',
             test='ABBA, ABCD, 2, 0',
             method_name='testCountPartialMatchesImplementation(String, String, int, int)',
             duration='0.001s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=10,
         ),
         TestData(
@@ -219,7 +220,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='AAAA, ABBB, 1, 0',
             method_name='testCountPartialMatchesImplementation(String, String, int, int)',
             duration='0s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=11,
         ),
         TestData(
@@ -227,7 +228,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='BBBB, BBDH, 2, 0',
             method_name='testCountPartialMatchesImplementation(String, String, int, int)',
             duration='0.002s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=12,
         ),
         TestData(
@@ -235,7 +236,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='AAAA, ABCD, 1, 0',
             method_name='testCountPartialMatchesImplementation(String, String, int, int)',
             duration='0.006s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=13,
         ),
         TestData(
@@ -243,7 +244,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='ACEB, BCDF, 1, 1',
             method_name='testCountPartialMatchesImplementation(String, String, int, int)',
             duration='0.001s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=1,
         ),
         TestData(
@@ -251,7 +252,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='ABCD, ABCD, 4, 0',
             method_name='testCountPartialMatchesImplementation(String, String, int, int)',
             duration='0.001s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=2,
         ),
         TestData(
@@ -259,7 +260,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='ABCD, DCBA, 0, 4',
             method_name='testCountPartialMatchesImplementation(String, String, int, int)',
             duration='0s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=3,
         ),
         TestData(
@@ -267,7 +268,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='ABCD, DBCA, 2, 2',
             method_name='testCountPartialMatchesImplementation(String, String, int, int)',
             duration='0s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=4,
         ),
         TestData(
@@ -275,7 +276,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='ABCD, EBCF, 2, 0',
             method_name='testCountPartialMatchesImplementation(String, String, int, int)',
             duration='0.004s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=5,
         ),
         TestData(
@@ -283,7 +284,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='AAAA, AAAA, 4, 0',
             method_name='testCountPartialMatchesImplementation(String, String, int, int)',
             duration='0.001s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=6,
         ),
         TestData(
@@ -291,7 +292,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='AAAA, BBBB, 0, 0',
             method_name='testCountPartialMatchesImplementation(String, String, int, int)',
             duration='0s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=7,
         ),
         TestData(
@@ -299,7 +300,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='AABB, BBAA, 0, 4',
             method_name='testCountPartialMatchesImplementation(String, String, int, int)',
             duration='0s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=8,
         ),
         TestData(
@@ -307,7 +308,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='ABCD, ABBA, 2, 0',
             method_name='testCountPartialMatchesImplementation(String, String, int, int)',
             duration='0s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=9,
         ),
         TestData(
@@ -315,21 +316,21 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='testGetGameRulesFunction()',
             method_name='testGetGameRulesFunction()',
             duration='0.001s',
-            result='passed',
+            result=TestResult.PASSED,
         ),
         TestData(
             class_name='Test',
             test='testIsCompleteFunction()',
             method_name='testIsCompleteFunction()',
             duration='0s',
-            result='passed',
+            result=TestResult.PASSED,
         ),
         TestData(
             class_name='Test',
             test='ACEB, BCDF, false',
             method_name='testIsCompleteImplementation(String, String, boolean)',
             duration='0.003s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=1,
         ),
         TestData(
@@ -337,7 +338,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='ACEB, ACEB, true',
             method_name='testIsCompleteImplementation(String, String, boolean)',
             duration='0s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=2,
         ),
         TestData(
@@ -345,7 +346,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='testSolution()',
             method_name='testSolution()',
             duration='0.016s',
-            result='passed',
+            result=TestResult.PASSED,
         ),
     ],
     2: None,
@@ -355,14 +356,14 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='testCountExactMatchesFunction()',
             method_name='testCountExactMatchesFunction()',
             duration='0s',
-            result='passed',
+            result=TestResult.PASSED,
         ),
         TestData(
             class_name='Test',
             test='ABBA, ABCD, 2, 0',
             method_name='testCountExactMatchesImplementation(String, String, int, int)',
             duration='0.001s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=10,
         ),
         TestData(
@@ -370,7 +371,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='AAAA, ABBB, 1, 0',
             method_name='testCountExactMatchesImplementation(String, String, int, int)',
             duration='0.001s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=11,
         ),
         TestData(
@@ -378,7 +379,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='BBBB, BBDH, 2, 0',
             method_name='testCountExactMatchesImplementation(String, String, int, int)',
             duration='0s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=12,
         ),
         TestData(
@@ -386,7 +387,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='AAAA, ABCD, 1, 0',
             method_name='testCountExactMatchesImplementation(String, String, int, int)',
             duration='0s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=13,
         ),
         TestData(
@@ -394,7 +395,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='ACEB, BCDF, 1, 1',
             method_name='testCountExactMatchesImplementation(String, String, int, int)',
             duration='0.012s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=1,
         ),
         TestData(
@@ -402,7 +403,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='ABCD, ABCD, 4, 0',
             method_name='testCountExactMatchesImplementation(String, String, int, int)',
             duration='0.001s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=2,
         ),
         TestData(
@@ -410,7 +411,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='ABCD, DCBA, 0, 4',
             method_name='testCountExactMatchesImplementation(String, String, int, int)',
             duration='0.001s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=3,
         ),
         TestData(
@@ -418,7 +419,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='ABCD, DBCA, 2, 2',
             method_name='testCountExactMatchesImplementation(String, String, int, int)',
             duration='0s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=4,
         ),
         TestData(
@@ -426,7 +427,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='ABCD, EBCF, 2, 0',
             method_name='testCountExactMatchesImplementation(String, String, int, int)',
             duration='0s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=5,
         ),
         TestData(
@@ -434,7 +435,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='AAAA, AAAA, 4, 0',
             method_name='testCountExactMatchesImplementation(String, String, int, int)',
             duration='0s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=6,
         ),
         TestData(
@@ -442,7 +443,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='AAAA, BBBB, 0, 0',
             method_name='testCountExactMatchesImplementation(String, String, int, int)',
             duration='0s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=7,
         ),
         TestData(
@@ -450,7 +451,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='AABB, BBAA, 0, 4',
             method_name='testCountExactMatchesImplementation(String, String, int, int)',
             duration='0s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=8,
         ),
         TestData(
@@ -458,7 +459,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='ABCD, ABBA, 2, 0',
             method_name='testCountExactMatchesImplementation(String, String, int, int)',
             duration='0s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=9,
         ),
         TestData(
@@ -466,21 +467,21 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='testCountGenerateSecretFunction()',
             method_name='testCountGenerateSecretFunction()',
             duration='0.001s',
-            result='passed',
+            result=TestResult.PASSED,
         ),
         TestData(
             class_name='Test',
             test='testCountPartialMatchesFunction()',
             method_name='testCountPartialMatchesFunction()',
             duration='0.021s',
-            result='passed',
+            result=TestResult.PASSED,
         ),
         TestData(
             class_name='Test',
             test='ABBA, ABCD, 2, 0',
             method_name='testCountPartialMatchesImplementation(String, String, int, int)',
             duration='0.001s',
-            result='failed',
+            result=TestResult.FAILED,
             test_number=10,
             error_class='java.lang.StringIndexOutOfBoundsException',
             message='Index 4 out of bounds for length 4',
@@ -490,7 +491,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='AAAA, ABBB, 1, 0',
             method_name='testCountPartialMatchesImplementation(String, String, int, int)',
             duration='0.001s',
-            result='failed',
+            result=TestResult.FAILED,
             test_number=11,
             error_class='java.lang.StringIndexOutOfBoundsException',
             message='Index 4 out of bounds for length 4',
@@ -500,7 +501,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='BBBB, BBDH, 2, 0',
             method_name='testCountPartialMatchesImplementation(String, String, int, int)',
             duration='0.001s',
-            result='failed',
+            result=TestResult.FAILED,
             test_number=12,
             error_class='java.lang.StringIndexOutOfBoundsException',
             message='Index 4 out of bounds for length 4',
@@ -510,7 +511,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='AAAA, ABCD, 1, 0',
             method_name='testCountPartialMatchesImplementation(String, String, int, int)',
             duration='0.001s',
-            result='failed',
+            result=TestResult.FAILED,
             test_number=13,
             error_class='java.lang.StringIndexOutOfBoundsException',
             message='Index 4 out of bounds for length 4',
@@ -520,7 +521,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='ACEB, BCDF, 1, 1',
             method_name='testCountPartialMatchesImplementation(String, String, int, int)',
             duration='0.003s',
-            result='failed',
+            result=TestResult.FAILED,
             test_number=1,
             error_class='java.lang.StringIndexOutOfBoundsException',
             message='Index 4 out of bounds for length 4',
@@ -530,7 +531,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='ABCD, ABCD, 4, 0',
             method_name='testCountPartialMatchesImplementation(String, String, int, int)',
             duration='0s',
-            result='failed',
+            result=TestResult.FAILED,
             test_number=2,
             error_class='java.lang.StringIndexOutOfBoundsException',
             message='Index 4 out of bounds for length 4',
@@ -540,7 +541,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='ABCD, DCBA, 0, 4',
             method_name='testCountPartialMatchesImplementation(String, String, int, int)',
             duration='0.001s',
-            result='failed',
+            result=TestResult.FAILED,
             test_number=3,
             error_class='java.lang.StringIndexOutOfBoundsException',
             message='Index 4 out of bounds for length 4',
@@ -550,7 +551,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='ABCD, DBCA, 2, 2',
             method_name='testCountPartialMatchesImplementation(String, String, int, int)',
             duration='0.001s',
-            result='failed',
+            result=TestResult.FAILED,
             test_number=4,
             error_class='java.lang.StringIndexOutOfBoundsException',
             message='Index 4 out of bounds for length 4',
@@ -560,7 +561,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='ABCD, EBCF, 2, 0',
             method_name='testCountPartialMatchesImplementation(String, String, int, int)',
             duration='0s',
-            result='failed',
+            result=TestResult.FAILED,
             test_number=5,
             error_class='java.lang.StringIndexOutOfBoundsException',
             message='Index 4 out of bounds for length 4',
@@ -570,7 +571,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='AAAA, AAAA, 4, 0',
             method_name='testCountPartialMatchesImplementation(String, String, int, int)',
             duration='0s',
-            result='failed',
+            result=TestResult.FAILED,
             test_number=6,
             error_class='java.lang.StringIndexOutOfBoundsException',
             message='Index 4 out of bounds for length 4',
@@ -580,7 +581,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='AAAA, BBBB, 0, 0',
             method_name='testCountPartialMatchesImplementation(String, String, int, int)',
             duration='0.001s',
-            result='failed',
+            result=TestResult.FAILED,
             test_number=7,
             error_class='java.lang.StringIndexOutOfBoundsException',
             message='Index 4 out of bounds for length 4',
@@ -590,7 +591,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='AABB, BBAA, 0, 4',
             method_name='testCountPartialMatchesImplementation(String, String, int, int)',
             duration='0.001s',
-            result='failed',
+            result=TestResult.FAILED,
             test_number=8,
             error_class='java.lang.StringIndexOutOfBoundsException',
             message='Index 4 out of bounds for length 4',
@@ -600,7 +601,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='ABCD, ABBA, 2, 0',
             method_name='testCountPartialMatchesImplementation(String, String, int, int)',
             duration='0.001s',
-            result='failed',
+            result=TestResult.FAILED,
             test_number=9,
             error_class='java.lang.StringIndexOutOfBoundsException',
             message='Index 4 out of bounds for length 4',
@@ -610,21 +611,21 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='testGetGameRulesFunction()',
             method_name='testGetGameRulesFunction()',
             duration='0s',
-            result='passed',
+            result=TestResult.PASSED,
         ),
         TestData(
             class_name='Test',
             test='testIsCompleteFunction()',
             method_name='testIsCompleteFunction()',
             duration='0.001s',
-            result='passed',
+            result=TestResult.PASSED,
         ),
         TestData(
             class_name='Test',
             test='ACEB, BCDF, false',
             method_name='testIsCompleteImplementation(String, String, boolean)',
             duration='0.003s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=1,
         ),
         TestData(
@@ -632,7 +633,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='ACEB, ACEB, true',
             method_name='testIsCompleteImplementation(String, String, boolean)',
             duration='0s',
-            result='passed',
+            result=TestResult.PASSED,
             test_number=2,
         ),
         TestData(
@@ -640,7 +641,7 @@ SUBMISSIONS_ID_TO_EXPECTED_TEST = {
             test='testSolution()',
             method_name='testSolution()',
             duration='0.012s',
-            result='passed',
+            result=TestResult.PASSED,
         ),
     ],
 }

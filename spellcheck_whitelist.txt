@@ -33,6 +33,7 @@ gradle
 groupby
 hyperskill
 hyperstyle
+iat
 iloc
 inplace
 isfile
