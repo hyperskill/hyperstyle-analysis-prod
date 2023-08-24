@@ -708,26 +708,20 @@ def test_functional():
         actual_submissions = pd.read_csv(Path(tmp_dir) / 'submissions-with_parsed_logs.csv')
         expected_submissions = pd.read_csv(LOGS_PARSER_FOLDER / 'submissions-with_parsed_logs.csv')
 
-        for expected_row, actual_row in zip(actual_submissions.itertuples(), expected_submissions.itertuples()):
-            expected_tests = (
-                None
-                if pd.isna(getattr(expected_row, EduColumnName.TESTS.value))
-                else TestData.schema().loads(getattr(expected_row, EduColumnName.TESTS.value), many=True)
-            )
-
+        for actual_row, expected_row in zip(actual_submissions.itertuples(), expected_submissions.itertuples()):
             actual_tests = (
                 None
                 if pd.isna(getattr(actual_row, EduColumnName.TESTS.value))
                 else TestData.schema().loads(getattr(actual_row, EduColumnName.TESTS.value), many=True)
             )
 
-            assert expected_tests == actual_tests
-
-            expected_exceptions = (
+            expected_tests = (
                 None
-                if pd.isna(getattr(expected_row, EduColumnName.EXCEPTIONS.value))
-                else ExceptionData.schema().loads(getattr(expected_row, EduColumnName.EXCEPTIONS.value), many=True)
+                if pd.isna(getattr(expected_row, EduColumnName.TESTS.value))
+                else TestData.schema().loads(getattr(expected_row, EduColumnName.TESTS.value), many=True)
             )
+
+            assert actual_tests == expected_tests
 
             actual_exceptions = (
                 None
@@ -735,18 +729,24 @@ def test_functional():
                 else ExceptionData.schema().loads(getattr(actual_row, EduColumnName.EXCEPTIONS.value), many=True)
             )
 
-            assert expected_exceptions == actual_exceptions
+            expected_exceptions = (
+                None
+                if pd.isna(getattr(expected_row, EduColumnName.EXCEPTIONS.value))
+                else ExceptionData.schema().loads(getattr(expected_row, EduColumnName.EXCEPTIONS.value), many=True)
+            )
 
-        expected_submissions_without_parsed_logs = actual_submissions.drop(
+            assert actual_exceptions == expected_exceptions
+
+        actual_submissions_without_parsed_logs = actual_submissions.drop(
             columns=[EduColumnName.EXCEPTIONS.value, EduColumnName.TESTS.value],
         )
 
-        actual_submissions_without_parsed_logs = expected_submissions.drop(
+        expected_submissions_without_parsed_logs = expected_submissions.drop(
             columns=[EduColumnName.EXCEPTIONS.value, EduColumnName.TESTS.value],
         )
 
         # Asserting that other columns didn't change
-        assert_frame_equal(expected_submissions_without_parsed_logs, actual_submissions_without_parsed_logs)
+        assert_frame_equal(actual_submissions_without_parsed_logs, expected_submissions_without_parsed_logs)
 
 
 def test_functional_incorrect_arguments():
