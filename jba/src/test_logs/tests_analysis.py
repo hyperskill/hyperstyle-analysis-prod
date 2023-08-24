@@ -62,8 +62,8 @@ def _get_result_color(result: TestResult) -> str:
             return "green"
         case TestResult.IGNORED:
             return "yellow"
-        case _:
-            return "black"
+
+    return "black"
 
 
 @st.cache_data
@@ -76,7 +76,8 @@ def convert_tests_to_timeline(group: pd.DataFrame) -> pd.DataFrame:
         (test.class_name, test.method_name, test.test_number)
         for tests in group_tests
         if tests is not None
-        for test in tests
+        # We can't swap if and for because it could lead to iterating over None
+        for test in tests  # noqa: WPS361
     }
 
     tests_timeline = []
@@ -123,14 +124,16 @@ def aggregate_tests_timeline(tests_timeline: pd.DataFrame) -> pd.DataFrame:
     non_parametrized_tests_timeline = tests_timeline[non_parametrized_tests_timeline_mask]
     parametrized_tests_timeline = tests_timeline[~non_parametrized_tests_timeline_mask]
 
-    aggregated_tests_timeline_data = []
-    for unique_test_name, group in parametrized_tests_timeline.groupby(
+    timeline_by_unique_parametrized_test_name = parametrized_tests_timeline.groupby(
         [TestDataField.CLASS_NAME.value, TestDataField.METHOD_NAME.value]
-    ):
-        aggregated_timeline = [None for _ in range(group[START_COLUMN].min() - 1)]
-        for i in range(group[START_COLUMN].min(), group[FINISH_COLUMN].max() + 1):
+    )
+
+    aggregated_tests_timeline_data = []
+    for unique_test_name, test_timeline in timeline_by_unique_parametrized_test_name:
+        aggregated_timeline = [None for _ in range(test_timeline[START_COLUMN].min() - 1)]
+        for i in range(test_timeline[START_COLUMN].min(), test_timeline[FINISH_COLUMN].max() + 1):
             parametrized_test_results = []
-            for row in group.itertuples():
+            for row in test_timeline.itertuples():
                 if getattr(row, START_COLUMN) <= i <= getattr(row, FINISH_COLUMN):
                     parametrized_test_results.append(getattr(row, TestDataField.RESULT.value))
             aggregated_timeline.append(_get_aggregated_result(parametrized_test_results))
@@ -158,26 +161,27 @@ def plot_tests_timeline(tests_timeline: pd.DataFrame, duplicate_attempts: List[i
 
     yticks = []
     yticklabels = []
-    for i, (unique_test_name, tests_timeline) in enumerate(timeline_by_unique_test_name, start=1):
+    for i, (unique_test_name, test_timeline) in enumerate(timeline_by_unique_test_name, start=1):
         class_name, method_name, test_number = unique_test_name
 
         xranges = []
         colors = []
-        for row in tests_timeline.itertuples():
+        for row in test_timeline.itertuples():
             start = getattr(row, START_COLUMN)
             finish = getattr(row, FINISH_COLUMN)
             duration = finish - start
             color = _get_result_color(getattr(row, TestDataField.RESULT.value))
 
-            if duration != 0:
+            if duration == 0:
+                plt.plot(start, i + 0.25, marker='o', markerfacecolor=color, markeredgecolor=color, markersize=5)
+            else:
                 xranges.append((start, duration))
                 colors.append(color)
-            else:
-                plt.plot(start, i + 0.25, marker='o', markerfacecolor=color, markeredgecolor=color, markersize=5)
 
         test_name = f'{class_name}.{method_name}'
         if not pd.isna(test_number):
-            test_name += f'[{int(test_number)}]'
+            # We use explicit string concatenation here for the sake of brevity
+            test_name += f'[{int(test_number)}]'  # noqa: WPS336
 
         yticks.append(i + 0.25)
         yticklabels.append(test_name)
@@ -196,7 +200,7 @@ def plot_tests_timeline(tests_timeline: pd.DataFrame, duplicate_attempts: List[i
             Patch(facecolor=LIGHT_GRAY_COLOR, label='Duplicate'),
         ],
         bbox_to_anchor=(1.02, 1),
-        borderaxespad=0.0,
+        borderaxespad=0,
         loc='upper left',
     )
 
@@ -249,7 +253,7 @@ def main():
     plot_tests_timeline(aggregated_tests_timeline, duplicate_attempts, invalid_attempts)
 
     parametrized_tests_timeline = tests_timeline[~pd.isna(tests_timeline[TestDataField.TEST_NUMBER.value])]
-    if len(parametrized_tests_timeline) != 0:
+    if not parametrized_tests_timeline.empty:
         class_name, method_name = st.selectbox(
             'Parametrized test name:',
             options=(

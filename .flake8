@@ -62,6 +62,8 @@ ignore =
     WPS432,
     # Forbid overlapping local and block variables. Disabled due to false-positives
     WPS440,
+    # Forbid comparisons between bitwise and boolean expressions
+    WPS465,
     # Forbid @staticmethod decorator
     WPS602,
     # Forbid incorrect nodes inside class definitions. Disabled due to false-positives with the pass keyword
