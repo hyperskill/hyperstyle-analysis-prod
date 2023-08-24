@@ -35,8 +35,8 @@ def test_count_duplicates(group: pd.DataFrame, expected_duplicates: List[int]):
 
 COURSE_DATA = pd.DataFrame(
     [
-        [1, 6, 'A'],
-        [1, 6, 'B'],
+        [1, 0, 'A'],
+        [1, 0, 'B'],
         [2, 1, 'A'],
         [2, 2, 'A'],
         [2, 2, 'B'],
