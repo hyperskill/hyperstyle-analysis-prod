@@ -57,7 +57,7 @@ def _find_test_result(
     :param test_number: Number of a parametrized test to search. Might be None,
     :param tests: List of tests to search for.
     :return: Result of the test which corresponding fields match `class_name`, `method_name` and `test_number`.
-    If there is no such test, None will be returned.
+        If there is no such test, None will be returned.
     """
     try:
         return next(

@@ -875,7 +875,10 @@ CONVERT_TESTS_TO_TIMELINE_DATA = [
 
 
 @pytest.mark.parametrize(('tests', 'expected_timeline_data'), CONVERT_TESTS_TO_TIMELINE_DATA)
-def test_convert_tests_to_timeline(tests: List[Optional[List[TestData]]], expected_timeline_data: List[Tuple]):
+def test_convert_tests_to_timeline(  # noqa: WPS234
+    tests: List[Optional[List[TestData]]],
+    expected_timeline_data: List[Tuple],
+):
     group_data = pd.DataFrame(
         map(lambda x: None if x is None else TestData.schema().dumps(x, many=True), tests),
         columns=[EduColumnName.TESTS.value],
@@ -992,7 +995,7 @@ AGGREGATE_TESTS_TIMELINE_DATA = [
             ('Test', 'some_parametrized_method_name_2(String)', None, TestResult.IGNORED, 1, 1),
             ('Test', 'some_parametrized_method_name_2(String)', None, TestResult.PASSED, 2, 3),
             ('Test', 'some_parametrized_method_name_3(String)', None, TestResult.PASSED, 1, 3),
-        ]
+        ],
     ),
     (
         [
@@ -1008,7 +1011,7 @@ AGGREGATE_TESTS_TIMELINE_DATA = [
             ('Test', 'some_method_name()', None, TestResult.PASSED, 3, 4),
             ('Test', 'some_parametrized_method_name(String)', None, TestResult.FAILED, 2, 2),
             ('Test', 'some_parametrized_method_name(String)', None, TestResult.PASSED, 3, 3),
-        ]
+        ],
     ),
 ]
 
