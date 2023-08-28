@@ -236,6 +236,6 @@ docker run hyperstyle-analysis-prod:<VERSION> poetry run streamlit run tests_ana
 
 The command runs Streamlit app that show two Gantt Chart:
 - General tests timeline.
-  <img src="./images/general_tests_timeline.png" title="General tests timeline"/>
+  <img src="./images/general_tests_timeline.png" title="General tests timeline" width="50%"/>
 - Parametrized tests timeline.
-  <img src="./images/parametrized_tests_timeline.png" title="Parametrized tests timeline"/>
+  <img src="./images/parametrized_tests_timeline.png" title="Parametrized tests timeline" width="50%"/>
