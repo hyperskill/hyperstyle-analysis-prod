@@ -1,7 +1,3 @@
-# TODO: docs
-# TODO: tests everywhere
-# TODO: add caching
-# TODO: add legend
 import itertools
 from typing import List, Tuple, Optional, TypeVar, Sequence
 
@@ -27,6 +23,15 @@ TimelineItem = Tuple[T, int, int]
 
 
 def _convert_to_timeline(elements: Sequence[T]) -> List[TimelineItem]:
+    """
+    Convert an element sequence to a timeline.
+    A timeline is a list of tuples, each consisting of an element, start index, and finish index.
+
+    Index numbering starts from 1.
+
+    :param elements: Elements to convert.
+    :return: List of tuples (element, start index, finish index).
+    """
     timeline = []
 
     current_position = 1
@@ -41,9 +46,19 @@ def _convert_to_timeline(elements: Sequence[T]) -> List[TimelineItem]:
 def _find_test_result(
     class_name: str,
     method_name: str,
-    test_number: int,
+    test_number: Optional[int],
     tests: List[TestData],
 ) -> Optional[TestResult]:
+    """
+    Find first test in the tests list by fields and return its result.
+
+    :param class_name: Name of a test class to search.
+    :param method_name: Name of a test method to search.
+    :param test_number: Number of a parametrized test to search. Might be None,
+    :param tests: List of tests to search for.
+    :return: Result of the test which corresponding fields match `class_name`, `method_name` and `test_number`.
+    If there is no such test, None will be returned.
+    """
     try:
         return next(
             test
@@ -66,8 +81,16 @@ def _get_result_color(result: TestResult) -> str:
     return "black"
 
 
-@st.cache_data
 def convert_tests_to_timeline(group: pd.DataFrame) -> pd.DataFrame:
+    """
+    Convert tests from the group into timeline table.
+
+    Each row of the table consist of class name, method name, number of parametrized test, result,
+    numbers of the first and the last consecutive submissions with this result.
+
+    :param group: Group of submissions whose tests should be converted to a timeline table.
+    :return: Timeline table.
+    """
     group_tests = group[EduColumnName.TESTS.value].apply(
         lambda tests: None if pd.isna(tests) else TestData.schema().loads(tests, many=True)
     )
@@ -120,6 +143,12 @@ def _get_aggregated_result(results: List[TestResult]) -> Optional[TestResult]:
 
 
 def aggregate_tests_timeline(tests_timeline: pd.DataFrame) -> pd.DataFrame:
+    """
+    Convert parametrized tests into non-parametrized ones by aggregating their result.
+
+    :param tests_timeline: Tests timeline with parametrized tests to aggregate.
+    :return: Aggregated tests timeline.
+    """
     non_parametrized_tests_timeline_mask = pd.isna(tests_timeline[TestDataField.TEST_NUMBER.value])
     non_parametrized_tests_timeline = tests_timeline[non_parametrized_tests_timeline_mask]
     parametrized_tests_timeline = tests_timeline[~non_parametrized_tests_timeline_mask]
@@ -142,16 +171,25 @@ def aggregate_tests_timeline(tests_timeline: pd.DataFrame) -> pd.DataFrame:
             if result is not None:
                 aggregated_tests_timeline_data.append([*unique_test_name, None, result, begin, end])
 
+    if not aggregated_tests_timeline_data:
+        return non_parametrized_tests_timeline
+
     return pd.concat(
         [
             non_parametrized_tests_timeline,
             pd.DataFrame(aggregated_tests_timeline_data, columns=non_parametrized_tests_timeline.columns),
         ]
-    )
+    ).reset_index(drop=True)
 
 
-# TODO: make bars slimmer
 def plot_tests_timeline(tests_timeline: pd.DataFrame, duplicate_attempts: List[int], invalid_attempts: List[int]):
+    """
+    Plot tests timeline.
+
+    :param tests_timeline: Tests timeline.
+    :param duplicate_attempts: Numbers of submissions with duplicate attempts.
+    :param invalid_attempts: Numbers of submissions with invalid attempts.
+    """
     timeline_by_unique_test_name = tests_timeline.groupby(
         [TestDataField.CLASS_NAME.value, TestDataField.METHOD_NAME.value, TestDataField.TEST_NUMBER.value],
         dropna=False,
@@ -204,9 +242,8 @@ def plot_tests_timeline(tests_timeline: pd.DataFrame, duplicate_attempts: List[i
         loc='upper left',
     )
 
-    # TODO: ?????
-    left_boundary = min(tests_timeline[START_COLUMN].min(), tests_timeline[START_COLUMN].min(), *invalid_attempts)
-    right_boundary = max(tests_timeline[FINISH_COLUMN].max(), tests_timeline[FINISH_COLUMN].max(), *invalid_attempts)
+    left_boundary = min([tests_timeline[START_COLUMN].min(), *invalid_attempts])
+    right_boundary = max([tests_timeline[FINISH_COLUMN].max(), *invalid_attempts])
     ax.set_xticks(range(left_boundary, right_boundary + 1))
 
     for attempt in duplicate_attempts:
