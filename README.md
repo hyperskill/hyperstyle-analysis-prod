@@ -1,6 +1,6 @@
 # Hyperstyle analysis
 
-This repository contains several tools-helpers to work with data from the Hyperstyle platform:
+This repository contains several tools-helpers to work with data from the Hyperskill and JetBrains Academy platforms:
 
 - [core](./core) module contains some common functions like pandas utilities or some common models
 - [templates](./templates/README.md) module contains algorithms for searching code quality issues in the pre-written templates.

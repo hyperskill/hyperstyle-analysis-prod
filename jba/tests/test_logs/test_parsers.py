@@ -1,11 +1,10 @@
+from pathlib import Path
 from textwrap import dedent
-
-import pytest
 from typing import List
 
-from pathlib import Path
+import pytest
 
-from jba.src.models.edu_logs import ExceptionData, TestData
+from jba.src.models.edu_logs import ExceptionData, TestData, TestResult
 from jba.src.test_logs.parsers import parse_gradle_stderr_logs, parse_gradle_test_logs
 from jba.tests.test_logs import TEST_LOGS_FOLDER
 
@@ -66,49 +65,49 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                 test='testCountExactMatchesFunction()',
                 method_name='testCountExactMatchesFunction()',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
             ),
             TestData(
                 class_name='Test',
                 test='testCountGenerateSecretFunction()',
                 method_name='testCountGenerateSecretFunction()',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
             ),
             TestData(
                 class_name='Test',
                 test='testCountPartialMatchesFunction()',
                 method_name='testCountPartialMatchesFunction()',
                 duration='0.031s',
-                result='passed',
+                result=TestResult.PASSED,
             ),
             TestData(
                 class_name='Test',
                 test='testGetGameRulesFunction()',
                 method_name='testGetGameRulesFunction()',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
             ),
             TestData(
                 class_name='Test',
                 test='testIsCompleteFunction()',
                 method_name='testIsCompleteFunction()',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
             ),
             TestData(
                 class_name='Test',
                 test='testPlayGameFunction()',
                 method_name='testPlayGameFunction()',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
             ),
             TestData(
                 class_name='Test',
                 test='testSolution()',
                 method_name='testSolution()',
                 duration='0.014s',
-                result='passed',
+                result=TestResult.PASSED,
             ),
         ],
     ),
@@ -120,287 +119,321 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                 test='testCountExactMatchesFunction()',
                 method_name='testCountExactMatchesFunction()',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
             ),
             TestData(
                 class_name='Test',
-                test='[10] ABBA, ABCD, 2, 0',
-                method_name='testCountExactMatchesImplementation(String, String, int, int)[10]',
+                test='ABBA, ABCD, 2, 0',
+                method_name='testCountExactMatchesImplementation(String, String, int, int)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=10,
             ),
             TestData(
                 class_name='Test',
-                test='[11] AAAA, ABBB, 1, 0',
-                method_name='testCountExactMatchesImplementation(String, String, int, int)[11]',
+                test='AAAA, ABBB, 1, 0',
+                method_name='testCountExactMatchesImplementation(String, String, int, int)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=11,
             ),
             TestData(
                 class_name='Test',
-                test='[12] BBBB, BBDH, 2, 0',
-                method_name='testCountExactMatchesImplementation(String, String, int, int)[12]',
+                test='BBBB, BBDH, 2, 0',
+                method_name='testCountExactMatchesImplementation(String, String, int, int)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=12,
             ),
             TestData(
                 class_name='Test',
-                test='[13] AAAA, ABCD, 1, 0',
-                method_name='testCountExactMatchesImplementation(String, String, int, int)[13]',
+                test='AAAA, ABCD, 1, 0',
+                method_name='testCountExactMatchesImplementation(String, String, int, int)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=13,
             ),
             TestData(
                 class_name='Test',
-                test='[1] ACEB, BCDF, 1, 1',
-                method_name='testCountExactMatchesImplementation(String, String, int, int)[1]',
+                test='ACEB, BCDF, 1, 1',
+                method_name='testCountExactMatchesImplementation(String, String, int, int)',
                 duration='0.003s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=1,
             ),
             TestData(
                 class_name='Test',
-                test='[2] ABCD, ABCD, 4, 0',
-                method_name='testCountExactMatchesImplementation(String, String, int, int)[2]',
+                test='ABCD, ABCD, 4, 0',
+                method_name='testCountExactMatchesImplementation(String, String, int, int)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=2,
             ),
             TestData(
                 class_name='Test',
-                test='[3] ABCD, DCBA, 0, 4',
-                method_name='testCountExactMatchesImplementation(String, String, int, int)[3]',
+                test='ABCD, DCBA, 0, 4',
+                method_name='testCountExactMatchesImplementation(String, String, int, int)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=3,
             ),
             TestData(
                 class_name='Test',
-                test='[4] ABCD, DBCA, 2, 2',
-                method_name='testCountExactMatchesImplementation(String, String, int, int)[4]',
+                test='ABCD, DBCA, 2, 2',
+                method_name='testCountExactMatchesImplementation(String, String, int, int)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=4,
             ),
             TestData(
                 class_name='Test',
-                test='[5] ABCD, EBCF, 2, 0',
-                method_name='testCountExactMatchesImplementation(String, String, int, int)[5]',
+                test='ABCD, EBCF, 2, 0',
+                method_name='testCountExactMatchesImplementation(String, String, int, int)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=5,
             ),
             TestData(
                 class_name='Test',
-                test='[6] AAAA, AAAA, 4, 0',
-                method_name='testCountExactMatchesImplementation(String, String, int, int)[6]',
+                test='AAAA, AAAA, 4, 0',
+                method_name='testCountExactMatchesImplementation(String, String, int, int)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=6,
             ),
             TestData(
                 class_name='Test',
-                test='[7] AAAA, BBBB, 0, 0',
-                method_name='testCountExactMatchesImplementation(String, String, int, int)[7]',
+                test='AAAA, BBBB, 0, 0',
+                method_name='testCountExactMatchesImplementation(String, String, int, int)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=7,
             ),
             TestData(
                 class_name='Test',
-                test='[8] AABB, BBAA, 0, 4',
-                method_name='testCountExactMatchesImplementation(String, String, int, int)[8]',
+                test='AABB, BBAA, 0, 4',
+                method_name='testCountExactMatchesImplementation(String, String, int, int)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=8,
             ),
             TestData(
                 class_name='Test',
-                test='[9] ABCD, ABBA, 2, 0',
-                method_name='testCountExactMatchesImplementation(String, String, int, int)[9]',
+                test='ABCD, ABBA, 2, 0',
+                method_name='testCountExactMatchesImplementation(String, String, int, int)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=9,
             ),
             TestData(
                 class_name='Test',
                 test='testCountGenerateSecretFunction()',
                 method_name='testCountGenerateSecretFunction()',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
             ),
             TestData(
                 class_name='Test',
                 test='testCountPartialMatchesFunction()',
                 method_name='testCountPartialMatchesFunction()',
                 duration='0.028s',
-                result='passed',
+                result=TestResult.PASSED,
             ),
             TestData(
                 class_name='Test',
-                test='[10] ABBA, ABCD, 2, 0',
-                method_name='testCountPartialMatchesImplementation(String, String, int, int)[10]',
+                test='ABBA, ABCD, 2, 0',
+                method_name='testCountPartialMatchesImplementation(String, String, int, int)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=10,
             ),
             TestData(
                 class_name='Test',
-                test='[11] AAAA, ABBB, 1, 0',
-                method_name='testCountPartialMatchesImplementation(String, String, int, int)[11]',
+                test='AAAA, ABBB, 1, 0',
+                method_name='testCountPartialMatchesImplementation(String, String, int, int)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=11,
             ),
             TestData(
                 class_name='Test',
-                test='[12] BBBB, BBDH, 2, 0',
-                method_name='testCountPartialMatchesImplementation(String, String, int, int)[12]',
+                test='BBBB, BBDH, 2, 0',
+                method_name='testCountPartialMatchesImplementation(String, String, int, int)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=12,
             ),
             TestData(
                 class_name='Test',
-                test='[13] AAAA, ABCD, 1, 0',
-                method_name='testCountPartialMatchesImplementation(String, String, int, int)[13]',
+                test='AAAA, ABCD, 1, 0',
+                method_name='testCountPartialMatchesImplementation(String, String, int, int)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=13,
             ),
             TestData(
                 class_name='Test',
-                test='[1] ACEB, BCDF, 1, 1',
-                method_name='testCountPartialMatchesImplementation(String, String, int, int)[1]',
+                test='ACEB, BCDF, 1, 1',
+                method_name='testCountPartialMatchesImplementation(String, String, int, int)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=1,
             ),
             TestData(
                 class_name='Test',
-                test='[2] ABCD, ABCD, 4, 0',
-                method_name='testCountPartialMatchesImplementation(String, String, int, int)[2]',
+                test='ABCD, ABCD, 4, 0',
+                method_name='testCountPartialMatchesImplementation(String, String, int, int)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=2,
             ),
             TestData(
                 class_name='Test',
-                test='[3] ABCD, DCBA, 0, 4',
-                method_name='testCountPartialMatchesImplementation(String, String, int, int)[3]',
+                test='ABCD, DCBA, 0, 4',
+                method_name='testCountPartialMatchesImplementation(String, String, int, int)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=3,
             ),
             TestData(
                 class_name='Test',
-                test='[4] ABCD, DBCA, 2, 2',
-                method_name='testCountPartialMatchesImplementation(String, String, int, int)[4]',
+                test='ABCD, DBCA, 2, 2',
+                method_name='testCountPartialMatchesImplementation(String, String, int, int)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=4,
             ),
             TestData(
                 class_name='Test',
-                test='[5] ABCD, EBCF, 2, 0',
-                method_name='testCountPartialMatchesImplementation(String, String, int, int)[5]',
+                test='ABCD, EBCF, 2, 0',
+                method_name='testCountPartialMatchesImplementation(String, String, int, int)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=5,
             ),
             TestData(
                 class_name='Test',
-                test='[6] AAAA, AAAA, 4, 0',
-                method_name='testCountPartialMatchesImplementation(String, String, int, int)[6]',
+                test='AAAA, AAAA, 4, 0',
+                method_name='testCountPartialMatchesImplementation(String, String, int, int)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=6,
             ),
             TestData(
                 class_name='Test',
-                test='[7] AAAA, BBBB, 0, 0',
-                method_name='testCountPartialMatchesImplementation(String, String, int, int)[7]',
+                test='AAAA, BBBB, 0, 0',
+                method_name='testCountPartialMatchesImplementation(String, String, int, int)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=7,
             ),
             TestData(
                 class_name='Test',
-                test='[8] AABB, BBAA, 0, 4',
-                method_name='testCountPartialMatchesImplementation(String, String, int, int)[8]',
+                test='AABB, BBAA, 0, 4',
+                method_name='testCountPartialMatchesImplementation(String, String, int, int)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=8,
             ),
             TestData(
                 class_name='Test',
-                test='[9] ABCD, ABBA, 2, 0',
-                method_name='testCountPartialMatchesImplementation(String, String, int, int)[9]',
+                test='ABCD, ABBA, 2, 0',
+                method_name='testCountPartialMatchesImplementation(String, String, int, int)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=9,
             ),
             TestData(
                 class_name='Test',
                 test='testGetGameRulesFunction()',
                 method_name='testGetGameRulesFunction()',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
             ),
             TestData(
                 class_name='Test',
                 test='testIsCompleteFunction()',
                 method_name='testIsCompleteFunction()',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
             ),
             TestData(
                 class_name='Test',
-                test='[1] ACEB, BCDF, false',
-                method_name='testIsCompleteImplementation(String, String, boolean)[1]',
+                test='ACEB, BCDF, false',
+                method_name='testIsCompleteImplementation(String, String, boolean)',
                 duration='0.002s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=1,
             ),
             TestData(
                 class_name='Test',
-                test='[2] ACEB, ACEB, true',
-                method_name='testIsCompleteImplementation(String, String, boolean)[2]',
+                test='ACEB, ACEB, true',
+                method_name='testIsCompleteImplementation(String, String, boolean)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=2,
             ),
             TestData(
                 class_name='Test',
                 test='testIsLostFunction()',
                 method_name='testIsLostFunction()',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
             ),
             TestData(
                 class_name='Test',
-                test='[1] true, 3, 4, true, false',
-                method_name='testIsLostImplementation(boolean, int, int, boolean, boolean)[1]',
+                test='true, 3, 4, true, false',
+                method_name='testIsLostImplementation(boolean, int, int, boolean, boolean)',
                 duration='0.006s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=1,
             ),
             TestData(
                 class_name='Test',
-                test='[2] true, 4, 4, true, false',
-                method_name='testIsLostImplementation(boolean, int, int, boolean, boolean)[2]',
+                test='true, 4, 4, true, false',
+                method_name='testIsLostImplementation(boolean, int, int, boolean, boolean)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=2,
             ),
             TestData(
                 class_name='Test',
-                test='[3] false, 4, 4, false, false',
-                method_name='testIsLostImplementation(boolean, int, int, boolean, boolean)[3]',
+                test='false, 4, 4, false, false',
+                method_name='testIsLostImplementation(boolean, int, int, boolean, boolean)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=3,
             ),
             TestData(
                 class_name='Test',
-                test='[4] false, 5, 4, false, true',
-                method_name='testIsLostImplementation(boolean, int, int, boolean, boolean)[4]',
+                test='false, 5, 4, false, true',
+                method_name='testIsLostImplementation(boolean, int, int, boolean, boolean)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=4,
             ),
             TestData(
                 class_name='Test',
-                test='[5] false, 3, 4, false, false',
-                method_name='testIsLostImplementation(boolean, int, int, boolean, boolean)[5]',
+                test='false, 3, 4, false, false',
+                method_name='testIsLostImplementation(boolean, int, int, boolean, boolean)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=5,
             ),
             TestData(
                 class_name='Test',
                 test='testIsWinFunction()',
                 method_name='testIsWinFunction()',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
             ),
             TestData(
                 class_name='Test',
-                test='[1] true, 3, 4, true, false',
-                method_name='testIsWinImplementation(boolean, int, int, boolean, boolean)[1]',
+                test='true, 3, 4, true, false',
+                method_name='testIsWinImplementation(boolean, int, int, boolean, boolean)',
                 duration='0.002s',
-                result='failed',
+                result=TestResult.FAILED,
+                test_number=1,
                 error_class='org.opentest4j.AssertionFailedError',
                 message=(
                     'The function isWin must return true for the following arguments: complete: true, attempts: 3, '
@@ -409,10 +442,11 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
             ),
             TestData(
                 class_name='Test',
-                test='[2] true, 4, 4, true, false',
-                method_name='testIsWinImplementation(boolean, int, int, boolean, boolean)[2]',
+                test='true, 4, 4, true, false',
+                method_name='testIsWinImplementation(boolean, int, int, boolean, boolean)',
                 duration='0.001s',
-                result='failed',
+                result=TestResult.FAILED,
+                test_number=2,
                 error_class='org.opentest4j.AssertionFailedError',
                 message=(
                     'The function isWin must return true for the following arguments: complete: true, attempts: 4, '
@@ -421,10 +455,11 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
             ),
             TestData(
                 class_name='Test',
-                test='[3] false, 4, 4, false, false',
-                method_name='testIsWinImplementation(boolean, int, int, boolean, boolean)[3]',
+                test='false, 4, 4, false, false',
+                method_name='testIsWinImplementation(boolean, int, int, boolean, boolean)',
                 duration='0.001s',
-                result='failed',
+                result=TestResult.FAILED,
+                test_number=3,
                 error_class='org.opentest4j.AssertionFailedError',
                 message=(
                     'The function isWin must return false for the following arguments: complete: false, attempts: 4, '
@@ -433,17 +468,19 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
             ),
             TestData(
                 class_name='Test',
-                test='[4] false, 5, 4, false, true',
-                method_name='testIsWinImplementation(boolean, int, int, boolean, boolean)[4]',
+                test='false, 5, 4, false, true',
+                method_name='testIsWinImplementation(boolean, int, int, boolean, boolean)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=4,
             ),
             TestData(
                 class_name='Test',
-                test='[5] false, 3, 4, false, false',
-                method_name='testIsWinImplementation(boolean, int, int, boolean, boolean)[5]',
+                test='false, 3, 4, false, false',
+                method_name='testIsWinImplementation(boolean, int, int, boolean, boolean)',
                 duration='0.001s',
-                result='failed',
+                result=TestResult.FAILED,
+                test_number=5,
                 error_class='org.opentest4j.AssertionFailedError',
                 message=(
                     'The function isWin must return false for the following arguments: complete: false, attempts: 3, '
@@ -455,42 +492,45 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                 test='testPrintRoundResultsFunction()',
                 method_name='testPrintRoundResultsFunction()',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
             ),
             TestData(
                 class_name='Test',
                 test=(
-                    '[1] ABCD, [GameStep(attempt=BCDF, positions=0, letters=3), '
+                    'ABCD, [GameStep(attempt=BCDF, positions=0, letters=3), '
                     'GameStep(attempt=ABCD, positions=4, letters=0)], WIN'
                 ),
-                method_name='testSolution(String, List, GameResult)[1]',
+                method_name='testSolution(String, List, GameResult)',
                 duration='0.021s',
-                result='failed',
+                result=TestResult.FAILED,
+                test_number=1,
                 error_class='java.lang.AssertionError',
                 message='You are asking the user to enter data fewer times than required in the task!',
             ),
             TestData(
                 class_name='Test',
                 test=(
-                    '[2] ABCD, [GameStep(attempt=BCDF, positions=0, letters=3), GameStep(attempt=ABDC, '
+                    'ABCD, [GameStep(attempt=BCDF, positions=0, letters=3), GameStep(attempt=ABDC, '
                     'positions=2, letters=2), GameStep(attempt=ABCD, positions=4, letters=0)], WIN'
                 ),
-                method_name='testSolution(String, List, GameResult)[2]',
+                method_name='testSolution(String, List, GameResult)',
                 duration='0.001s',
-                result='failed',
+                result=TestResult.FAILED,
+                test_number=2,
                 error_class='java.lang.AssertionError',
                 message='You are asking the user to enter data fewer times than required in the task!',
             ),
             TestData(
                 class_name='Test',
                 test=(
-                    '[3] ABCD, [GameStep(attempt=BCDF, positions=0, letters=3), '
+                    'ABCD, [GameStep(attempt=BCDF, positions=0, letters=3), '
                     'GameStep(attempt=BCDF, positions=0, letters=3), GameStep(attempt=BCDF, '
                     'positions=0, letters=3), GameStep(attempt=BCDF, positions=0, letters=3)], LOSE'
                 ),
-                method_name='testSolution(String, List, GameResult)[3]',
+                method_name='testSolution(String, List, GameResult)',
                 duration='0.004s',
-                result='failed',
+                result=TestResult.FAILED,
+                test_number=3,
                 error_class='java.lang.AssertionError',
                 message='You are asking the user to enter data fewer times than required in the task!',
             ),
@@ -504,13 +544,13 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                 test='canvasGeneratorFunction()',
                 method_name='canvasGeneratorFunction()',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
             ),
             TestData(
                 class_name='Test',
                 test=dedent(
                     r"""
-                    [10]  X
+                     X
                     / \
                     \ /
                      X, Filter(width=6, height=8, result= X  X  X  X  X  X 
@@ -539,16 +579,17 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                     \ /\ /\ /\ /\ /\ /
                      X  X  X  X  X  X )
                     """
-                ).strip(),
-                method_name='canvasGeneratorImplementation(String, Filter)[10]',
+                ).strip('\n'),
+                method_name='canvasGeneratorImplementation(String, Filter)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=10,
             ),
             TestData(
                 class_name='Test',
                 test=dedent(
                     r"""
-                    [11]   ____   
+                      ____   
                      /    \
                     / /  \ \
                     \ \__/ /
@@ -558,16 +599,17 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                     \ \__/ / 
                      \____/  )
                     """
-                ).strip(),
-                method_name='canvasGeneratorImplementation(String, Filter)[11]',
+                ).strip('\n'),
+                method_name='canvasGeneratorImplementation(String, Filter)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=11,
             ),
             TestData(
                 class_name='Test',
                 test=dedent(
                     r"""
-                    [12]   ____   
+                      ____   
                      /    \
                     / /  \ \
                     \ \__/ /
@@ -577,16 +619,17 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                     \ \__/ / \ \__/ / 
                      \____/   \____/  )
                     """
-                ).strip(),
-                method_name='canvasGeneratorImplementation(String, Filter)[12]',
+                ).strip('\n'),
+                method_name='canvasGeneratorImplementation(String, Filter)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=12,
             ),
             TestData(
                 class_name='Test',
                 test=dedent(
                     r"""
-                    [13]   ____   
+                      ____   
                      /    \
                     / /  \ \
                     \ \__/ /
@@ -600,10 +643,11 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                     \ \__/ / 
                      \____/  )
                     """
-                ).strip(),
-                method_name='canvasGeneratorImplementation(String, Filter)[13]',
+                ).strip('\n'),
+                method_name='canvasGeneratorImplementation(String, Filter)',
                 duration='0.004s',
-                result='failed',
+                result=TestResult.FAILED,
+                test_number=13,
                 error_class='org.opentest4j.AssertionFailedError',
                 message=dedent(
                     r"""
@@ -641,13 +685,13 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                     \ \__/ /
                      \____/ >
                     """
-                ).strip(),
+                ).strip('\n'),
             ),
             TestData(
                 class_name='Test',
                 test=dedent(
                     r"""
-                    [14]   ____   
+                      ____   
                      /    \
                     / /  \ \
                     \ \__/ /
@@ -663,10 +707,11 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                      /    \   /    \   /    \   /    \   /    \  
                     / /  \ \ / /  \ \ …
                     """
-                ).strip(),
-                method_name='canvasGeneratorImplementation(String, Filter)[14]',
+                ).strip('\n'),
+                method_name='canvasGeneratorImplementation(String, Filter)',
                 duration='0.002s',
-                result='failed',
+                result=TestResult.FAILED,
+                test_number=14,
                 error_class='org.opentest4j.AssertionFailedError',
                 message=dedent(
                     r"""
@@ -764,13 +809,13 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                     \ \__/ /\ \__/ /\ \__/ /\ \__/ /\ \__/ /
                      \____/  \____/  \____/  \____/  \____/ >
                     """
-                ).strip(),
+                ).strip('\n'),
             ),
             TestData(
                 class_name='Test',
                 test=dedent(
                     r"""
-                    [15]   ____   
+                      ____   
                      /    \
                     / /  \ \
                     \ \__/ /
@@ -784,10 +829,11 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                     \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / \ \__/ / 
                      \____/   \____/   \____/   \____/   \…
                     """
-                ).strip(),
-                method_name='canvasGeneratorImplementation(String, Filter)[15]',
+                ).strip('\n'),
+                method_name='canvasGeneratorImplementation(String, Filter)',
                 duration='0.002s',
-                result='failed',
+                result=TestResult.FAILED,
+                test_number=15,
                 error_class='org.opentest4j.AssertionFailedError',
                 message=dedent(
                     r"""
@@ -897,13 +943,13 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                     \ \__/ /\ \__/ /\ \__/ /\ \__/ /\ \__/ /\ \__/ /
                      \____/  \____/  \____/  \____/  \____/  \____/ >
                     """
-                ).strip(),
+                ).strip('\n'),
             ),
             TestData(
                 class_name='Test',
                 test=dedent(
                     """
-                    [16] +---+---+
+                    +---+---+
                     | o   o |
                     |   ^   |
                     |  ---  |
@@ -913,16 +959,17 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                     |  ---  |
                     +---+---+)
                     """
-                ).strip(),
-                method_name='canvasGeneratorImplementation(String, Filter)[16]',
+                ).strip('\n'),
+                method_name='canvasGeneratorImplementation(String, Filter)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=16,
             ),
             TestData(
                 class_name='Test',
                 test=dedent(
                     """
-                    [17] +---+---+
+                    +---+---+
                     | o   o |
                     |   ^   |
                     |  ---  |
@@ -932,16 +979,17 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                     |  ---  ||  ---  |
                     +---+---++---+---+)
                     """
-                ).strip(),
-                method_name='canvasGeneratorImplementation(String, Filter)[17]',
+                ).strip('\n'),
+                method_name='canvasGeneratorImplementation(String, Filter)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=17,
             ),
             TestData(
                 class_name='Test',
                 test=dedent(
                     """
-                    [18] +---+---+
+                    +---+---+
                     | o   o |
                     |   ^   |
                     |  ---  |
@@ -955,16 +1003,17 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                     |  ---  |
                     +---+---+)
                     """
-                ).strip(),
-                method_name='canvasGeneratorImplementation(String, Filter)[18]',
+                ).strip('\n'),
+                method_name='canvasGeneratorImplementation(String, Filter)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=18,
             ),
             TestData(
                 class_name='Test',
                 test=dedent(
                     """
-                    [19] +---+---+
+                    +---+---+
                     | o   o |
                     |   ^   |
                     |  ---  |
@@ -980,23 +1029,25 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                     | o   o || o   o || o   o || o   o || o   o |
                     |   ^   ||   ^   |…
                     """
-                ).strip(),
-                method_name='canvasGeneratorImplementation(String, Filter)[19]',
+                ).strip('\n'),
+                method_name='canvasGeneratorImplementation(String, Filter)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=19,
             ),
             TestData(
                 class_name='Test',
-                test='[1] ○, Filter(width=1, height=1, result=○)',
-                method_name='canvasGeneratorImplementation(String, Filter)[1]',
+                test='○, Filter(width=1, height=1, result=○)',
+                method_name='canvasGeneratorImplementation(String, Filter)',
                 duration='0.004s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=1,
             ),
             TestData(
                 class_name='Test',
                 test=dedent(
                     """
-                    [20] +---+---+
+                    +---+---+
                     | o   o |
                     |   ^   |
                     |  ---  |
@@ -1010,16 +1061,17 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                     |  ---  ||  ---  ||  ---  ||  ---  ||  ---  ||  ---  |
                     +---+---++---+---++---+---++---+---++-…
                     """
-                ).strip(),
-                method_name='canvasGeneratorImplementation(String, Filter)[20]',
+                ).strip('\n'),
+                method_name='canvasGeneratorImplementation(String, Filter)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=20,
             ),
             TestData(
                 class_name='Test',
                 test=dedent(
                     """
-                    [21]    .+------+
+                       .+------+
                      .' |    .'|
                     +---+--+'  |
                     |   |  |   |
@@ -1033,16 +1085,17 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                     |.'    | .' 
                     +------+'   )
                     """
-                ).strip(),
-                method_name='canvasGeneratorImplementation(String, Filter)[21]',
+                ).strip('\n'),
+                method_name='canvasGeneratorImplementation(String, Filter)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=21,
             ),
             TestData(
                 class_name='Test',
                 test=dedent(
                     """
-                    [22]    .+------+
+                       .+------+
                      .' |    .'|
                     +---+--+'  |
                     |   |  |   |
@@ -1056,16 +1109,17 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                     |.'    | .' |.'    | .' 
                     +------+'   +------+'   )
                     """
-                ).strip(),
-                method_name='canvasGeneratorImplementation(String, Filter)[22]',
+                ).strip('\n'),
+                method_name='canvasGeneratorImplementation(String, Filter)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=22,
             ),
             TestData(
                 class_name='Test',
                 test=dedent(
                     """
-                    [23]    .+------+
+                       .+------+
                      .' |    .'|
                     +---+--+'  |
                     |   |  |   |
@@ -1085,16 +1139,17 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                     |.'    | .' 
                     +------+'   )
                     """
-                ).strip(),
-                method_name='canvasGeneratorImplementation(String, Filter)[23]',
+                ).strip('\n'),
+                method_name='canvasGeneratorImplementation(String, Filter)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=23,
             ),
             TestData(
                 class_name='Test',
                 test=dedent(
                     """
-                    [24]    .+------+
+                       .+------+
                      .' |    .'|
                     +---+--+'  |
                     |   |  |   |
@@ -1109,16 +1164,17 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                     +------+'   +------+'   +------+'   +------+'   +------+'   
                      .' |    .'| .' |    .'| .' |    .'| .' |    .'| .'…
                     """
-                ).strip(),
-                method_name='canvasGeneratorImplementation(String, Filter)[24]',
+                ).strip('\n'),
+                method_name='canvasGeneratorImplementation(String, Filter)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=24,
             ),
             TestData(
                 class_name='Test',
                 test=dedent(
                     """
-                    [25]    .+------+
+                       .+------+
                      .' |    .'|
                     +---+--+'  |
                     |   |  |   |
@@ -1132,35 +1188,38 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                     |.'    | .' |.'    | .' |.'    | .' |.'    | .' |.'    | .' |.'    | .' 
                     +------+'   +------+'   +------+'   +---…
                     """
-                ).strip(),
-                method_name='canvasGeneratorImplementation(String, Filter)[25]',
+                ).strip('\n'),
+                method_name='canvasGeneratorImplementation(String, Filter)',
                 duration='0.002s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=25,
             ),
             TestData(
                 class_name='Test',
-                test='[2] ○, Filter(width=2, height=1, result=○○)',
-                method_name='canvasGeneratorImplementation(String, Filter)[2]',
+                test='○, Filter(width=2, height=1, result=○○)',
+                method_name='canvasGeneratorImplementation(String, Filter)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=2,
             ),
             TestData(
                 class_name='Test',
                 test=dedent(  # noqa: WPS462 Disabled because you can use multiline string with the dedent function
                     """
-                    [3] ○, Filter(width=1, height=2, result=○
+                    ○, Filter(width=1, height=2, result=○
                     ○)
                     """
-                ).strip(),
-                method_name='canvasGeneratorImplementation(String, Filter)[3]',
+                ).strip('\n'),
+                method_name='canvasGeneratorImplementation(String, Filter)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=3,
             ),
             TestData(
                 class_name='Test',
                 test=dedent(  # noqa: WPS462 Disabled because you can use multiline string with the dedent function
                     """
-                    [4] ○, Filter(width=5, height=7, result=○○○○○
+                    ○, Filter(width=5, height=7, result=○○○○○
                     ○○○○○
                     ○○○○○
                     ○○○○○
@@ -1168,16 +1227,17 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                     ○○○○○
                     ○○○○○)
                     """
-                ).strip(),
-                method_name='canvasGeneratorImplementation(String, Filter)[4]',
+                ).strip('\n'),
+                method_name='canvasGeneratorImplementation(String, Filter)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=4,
             ),
             TestData(
                 class_name='Test',
                 test=dedent(  # noqa: WPS462 Disabled because you can use multiline string with the dedent function
                     """
-                    [5] ○, Filter(width=6, height=8, result=○○○○○○
+                    ○, Filter(width=6, height=8, result=○○○○○○
                     ○○○○○○
                     ○○○○○○
                     ○○○○○○
@@ -1186,16 +1246,17 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                     ○○○○○○
                     ○○○○○○)
                     """
-                ).strip(),
-                method_name='canvasGeneratorImplementation(String, Filter)[5]',
+                ).strip('\n'),
+                method_name='canvasGeneratorImplementation(String, Filter)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=5,
             ),
             TestData(
                 class_name='Test',
                 test=dedent(
                     r"""
-                    [6]  X
+                     X
                     / \
                     \ /
                      X, Filter(width=1, height=1, result= X 
@@ -1203,16 +1264,17 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                     \ /
                      X )
                     """
-                ).strip(),
-                method_name='canvasGeneratorImplementation(String, Filter)[6]',
+                ).strip('\n'),
+                method_name='canvasGeneratorImplementation(String, Filter)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=6,
             ),
             TestData(
                 class_name='Test',
                 test=dedent(
                     r"""
-                    [7]  X
+                     X
                     / \
                     \ /
                      X, Filter(width=2, height=1, result= X  X 
@@ -1220,16 +1282,17 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                     \ /\ /
                      X  X )
                     """
-                ).strip(),
-                method_name='canvasGeneratorImplementation(String, Filter)[7]',
+                ).strip('\n'),
+                method_name='canvasGeneratorImplementation(String, Filter)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=7,
             ),
             TestData(
                 class_name='Test',
                 test=dedent(
                     r"""
-                    [8]  X
+                     X
                     / \
                     \ /
                      X, Filter(width=1, height=2, result= X 
@@ -1240,16 +1303,17 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                     \ /
                      X )
                     """
-                ).strip(),
-                method_name='canvasGeneratorImplementation(String, Filter)[8]',
+                ).strip('\n'),
+                method_name='canvasGeneratorImplementation(String, Filter)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=8,
             ),
             TestData(
                 class_name='Test',
                 test=dedent(
                     r"""
-                    [9]  X
+                     X
                     / \
                     \ /
                      X, Filter(width=5, height=7, result= X  X  X  X  X 
@@ -1275,130 +1339,141 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                     \ /\ /\ /\ /\ /
                      X  X  X  X  X )
                     """
-                ).strip(),
-                method_name='canvasGeneratorImplementation(String, Filter)[9]',
+                ).strip('\n'),
+                method_name='canvasGeneratorImplementation(String, Filter)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=9,
             ),
             TestData(
                 class_name='Test',
                 test='fillPatternRowErrorCase()',
                 method_name='fillPatternRowErrorCase()',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
             ),
             TestData(
                 class_name='Test',
                 test='fillPatternRowFunction()',
                 method_name='fillPatternRowFunction()',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
             ),
             TestData(
                 class_name='Test',
-                test='[1] , 5,      ',
-                method_name='fillPatternRowImplementation(String, int, String)[1]',
+                test=', 5,      ',
+                method_name='fillPatternRowImplementation(String, int, String)',
                 duration='0.026s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=1,
             ),
             TestData(
                 class_name='Test',
-                test='[2] ○, 5, ○    ',
-                method_name='fillPatternRowImplementation(String, int, String)[2]',
+                test='○, 5, ○    ',
+                method_name='fillPatternRowImplementation(String, int, String)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=2,
             ),
             TestData(
                 class_name='Test',
-                test='[3] ○○, 5, ○○   ',
-                method_name='fillPatternRowImplementation(String, int, String)[3]',
+                test='○○, 5, ○○   ',
+                method_name='fillPatternRowImplementation(String, int, String)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=3,
             ),
             TestData(
                 class_name='Test',
-                test='[4] ○○○, 5, ○○○  ',
-                method_name='fillPatternRowImplementation(String, int, String)[4]',
+                test='○○○, 5, ○○○  ',
+                method_name='fillPatternRowImplementation(String, int, String)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=4,
             ),
             TestData(
                 class_name='Test',
-                test='[5] ○○○○, 5, ○○○○ ',
-                method_name='fillPatternRowImplementation(String, int, String)[5]',
+                test='○○○○, 5, ○○○○ ',
+                method_name='fillPatternRowImplementation(String, int, String)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=5,
             ),
             TestData(
                 class_name='Test',
-                test='[6] ○○○○○, 5, ○○○○○',
-                method_name='fillPatternRowImplementation(String, int, String)[6]',
+                test='○○○○○, 5, ○○○○○',
+                method_name='fillPatternRowImplementation(String, int, String)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=6,
             ),
             TestData(
                 class_name='Test',
                 test='getPatternHeightFunction()',
                 method_name='getPatternHeightFunction()',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
             ),
             TestData(
                 class_name='Test',
-                test='[1] ○, 1',
-                method_name='getPatternHeightImplementation(String, int)[1]',
+                test='○, 1',
+                method_name='getPatternHeightImplementation(String, int)',
                 duration='0.006s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=1,
             ),
             TestData(
                 class_name='Test',
                 test=dedent(
                     r"""
-                    [2]  X
+                     X
                     / \
                     \ /
                      X, 4
                     """
-                ).strip(),
-                method_name='getPatternHeightImplementation(String, int)[2]',
+                ).strip('\n'),
+                method_name='getPatternHeightImplementation(String, int)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=2,
             ),
             TestData(
                 class_name='Test',
                 test=dedent(
                     r"""
-                    [3]   ____   
+                      ____   
                      /    \
                     / /  \ \
                     \ \__/ /
                      \____/, 5
                     """
-                ).strip(),
-                method_name='getPatternHeightImplementation(String, int)[3]',
+                ).strip('\n'),
+                method_name='getPatternHeightImplementation(String, int)',
                 duration='0s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=3,
             ),
             TestData(
                 class_name='Test',
                 test=dedent(
                     """
-                    [4] +---+---+
+                    +---+---+
                     | o   o |
                     |   ^   |
                     |  ---  |
                     +---+---+, 5
                     """
-                ).strip(),
-                method_name='getPatternHeightImplementation(String, int)[4]',
+                ).strip('\n'),
+                method_name='getPatternHeightImplementation(String, int)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=4,
             ),
             TestData(
                 class_name='Test',
                 test=dedent(
                     """
-                    [5]    .+------+
+                       .+------+
                      .' |    .'|
                     +---+--+'  |
                     |   |  |   |
@@ -1406,10 +1481,11 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                     |.'    | .' 
                     +------+', 7
                     """
-                ).strip(),
-                method_name='getPatternHeightImplementation(String, int)[5]',
+                ).strip('\n'),
+                method_name='getPatternHeightImplementation(String, int)',
                 duration='0.001s',
-                result='passed',
+                result=TestResult.PASSED,
+                test_number=5,
             ),
         ],
     ),
@@ -1421,7 +1497,7 @@ PARSE_GRADLE_TEST_LOGS_DATA = [
                 test='failed to execute tests',
                 method_name='failed to execute tests',
                 duration='0.902s',
-                result='failed',
+                result=TestResult.FAILED,
                 error_class='org.gradle.api.internal.tasks.testing.TestSuiteExecutionException',
                 message='Could not complete execution for Gradle Test Executor 357.',
             ),

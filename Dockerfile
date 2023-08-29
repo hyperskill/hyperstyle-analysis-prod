@@ -1,4 +1,4 @@
-FROM registry.jetbrains.team/p/code-quality-for-online-learning-platforms/hyperstyle-analysis-prod/hyperstyle-analysis-prod-base:py3.9.17-java17.0.8.7
+FROM registry.jetbrains.team/p/code-quality-for-online-learning-platforms/hyperstyle-analysis-prod/hyperstyle-analysis-prod-base:py3.11.4-java20.0.2.9
 
 # python:
 ENV PYTHONFAULTHANDLER=1 \
@@ -15,18 +15,25 @@ ENV PYTHONFAULTHANDLER=1 \
 
 
 # Installing poetry and git:
-RUN pip install --upgrade "poetry==$POETRY_VERSION" && \
-    apt-get install -y git
+RUN set -eux && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends git && \
+    pip install --no-cache-dir "poetry==$POETRY_VERSION"
 
 # Coping repo
 COPY . /hyperstyle-analysis-prod
 WORKDIR /hyperstyle-analysis-prod
 
-# Installing dependencies:
-RUN  poetry  \
-     install \
-     --no-interaction  \
-     --no-ansi  \
-     --with data-collection,data-collection,data-labelling,jba,preprocessing,templates
+# Installing and building dependencies:
+RUN set -eux && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends gcc python3-dev && \
+    poetry  \
+    install \
+    --no-interaction  \
+    --no-ansi  \
+    --with data-collection,data-collection,data-labelling,jba,preprocessing,templates && \
+    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false gcc python3-dev && \
+    yes | poetry cache clear . --all
 
 CMD ["/bin/bash"]

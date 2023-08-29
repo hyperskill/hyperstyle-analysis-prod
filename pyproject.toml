@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "hyperstyle-analysis-prod"
-version = "0.1.1"
-description = "Repository containing several tools-helpers to work with data from the Hyperstyle platform"
+version = "0.2.0"
+description = "Repository containing several tools-helpers to work with data from the Hyperskill and JetBrains Academy platforms"
 authors = [
     "Anastasia Birillo <anastasia.birillo@jetbrains.com>",
     "Maria Tigina <maria.tigina@jetbrains.com>",
@@ -19,7 +19,7 @@ packages = [
 
 # Core dependencies
 [tool.poetry.dependencies]
-python = "~3.9"
+python = "~3.11"
 pandas = "2.0.3"
 dataclasses-json = "0.5.14"
 hyperstyle = "1.4.2"

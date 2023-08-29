@@ -13,6 +13,7 @@ df
 dfs
 dif
 dirs
+dotall
 dotenv
 dropna
 dtype
@@ -32,6 +33,7 @@ gradle
 groupby
 hyperskill
 hyperstyle
+iat
 iloc
 inplace
 isfile
@@ -57,6 +59,7 @@ numpy
 oauth
 onboarding
 pandarallel
+parametrized
 params
 parsers
 pathlib

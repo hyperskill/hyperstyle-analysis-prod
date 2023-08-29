@@ -1,9 +1,8 @@
-from dataclasses_json import dataclass_json
+from dataclasses import dataclass, field
+from enum import unique, Enum
 from typing import Optional
 
-from dataclasses import dataclass, field
-
-from enum import unique, Enum
+from dataclasses_json import dataclass_json
 
 
 @unique
@@ -13,8 +12,15 @@ class TestDataField(Enum):
     METHOD_NAME = 'method_name'
     DURATION = 'duration'
     RESULT = 'result'
+    TEST_NUMBER = 'test_number'
     ERROR_CLASS = 'error_class'
     MESSAGE = 'message'
+
+
+class TestResult(Enum):
+    PASSED = 'passed'
+    FAILED = 'failed'
+    IGNORED = 'ignored'
 
 
 @dataclass_json
@@ -24,7 +30,9 @@ class TestData:
     test: str
     method_name: str
     duration: str = field(compare=False)
-    result: str
+    result: TestResult
+
+    test_number: Optional[int] = None
 
     error_class: Optional[str] = None
     message: Optional[str] = None
