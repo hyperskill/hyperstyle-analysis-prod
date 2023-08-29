@@ -222,3 +222,23 @@ docker run hyperstyle-analysis-prod:<VERSION> poetry run gradle_logs_parser [arg
 | Argument                | Description                  |
 |-------------------------|------------------------------|
 | **&#8209;&#8209;debug** | Run the script in debug mode |
+
+3. [tests_analysis.py](src/test_logs/tests_analysis.py) allows you to visualize parsed test logs obtained from [logs_parser.py](src/test_logs/logs_parser.py).
+
+Execute one of the following commands with necessary arguments:
+```bash
+poetry run streamlit run tests_analysis.py
+```
+or
+```bash
+docker run hyperstyle-analysis-prod:<VERSION> poetry run streamlit run tests_analysis.py
+```
+
+The command runs Streamlit app that shows two Gantt Chart:
+- General tests timeline.
+
+  <img src="./images/general_tests_timeline.png" title="General tests timeline" width="70%"/>
+
+- Parametrized tests timeline.
+
+  <img src="./images/parametrized_tests_timeline.png" title="Parametrized tests timeline" width="70%"/>

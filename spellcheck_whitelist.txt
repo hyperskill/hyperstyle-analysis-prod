@@ -1,5 +1,8 @@
 arange
 astype
+barh
+bbox
+borderaxespad
 bs4
 cleanupSemantic
 comparator
@@ -21,10 +24,13 @@ edu
 eps
 eq
 eval
+facecolor
+facecolors
 fieldnames
 fillna
 fullmatch
 fullname
+func
 gamification
 gca
 getmtime
@@ -50,6 +56,9 @@ linkedin
 listdir
 loc
 lti
+markeredgecolor
+markerfacecolor
+markersize
 matcher
 matplotlib
 mktemp
@@ -76,10 +85,12 @@ reddit
 removeprefix
 repo
 requestor
+selectbox
 splitext
 src
 stepic
 stepik
+streamlit
 styleguide
 substring
 svg
@@ -105,7 +116,11 @@ writerow
 xaxis
 xlabel
 xlsx
+xranges
 xticklabels
 xticks
 yaxis
 ylabel
+yrange
+yticklabels
+yticks
