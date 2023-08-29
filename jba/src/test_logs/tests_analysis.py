@@ -275,6 +275,7 @@ def main():
     group_submissions = submissions[submissions[SubmissionColumns.GROUP.value] == group].reset_index(drop=True)
 
     if group_submissions[EduColumnName.TASK_TYPE.value].iloc[0] == EduTaskType.THEORY.value:
+        # TODO: show visualizations for theory groups too (for example, quiz results)
         st.info("It's a theory group. Please choose another group.")
         st.stop()
 
