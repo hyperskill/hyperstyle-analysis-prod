@@ -14,7 +14,10 @@ from jba.src.models.edu_logs import TestData, TestDataField, TestResult
 START_COLUMN = 'start'
 FINISH_COLUMN = 'finish'
 
-LIGHT_GRAY_COLOR = '#d3d3d3'
+FAILED_COLOR = 'red'
+IGNORED_COLOR = 'yellow'
+PASSED_COLOR = 'green'
+DUPLICATE_COLOR = '#d3d3d3'
 
 T = TypeVar('T')
 
@@ -54,7 +57,7 @@ def _find_test_result(
 
     :param class_name: Name of a test class to search.
     :param method_name: Name of a test method to search.
-    :param test_number: Number of a parametrized test to search. Might be None,
+    :param test_number: Number of a parametrized test to search. Might be None.
     :param tests: List of tests to search for.
     :return: Result of the test which corresponding fields match `class_name`, `method_name` and `test_number`.
         If there is no such test, None will be returned.
@@ -72,13 +75,13 @@ def _find_test_result(
 def _get_result_color(result: TestResult) -> str:
     match result:
         case TestResult.FAILED:
-            return "red"
+            return FAILED_COLOR
         case TestResult.PASSED:
-            return "green"
+            return PASSED_COLOR
         case TestResult.IGNORED:
-            return "yellow"
+            return IGNORED_COLOR
 
-    return "black"
+    return 'black'
 
 
 def convert_tests_to_timeline(group: pd.DataFrame) -> pd.DataFrame:
@@ -232,10 +235,10 @@ def plot_tests_timeline(tests_timeline: pd.DataFrame, duplicate_attempts: List[i
 
     ax.legend(
         handles=[
-            Patch(facecolor='red', label='Failed'),
-            Patch(facecolor='yellow', label='Ignored'),
-            Patch(facecolor='green', label='Passed'),
-            Patch(facecolor=LIGHT_GRAY_COLOR, label='Duplicate'),
+            Patch(facecolor=FAILED_COLOR, label='Failed'),
+            Patch(facecolor=IGNORED_COLOR, label='Ignored'),
+            Patch(facecolor=PASSED_COLOR, label='Passed'),
+            Patch(facecolor=DUPLICATE_COLOR, label='Duplicate'),
         ],
         bbox_to_anchor=(1.02, 1),
         borderaxespad=0,
@@ -247,7 +250,7 @@ def plot_tests_timeline(tests_timeline: pd.DataFrame, duplicate_attempts: List[i
     ax.set_xticks(range(left_boundary, right_boundary + 1))
 
     for attempt in duplicate_attempts:
-        ax.get_xticklabels()[attempt - 1].set_color(LIGHT_GRAY_COLOR)
+        ax.get_xticklabels()[attempt - 1].set_color(DUPLICATE_COLOR)
 
     st.pyplot(fig)
 
