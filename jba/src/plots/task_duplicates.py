@@ -77,17 +77,15 @@ def plot_task_duplicates(
         axis=1,
     ).fillna(0)
 
-    plt.figure(dpi=300)
+    fig, ax = plt.subplots(dpi=300)
 
-    ax = plt.gca()
     stats.plot(kind='line', x=EduColumnName.TASK_NAME.value, y=MEDIAN_STATS_COLUMN, color='gray', ax=ax, style=['--'])
     stats.plot(kind='line', x=EduColumnName.TASK_NAME.value, y=MEAN_STATS_COLUMNS, color='black', ax=ax, style=[':'])
     stats.plot(kind='line', x=EduColumnName.TASK_NAME.value, y=MIN_STATS_COLUMN, color='blue', ax=ax)
     stats.plot(kind='line', x=EduColumnName.TASK_NAME.value, y=MAX_STATS_COLUMN, color='red', ax=ax)
-
     make_plot_pretty(ax, tasks_df, plot_name('number of duplicates', course_name), "number of duplicates")
 
-    plt.show()
+    return fig
 
 
 def configure_parser(parser: argparse.ArgumentParser) -> None:
@@ -110,7 +108,9 @@ def main():
 
     course_data = read_df(args.preprocessed_course_data_path)
     tasks_data_df = read_df(args.course_structure_path)
+
     plot_task_duplicates(course_data, tasks_data_df, args.course_name)
+    plt.show()
 
 
 if __name__ == '__main__':

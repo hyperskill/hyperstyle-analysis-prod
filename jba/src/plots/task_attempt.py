@@ -35,8 +35,11 @@ def _calculate_max(tasks_stat: Dict[int, TaskStat], task_id: int) -> int:
     return stats.max_attempts
 
 
-def plot_task_attempts(course_data_df: pd.DataFrame, all_tasks_data_df: pd.DataFrame,
-                       course_name: Optional[str] = None):
+def plot_task_attempts(
+    course_data_df: pd.DataFrame,
+    all_tasks_data_df: pd.DataFrame,
+    course_name: Optional[str] = None,
+) -> plt.Figure:
     tasks_stat = calculate_tasks_stat(course_data_df)
 
     median_attempts_count_column = 'median'
@@ -45,23 +48,34 @@ def plot_task_attempts(course_data_df: pd.DataFrame, all_tasks_data_df: pd.DataF
 
     tasks_df = prepare_task_df_for_plots(course_data_df, all_tasks_data_df)
     tasks_df[median_attempts_count_column] = tasks_df.apply(
-        lambda row: _calculate_median(tasks_stat, row[EduColumnName.TASK_ID.value]), axis=1)
+        lambda row: _calculate_median(tasks_stat, row[EduColumnName.TASK_ID.value]),
+        axis=1,
+    )
     tasks_df[min_attempts_count_column] = tasks_df.apply(
-        lambda row: _calculate_min(tasks_stat, row[EduColumnName.TASK_ID.value]), axis=1)
+        lambda row: _calculate_min(tasks_stat, row[EduColumnName.TASK_ID.value]),
+        axis=1,
+    )
     tasks_df[max_attempts_count_column] = tasks_df.apply(
-        lambda row: _calculate_max(tasks_stat, row[EduColumnName.TASK_ID.value]), axis=1)
+        lambda row: _calculate_max(tasks_stat, row[EduColumnName.TASK_ID.value]),
+        axis=1,
+    )
 
-    plt.figure(dpi=300)
-    ax = plt.gca()
+    fig, ax = plt.subplots(dpi=300)
+
     tasks_df.plot(kind='line', x=EduColumnName.TASK_NAME.value, y=median_attempts_count_column, color='black', ax=ax)
     tasks_df.plot(kind='line', x=EduColumnName.TASK_NAME.value, y=min_attempts_count_column, color='blue', ax=ax)
     tasks_df.plot(kind='line', x=EduColumnName.TASK_NAME.value, y=max_attempts_count_column, color='red', ax=ax)
     make_plot_pretty(ax, tasks_df, plot_name('number of attempts', course_name), "number of attempts")
-    plt.show()
+
+    return fig
 
 
 def configure_parser(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument('preprocessed_course_data_path', type=str, help='Path to .csv file with preprocessed course data.')
+    parser.add_argument(
+        'preprocessed_course_data_path',
+        type=str,
+        help='Path to .csv file with preprocessed course data.',
+    )
     parser.add_argument('course_structure_path', type=str, help='Path to .csv with the course structure.')
     parser.add_argument('--course-name', type=str, default=None, help='Name of the course.')
 
@@ -73,7 +87,9 @@ def main():
     args = parser.parse_args(sys.argv[1:])
     course_data = read_df(args.preprocessed_course_data_path)
     tasks_data_df = read_df(args.course_structure_path)
+
     plot_task_attempts(course_data, tasks_data_df, args.course_name)
+    plt.show()
 
 
 if __name__ == '__main__':

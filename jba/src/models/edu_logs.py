@@ -24,7 +24,7 @@ class TestResult(Enum):
 
 
 @dataclass_json
-@dataclass
+@dataclass(frozen=True)
 class TestData:
     class_name: str
     test: str
@@ -36,6 +36,14 @@ class TestData:
 
     error_class: Optional[str] = None
     message: Optional[str] = None
+
+    # TODO: replace similar code
+    @property
+    def full_test_name(self) -> str:
+        base_name = f'{self.class_name}.{self.method_name}'
+        if self.test_number is not None:
+            base_name += f'[{self.test_number}]'
+        return base_name
 
 
 @dataclass_json
