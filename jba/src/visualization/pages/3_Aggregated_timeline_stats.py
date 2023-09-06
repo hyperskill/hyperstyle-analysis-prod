@@ -17,28 +17,6 @@ from jba.src.visualization.common import (
 
 # https://matplotlib.org/stable/gallery/images_contours_and_fields/image_annotated_heatmap.html#using-the-helper-function-code-style
 def heatmap(data, row_labels, col_labels, ax=None, cbar_kw=None, cbarlabel="", clim=(0, 1), **kwargs):
-    """
-    Create a heatmap from a numpy array and two lists of labels.
-
-    Parameters
-    ----------
-    data
-        A 2D numpy array of shape (M, N).
-    row_labels
-        A list or array of length M with the labels for the rows.
-    col_labels
-        A list or array of length N with the labels for the columns.
-    ax
-        A `matplotlib.axes.Axes` instance to which the heatmap is plotted.  If
-        not provided, use current axes or create a new one.  Optional.
-    cbar_kw
-        A dictionary with arguments to `matplotlib.Figure.colorbar`.  Optional.
-    cbarlabel
-        The label for the colorbar.  Optional.
-    **kwargs
-        All other arguments are forwarded to `imshow`.
-    """
-
     if ax is None:
         ax = plt.gca()
 

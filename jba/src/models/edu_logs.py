@@ -42,7 +42,8 @@ class TestData:
     def full_test_name(self) -> str:
         base_name = f'{self.class_name}.{self.method_name}'
         if self.test_number is not None:
-            base_name += f'[{self.test_number}]'
+            # We use explicit string concatenation here for the sake of brevity
+            base_name += f'[{self.test_number}]'  # noqa: WPS336
         return base_name
 
 

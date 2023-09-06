@@ -39,8 +39,8 @@ def main():
     tests_timeline = convert_tests_to_timeline(group_submissions)
 
     duplicate_mask = (
-            group_submissions[EduColumnName.CODE_SNIPPETS.value].shift()
-            == group_submissions[EduColumnName.CODE_SNIPPETS.value]
+        group_submissions[EduColumnName.CODE_SNIPPETS.value].shift()
+        == group_submissions[EduColumnName.CODE_SNIPPETS.value]
     )
     duplicate_attempts = (duplicate_mask[duplicate_mask].index.values + 1).tolist()
 
@@ -68,7 +68,7 @@ def main():
         parametrized_test_timeline = parametrized_tests_timeline[
             (parametrized_tests_timeline[TestDataField.CLASS_NAME.value] == class_name)
             & (parametrized_tests_timeline[TestDataField.METHOD_NAME.value] == method_name)
-            ]
+        ]
 
         plot_tests_timeline(parametrized_test_timeline, duplicate_attempts, invalid_attempts)
 
