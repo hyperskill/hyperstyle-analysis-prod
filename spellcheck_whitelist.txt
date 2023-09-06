@@ -92,6 +92,7 @@ stepic
 stepik
 streamlit
 styleguide
+subheader
 substring
 svg
 textwrap
@@ -124,4 +125,3 @@ ylabel
 yrange
 yticklabels
 yticks
-subheader
