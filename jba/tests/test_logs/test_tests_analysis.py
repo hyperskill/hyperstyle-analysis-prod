@@ -6,7 +6,7 @@ from pandas._testing import assert_frame_equal
 
 from jba.src.models.edu_columns import EduColumnName
 from jba.src.models.edu_logs import TestResult, TestData, TestDataField
-from jba.src.test_logs.tests_analysis import (
+from jba.src.visualization.common import (
     _convert_to_timeline,
     TimelineItem,
     _find_test_result,

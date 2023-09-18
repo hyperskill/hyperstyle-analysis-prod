@@ -4,6 +4,9 @@ ignore =
     I0,
     # Forbid blacklisted module names
     WPS100,
+    # Forbid module names that do not match our pattern.
+    # Disabled due to false-positives with streamlit multi-page apps which for some reason cannot be disabled with the per-file-ignores argument
+    WPS102,
     # Forbid blacklisted variable names
     WPS110,
     # Forbid short variable or module names
@@ -114,6 +117,8 @@ per-file-ignores =
     ./core/src/model/quality/issue/issue.py:WPS463
     # Disabled because we're using getters here intentionally
     ./core/src/model/quality/issue/hyperstyle_issue.py:WPS615
+    # TODO: remove after refactoring
+    ./jba/src/visualization/pages/3_Aggregated_timeline_stats.py:SC100,SC200
 
 exclude = .git, .github, venv, .venv, .pytest_cache
 max-line-length = 120
