@@ -11,6 +11,7 @@ copyfile
 copytree
 csv
 dacite
+dataframe
 dedent
 df
 dfs
@@ -40,6 +41,7 @@ groupby
 hyperskill
 hyperstyle
 iat
+ij
 iloc
 inplace
 isfile
@@ -125,5 +127,3 @@ ylabel
 yrange
 yticklabels
 yticks
-ij
-dataframe
