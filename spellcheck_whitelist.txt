@@ -110,6 +110,7 @@ webp
 wemake
 wfile
 whitespaces
+wps359
 wps508
 wps518
 wps615
@@ -127,4 +128,3 @@ ylabel
 yrange
 yticklabels
 yticks
-wps359
