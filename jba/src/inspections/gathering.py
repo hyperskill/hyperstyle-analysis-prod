@@ -34,7 +34,7 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
 
     parser.add_argument(
         '--language-version',
-        choices=[value for value in LanguageVersion.values()],
+        choices=LanguageVersion.values(),
         help='Language version of code snippets.',
         required=True,
     )
@@ -81,12 +81,14 @@ def _convert_submissions(submissions: pd.DataFrame, language_version: LanguageVe
     # TODO: gather inspections from all snippets simultaneously instead of individually
     df_solutions = df_solutions.explode(EduColumnName.CODE_SNIPPETS.value)
 
-    df_solutions[['file_path', SubmissionColumns.CODE.value]] = df_solutions[EduColumnName.CODE_SNIPPETS.value].apply(
+    # WPS359 is disabled due to false positive.
+    df_solutions[['file_path', SubmissionColumns.CODE.value]] = df_solutions[EduColumnName.CODE_SNIPPETS.value].apply(  # noqa: WPS359
         lambda code_snippet: pd.Series([code_snippet['name'], code_snippet['text']])
     )
 
-    df_solutions[SubmissionColumns.ID.value] = (
-        df_solutions[EduColumnName.ID.value].astype(str) + '-' + df_solutions['file_path'].replace('/', '_')
+    df_solutions[SubmissionColumns.ID.value] = df_solutions.apply(
+        lambda row: f'{row[EduColumnName.ID.value]}-{row["file_path"].replace("/", "_")}',
+        axis=1,
     )
 
     df_solutions[SubmissionColumns.LANG.value] = language_version.value

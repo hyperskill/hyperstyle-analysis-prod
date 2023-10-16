@@ -45,7 +45,7 @@ class HyperstyleEvaluationConfig(EvaluationConfig):
         self.new_format: bool = new_format
         self.n_cpu: int = n_cpu
         self.disable: Optional[str] = disable
-        self.ij_config: Optional[Dict[str, Dict[str, str]]] = ij_config
+        self.ij_config: Optional[Dict[str, Dict[str, str]]] = ij_config  # noqa: WPS234
         self.working_directory: Optional[str] = working_directory
         self.venv: Optional[str | Path] = venv
 
