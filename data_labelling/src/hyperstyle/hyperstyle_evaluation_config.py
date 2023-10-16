@@ -1,8 +1,9 @@
+import json
 import logging.config
 import platform
 import sys
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Dict
 
 from hyperstyle.src.python.review.application_config import LanguageVersion
 
@@ -14,15 +15,19 @@ HYPERSTYLE_TOOL_PATH = 'review/hyperstyle/src/python/review/run_tool.py'
 
 
 class HyperstyleEvaluationConfig(EvaluationConfig):
-    def __init__(self,
-                 tool_path: str,
-                 allow_duplicates: bool,
-                 with_all_categories: bool,
-                 tmp_path: Path,
-                 n_cpu: Optional[int] = None,
-                 disable: Optional[str] = None,
-                 working_directory: Optional[str] = None,
-                 venv: Optional[str] = None):
+    def __init__(
+        self,
+        tool_path: str,
+        allow_duplicates: bool,
+        with_all_categories: bool,
+        new_format: bool,
+        tmp_path: Path,
+        n_cpu: Optional[int] = None,
+        disable: Optional[str] = None,
+        working_directory: Optional[str] = None,
+        venv: Optional[str | Path] = None,
+        ij_config: Optional[Dict] = None,
+    ):
         """
         `tool_path` - path to hyperstyle tool running script (custom or HYPERSTYLE_TOOL_PATH)
         `tmp_path` - path where to place evaluation temporary files
@@ -37,10 +42,12 @@ class HyperstyleEvaluationConfig(EvaluationConfig):
 
         self.allow_duplicates: bool = allow_duplicates
         self.with_all_categories: bool = with_all_categories
+        self.new_format: bool = new_format
         self.n_cpu: int = n_cpu
         self.disable: Optional[str] = disable
+        self.ij_config: Optional[Dict[str, Dict[str, str]]] = ij_config
         self.working_directory: Optional[str] = working_directory
-        self.venv: Optional[str] = venv
+        self.venv: Optional[str | Path] = venv
 
     def build_command(self,
                       input_path: Union[str, Path],
@@ -72,6 +79,9 @@ class HyperstyleEvaluationConfig(EvaluationConfig):
 
         if self.disable:
             python_command += ['--disable', self.disable]
+
+        if self.ij_config:
+            python_command += ['--ij-config', json.dumps(self.ij_config)]
 
         if platform.system() == 'Darwin':
             bash_prefix = None
