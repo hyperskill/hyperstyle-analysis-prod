@@ -36,6 +36,7 @@ class EduColumnName(Enum):
 
     EXCEPTIONS = 'exceptions'
     TESTS = 'tests'
+    INSPECTIONS = 'inspections'
 
 
 @unique
