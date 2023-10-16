@@ -59,6 +59,7 @@ python-dotenv = "1.0.0"
 pandarallel = "1.6.5"
 beautifulsoup4 = "4.12.2"
 streamlit = "1.22.0"
+streamlit-diff-viewer = "0.0.2"
 
 # Preprocessing dependencies
 [tool.poetry.group.preprocessing]
