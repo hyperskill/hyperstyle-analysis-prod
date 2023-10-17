@@ -21,6 +21,7 @@ dotall
 dotenv
 dropna
 dtype
+dtypes
 edu
 eps
 eq
@@ -41,11 +42,13 @@ groupby
 hyperskill
 hyperstyle
 iat
+idxmax
 ij
 iloc
 inplace
 isfile
 isin
+islice
 isna
 isnull
 isoparse
@@ -67,6 +70,7 @@ mktemp
 ngroup
 notnull
 numpy
+nunique
 oauth
 onboarding
 pandarallel
@@ -74,6 +78,7 @@ parametrized
 params
 parsers
 pathlib
+plotly
 plt
 pos
 postprocess
@@ -122,14 +127,9 @@ xlsx
 xranges
 xticklabels
 xticks
+yaxes
 yaxis
 ylabel
 yrange
 yticklabels
 yticks
-plotly
-yaxes
-islice
-idxmax
-dtypes
-nunique
