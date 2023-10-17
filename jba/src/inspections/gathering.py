@@ -81,8 +81,7 @@ def _convert_submissions(submissions: pd.DataFrame, language_version: LanguageVe
     # TODO: gather inspections from all snippets simultaneously instead of individually
     df_solutions = df_solutions.explode(EduColumnName.CODE_SNIPPETS.value)
 
-    # WPS359 is disabled due to false positive.
-    df_solutions[['file_path', SubmissionColumns.CODE.value]] = df_solutions[EduColumnName.CODE_SNIPPETS.value].apply(  # noqa: WPS359
+    df_solutions[['file_path', SubmissionColumns.CODE.value]] = df_solutions[EduColumnName.CODE_SNIPPETS.value].apply(
         lambda code_snippet: pd.Series([code_snippet['name'], code_snippet['text']])
     )
 
@@ -111,9 +110,10 @@ def evaluate_submissions(
         .groupby('index')
         .apply(
             lambda group: json.dumps(
-                group[['file_path', SubmissionColumns.HYPERSTYLE_ISSUES.value]]
-                .rename(columns={'file_path': 'name', SubmissionColumns.HYPERSTYLE_ISSUES.value: 'text'})
-                .to_dict('records')
+                pd.Series(
+                    group[SubmissionColumns.HYPERSTYLE_ISSUES.value].values,
+                    index=group['file_path'],
+                ).to_dict()
             )
         )
         .rename(EduColumnName.INSPECTIONS.value)
