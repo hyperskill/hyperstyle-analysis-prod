@@ -112,7 +112,7 @@ def main():
         unique_inspections_stats.head(top)['Total'] != unique_inspections_stats.head(top)['Not fixed']
     ]
 
-    if not inspections_to_choose:
+    if inspections_to_choose.empty:
         st.stop()
 
     st.subheader('Inspections fixing', help='This section shows how students fix inspections')
