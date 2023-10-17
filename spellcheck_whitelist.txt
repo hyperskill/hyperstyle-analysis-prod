@@ -127,4 +127,9 @@ ylabel
 yrange
 yticklabels
 yticks
-wps359
+plotly
+yaxes
+islice
+idxmax
+dtypes
+nunique
