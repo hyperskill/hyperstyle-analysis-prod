@@ -34,7 +34,11 @@ def plot_unique_inspections_stats(stats: pd.DataFrame, top: int, normalize: bool
         title=title,
     )
 
-    fig.update_yaxes(title='Groups' + ' (%)' if normalize else '')
+    y_title = 'Groups'
+    if normalize:
+        y_title = f'{y_title} (%)'
+
+    fig.update_yaxes(title=y_title)
     fig.update_legends(title='State')
 
     st.plotly_chart(fig, use_container_width=True)

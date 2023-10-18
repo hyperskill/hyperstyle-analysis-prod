@@ -204,13 +204,15 @@ def main():
     )
 
     with st.expander('Legend'):
-        st.markdown("""
+        st.markdown(
+            """
             * :green[1] means that all groups on the current attempt have fixed a particular test
             * 0 means that
                 - either the status of the test has not changed
                 - or the number of groups in which the test was fixed and broken are the same
             * :red[-1] means that all groups on the current attempt have broken a particular test
-        """)
+            """
+        )
 
     chained_res = None
     for name, group in task_submissions_with_attempt.groupby([SubmissionColumns.GROUP.value]):
