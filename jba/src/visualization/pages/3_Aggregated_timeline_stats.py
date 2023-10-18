@@ -107,6 +107,8 @@ def main():
     st.title('Aggregated timeline stats')
 
     submissions = read_df(st.session_state.submissions_path)
+    course_structure = read_df(st.session_state.course_structure_path)
+
     submissions = submissions[(submissions.task_type != 'theory')]
     # TODO: ignore submissions with skipped tests
     submissions = submissions[~submissions[SubmissionColumns.GROUP.value].isin([41, 674])]
@@ -127,17 +129,22 @@ def main():
         .droplevel(0)
     )
 
-    # TODO: handle absence of sections
-    submissions_by_task = submissions.groupby(
-        [EduColumnName.SECTION_NAME.value, EduColumnName.LESSON_NAME.value, EduColumnName.TASK_NAME.value]
-    )
-
     left, right = st.columns([3, 1])
 
     with left:
-        task = st.selectbox(
-            'Task:', options=submissions_by_task.groups.keys(), format_func=lambda option: '/'.join(option)
+        # TODO: handle absence of sections
+        submissions_by_task = submissions.groupby(
+            [EduColumnName.SECTION_NAME.value, EduColumnName.LESSON_NAME.value, EduColumnName.TASK_NAME.value]
         )
+
+        tasks = filter(
+            lambda name: name in submissions_by_task.groups,
+            course_structure[
+                [EduColumnName.SECTION_NAME.value, EduColumnName.LESSON_NAME.value, EduColumnName.TASK_NAME.value]
+            ].itertuples(index=False, name=None),
+        )
+
+        task = st.selectbox('Task:', options=tasks, format_func=lambda option: '/'.join(option))
         task_submissions = submissions_by_task.get_group(task)
         number_of_groups_in_task = len(task_submissions[SubmissionColumns.GROUP.value].unique())
 
@@ -151,10 +158,19 @@ def main():
     ]
     number_of_groups_in_task_attempt = len(task_submissions_with_attempt[SubmissionColumns.GROUP.value].unique())
 
-    st.write(f'{number_of_groups_in_task_attempt}/{number_of_groups_in_task} {group_mask[group_mask].index.tolist()}')
+    st.write(f'Stats for {number_of_groups_in_task_attempt} groups out of {number_of_groups_in_task}')
+    st.write(f'Groups: {group_mask[group_mask].index.tolist()}')
 
     # TODO: gray out tests from previous tasks
     # TODO: show chart for parametrized tests
+
+    st.subheader(
+        'Average tests timeline',
+        help=(
+            f'This graph shows the average test timeline for all {"/".join(task)} timelines '
+            f'with number of attempts equal to {number_of_attempts}.'
+        ),
+    )
 
     pivoted_res = None
     for name, group in task_submissions_with_attempt.groupby([SubmissionColumns.GROUP.value]):
@@ -179,6 +195,23 @@ def main():
     fig.tight_layout()
     st.pyplot(fig)
 
+    st.subheader(
+        'Chain',
+        help=(
+            'This graph shows in what order the tests were fixed (or broken) '
+            f'in all {"/".join(task)} groups with the number of attempts equal to {number_of_attempts}.'
+        ),
+    )
+
+    with st.expander('Legend'):
+        st.markdown("""
+            * :green[1] means that all groups on the current attempt have fixed a particular test
+            * 0 means that
+                - either the status of the test has not changed
+                - or the number of groups in which the test was fixed and broken are the same
+            * :red[-1] means that all groups on the current attempt have broken a particular test
+        """)
+
     chained_res = None
     for name, group in task_submissions_with_attempt.groupby([SubmissionColumns.GROUP.value]):
         chained_tests = convert_tests_to_chain(group, number_of_attempts)
@@ -189,14 +222,13 @@ def main():
         chained_res += chained_tests
 
     fig, ax = plt.subplots()
-    data = (chained_res / chained_res.max(None)).to_numpy(dtype=float)
+    data = (chained_res / chained_res.abs().max(None)).to_numpy(dtype=float)
     im, cbar = heatmap(
         data,
         chained_res.index.map(lambda x: '.'.join(y for y in x if not pd.isna(y))),
         range(1, number_of_attempts + 1),
         ax=ax,
         cmap="RdYlGn",
-        cbarlabel="Passed (%)",  # TODO: fix label
         clim=(-1, 1),
     )
     ax.set_xlabel('Attempt')

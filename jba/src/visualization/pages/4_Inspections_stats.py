@@ -20,7 +20,7 @@ from jba.src.models.edu_columns import EduColumnName
 INSPECTIONS_TO_IGNORE = ['KDocMissingDocumentation', 'UnusedSymbol']
 
 
-def plot_unique_inspections_stats(stats: pd.DataFrame, top: int):
+def plot_unique_inspections_stats(stats: pd.DataFrame, top: int, normalize: bool):
     title = 'Inspections frequency'
 
     if top != len(stats):
@@ -34,7 +34,7 @@ def plot_unique_inspections_stats(stats: pd.DataFrame, top: int):
         title=title,
     )
 
-    fig.update_yaxes(title='Groups')
+    fig.update_yaxes(title='Groups' + ' (%)' if normalize else '')
     fig.update_legends(title='State')
 
     st.plotly_chart(fig, use_container_width=True)
@@ -77,6 +77,7 @@ def main():
     st.title('Inspections stats')
 
     submissions = read_submissions(st.session_state.submissions_path)
+    course_structure = read_df(st.session_state.course_structure_path)
 
     left, right = st.columns([3, 1])
 
@@ -86,9 +87,16 @@ def main():
             [EduColumnName.SECTION_NAME.value, EduColumnName.LESSON_NAME.value, EduColumnName.TASK_NAME.value]
         )
 
+        tasks = filter(
+            lambda name: name in submissions_by_task.groups,
+            course_structure[
+                [EduColumnName.SECTION_NAME.value, EduColumnName.LESSON_NAME.value, EduColumnName.TASK_NAME.value]
+            ].itertuples(index=False, name=None),
+        )
+
         task = st.selectbox(
             'Task:',
-            options=['All', *submissions_by_task.groups],
+            options=['All', *tasks],
             format_func=lambda option: '/'.join(option) if option in submissions_by_task.groups else option,
         )
 
@@ -106,7 +114,7 @@ def main():
         normalize = st.checkbox('Normalize data', value=True)
 
     unique_inspections_stats = get_unique_inspections_stats(task_submissions, INSPECTIONS_TO_IGNORE, normalize)
-    plot_unique_inspections_stats(unique_inspections_stats, top=top)
+    plot_unique_inspections_stats(unique_inspections_stats, top=top, normalize=normalize)
 
     inspections_to_choose = unique_inspections_stats.head(top).index[
         unique_inspections_stats.head(top)['Total'] != unique_inspections_stats.head(top)['Not fixed']
