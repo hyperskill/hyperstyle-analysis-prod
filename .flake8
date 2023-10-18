@@ -67,6 +67,8 @@ ignore =
     WPS432,
     # Forbid overlapping local and block variables. Disabled due to false-positives
     WPS440,
+    # Forbids direct usage of multiline strings
+    WPS462,
     # Forbid comparisons between bitwise and boolean expressions
     WPS465,
     # Forbid @staticmethod decorator

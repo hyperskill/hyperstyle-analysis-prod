@@ -212,7 +212,7 @@ def main():
                 - or the number of groups in which the test was fixed and broken are the same
             * :red[-1] means that all groups on the current attempt have broken a particular test
             """
-        )
+        )  # noqa: WPS355
 
     chained_res = None
     for name, group in task_submissions_with_attempt.groupby([SubmissionColumns.GROUP.value]):
