@@ -108,7 +108,7 @@ def get_inspection_fixing_examples(  # noqa: WPS234
             if inspection.code == inspection_name
         ]
 
-        if len(previous_issues) - len(current_issues) > 0:
+        if len(current_issues) < len(previous_issues):
             previous_code = getattr(previous_row, EduColumnName.CODE_SNIPPETS.value)
             current_code = getattr(current_row, EduColumnName.CODE_SNIPPETS.value)
             examples.append((previous_issues, previous_code, current_issues, current_code))

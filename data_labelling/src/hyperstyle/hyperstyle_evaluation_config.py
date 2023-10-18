@@ -13,6 +13,8 @@ logger = logging.getLogger(__name__)
 
 HYPERSTYLE_TOOL_PATH = 'review/hyperstyle/src/python/review/run_tool.py'
 
+IJConfig = Dict[str, Dict[str, str]]
+
 
 class HyperstyleEvaluationConfig(EvaluationConfig):
     def __init__(
@@ -26,7 +28,7 @@ class HyperstyleEvaluationConfig(EvaluationConfig):
         disable: Optional[str] = None,
         working_directory: Optional[str] = None,
         venv: Optional[str | Path] = None,
-        ij_config: Optional[Dict] = None,
+        ij_config: Optional[IJConfig] = None,
     ):
         """
         `tool_path` - path to hyperstyle tool running script (custom or HYPERSTYLE_TOOL_PATH)
@@ -45,7 +47,7 @@ class HyperstyleEvaluationConfig(EvaluationConfig):
         self.new_format: bool = new_format
         self.n_cpu: int = n_cpu
         self.disable: Optional[str] = disable
-        self.ij_config: Optional[Dict[str, Dict[str, str]]] = ij_config  # noqa: WPS234
+        self.ij_config: Optional[IJConfig] = ij_config
         self.working_directory: Optional[str] = working_directory
         self.venv: Optional[str | Path] = venv
 
