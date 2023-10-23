@@ -17,8 +17,6 @@ from jba.src.inspections.analysis import (
 )
 from jba.src.models.edu_columns import EduColumnName
 
-INSPECTIONS_TO_IGNORE = ['KDocMissingDocumentation', 'UnusedSymbol']
-
 
 def plot_unique_inspections_stats(stats: pd.DataFrame, top: int, normalize: bool):
     title = 'Inspections frequency'
@@ -83,41 +81,51 @@ def main():
     submissions = read_submissions(st.session_state.submissions_path)
     course_structure = read_df(st.session_state.course_structure_path)
 
-    left, right = st.columns([3, 1])
+    # TODO: handle absence of sections
+    submissions_by_task = submissions.groupby(
+        [EduColumnName.SECTION_NAME.value, EduColumnName.LESSON_NAME.value, EduColumnName.TASK_NAME.value]
+    )
 
-    with left:
-        # TODO: handle absence of sections
-        submissions_by_task = submissions.groupby(
+    tasks = filter(
+        lambda name: name in submissions_by_task.groups,
+        course_structure[
             [EduColumnName.SECTION_NAME.value, EduColumnName.LESSON_NAME.value, EduColumnName.TASK_NAME.value]
-        )
+        ].itertuples(index=False, name=None),
+    )
 
-        tasks = filter(
-            lambda name: name in submissions_by_task.groups,
-            course_structure[
-                [EduColumnName.SECTION_NAME.value, EduColumnName.LESSON_NAME.value, EduColumnName.TASK_NAME.value]
-            ].itertuples(index=False, name=None),
-        )
+    task = st.selectbox(
+        'Task:',
+        options=['All', *tasks],
+        format_func=lambda option: '/'.join(option) if option in submissions_by_task.groups else option,
+    )
 
-        task = st.selectbox(
-            'Task:',
-            options=['All', *tasks],
-            format_func=lambda option: '/'.join(option) if option in submissions_by_task.groups else option,
-        )
+    task_submissions = submissions_by_task.get_group(task) if task in submissions_by_task.groups else submissions
 
-        task_submissions = submissions_by_task.get_group(task) if task in submissions_by_task.groups else submissions
+    with st.expander('Config'):
+        left, right = st.columns([1, 3])
 
-    with right:
-        top = st.number_input(
-            'Top:',
-            min_value=1,
-            max_value=len(find_unique_inspections(task_submissions)),
-            value=min(10, len(find_unique_inspections(task_submissions))),
-        )
+        with left:
+            top = st.number_input(
+                'Top:',
+                min_value=1,
+                max_value=len(find_unique_inspections(task_submissions)),
+                value=min(10, len(find_unique_inspections(task_submissions))),
+            )
+
+        with right:
+            inspections_to_ignore = st.text_input(
+                'Inspections to ignore:',
+                help=(
+                    'List of inspections to ignore. '
+                    'Must be a string with the list of inspections seperated with comma.'
+                ),
+                value='KDocMissingDocumentation,UnusedSymbol',
+            ).split(',')
 
     with st.sidebar:
         normalize = st.checkbox('Normalize data', value=True)
 
-    unique_inspections_stats = get_unique_inspections_stats(task_submissions, INSPECTIONS_TO_IGNORE, normalize)
+    unique_inspections_stats = get_unique_inspections_stats(task_submissions, inspections_to_ignore, normalize)
     plot_unique_inspections_stats(unique_inspections_stats, top=top, normalize=normalize)
 
     inspections_to_choose = unique_inspections_stats.head(top).index[
