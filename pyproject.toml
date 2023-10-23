@@ -89,6 +89,7 @@ plot_task_duplicates = 'jba.src.plots.task_duplicates:main'
 submissions_gathering = 'jba.src.gathering.gather_submissions_info:main'
 gradle_tests_runner = 'jba.src.test_logs.tests_runner:main'
 gradle_logs_parser = 'jba.src.test_logs.logs_parser:main'
+inpsections_gathering = 'jba.src.inspections.gathering:main'
 # Preprocessing scripts
 preprocess_submissions = 'preprocessing.src.preprocess_submissions:main'
 # Templates scripts
