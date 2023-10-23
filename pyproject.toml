@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hyperstyle-analysis-prod"
-version = "0.2.0"
+version = "0.3.0"
 description = "Repository containing several tools-helpers to work with data from the Hyperskill and JetBrains Academy platforms"
 authors = [
     "Anastasia Birillo <anastasia.birillo@jetbrains.com>",
