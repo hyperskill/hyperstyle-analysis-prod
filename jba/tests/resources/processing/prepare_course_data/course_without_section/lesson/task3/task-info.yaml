@@ -1,0 +1,5 @@
+type: edu
+custom_name: Task №3
+files:
+- name: src/main/kotlin/Main.kt
+  visible: true
