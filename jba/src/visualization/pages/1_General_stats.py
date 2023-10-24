@@ -15,6 +15,8 @@ def main():
     course_structure = read_df(st.session_state.course_structure_path)
 
     # TODO: add basic stats
+    # TODO: do we really need a course structure in this visualization?
+    #       Maybe we could use structure from submissions
 
     st.header('Task attempts')
     fig = plot_task_attempts(submissions, course_structure, st.session_state.course_name)

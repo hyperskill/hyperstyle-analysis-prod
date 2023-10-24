@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hyperstyle-analysis-prod"
-version = "0.2.0"
+version = "0.3.0"
 description = "Repository containing several tools-helpers to work with data from the Hyperskill and JetBrains Academy platforms"
 authors = [
     "Anastasia Birillo <anastasia.birillo@jetbrains.com>",
@@ -59,6 +59,8 @@ python-dotenv = "1.0.0"
 pandarallel = "1.6.5"
 beautifulsoup4 = "4.12.2"
 streamlit = "1.22.0"
+streamlit-diff-viewer = "0.0.2"
+plotly = "5.17.0"
 
 # Preprocessing dependencies
 [tool.poetry.group.preprocessing]
@@ -87,6 +89,7 @@ plot_task_duplicates = 'jba.src.plots.task_duplicates:main'
 submissions_gathering = 'jba.src.gathering.gather_submissions_info:main'
 gradle_tests_runner = 'jba.src.test_logs.tests_runner:main'
 gradle_logs_parser = 'jba.src.test_logs.logs_parser:main'
+inpsections_gathering = 'jba.src.inspections.gathering:main'
 # Preprocessing scripts
 preprocess_submissions = 'preprocessing.src.preprocess_submissions:main'
 # Templates scripts

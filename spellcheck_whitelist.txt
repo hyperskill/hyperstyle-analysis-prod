@@ -11,6 +11,7 @@ copyfile
 copytree
 csv
 dacite
+dataframe
 dedent
 df
 dfs
@@ -20,10 +21,12 @@ dotall
 dotenv
 dropna
 dtype
+dtypes
 edu
 eps
 eq
 eval
+expander
 facecolor
 facecolors
 fieldnames
@@ -40,10 +43,13 @@ groupby
 hyperskill
 hyperstyle
 iat
+idxmax
+ij
 iloc
 inplace
 isfile
 isin
+islice
 isna
 isnull
 isoparse
@@ -65,6 +71,7 @@ mktemp
 ngroup
 notnull
 numpy
+nunique
 oauth
 onboarding
 pandarallel
@@ -72,8 +79,10 @@ parametrized
 params
 parsers
 pathlib
+plotly
 plt
 pos
+postfix
 postprocess
 preprocess
 preprocessed
@@ -120,6 +129,7 @@ xlsx
 xranges
 xticklabels
 xticks
+yaxes
 yaxis
 ylabel
 yrange

@@ -1,9 +1,10 @@
 import logging
+import subprocess
+import time
 from pathlib import Path
 from typing import Callable, List, TypeVar, Optional, Tuple
 
 import pandas as pd
-import time
 
 from core.src.model.column_name import SubmissionColumns
 from core.src.utils.file.file_utils import create_directory, remove_directory, create_file
@@ -70,7 +71,7 @@ def evaluate_command(command: List[str], working_directory: Optional[str] = None
     logger.info('Start evaluation')
     start = time.time()
 
-    logger.info(f'Executing command: {" ".join(command)}')
+    logger.info(f'Executing command: {subprocess.list2cmdline(command)}')
     output, _ = run_in_subprocess(command, working_directory=working_directory)
 
     end = time.time()

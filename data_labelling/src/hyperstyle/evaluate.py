@@ -49,6 +49,7 @@ def main():
     config = HyperstyleEvaluationConfig(tool_path=args.tool_path,
                                         allow_duplicates=args.allow_duplicates,
                                         with_all_categories=args.with_all_categories,
+                                        new_format=False,
                                         tmp_path=args.tmp_directory,
                                         disable=args.disable,
                                         working_directory=args.working_directory,
