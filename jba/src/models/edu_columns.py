@@ -1,5 +1,12 @@
 from enum import Enum, unique
 
+from jba.src.models.edu_structure import EduStructureType
+
+ID_COLUMN_POSTFIX = 'id'
+NAME_COLUMN_POSTFIX = 'name'
+NUMBER_COLUMN_POSTFIX = 'number'
+AMOUNT_COLUMN_POSTFIX = 'amount'
+
 
 @unique
 class EduColumnName(Enum):
@@ -12,21 +19,21 @@ class EduColumnName(Enum):
     CODE_SNIPPETS = 'code_snippets'
     UUID = 'uuid'
 
-    TASK_ID = 'task_id'
-    TASK_GLOBAL_NUMBER = 'task_global_number'
-    TASK_NAME = 'task_name'
-    TASK_NUMBER = 'task_number'
-    TASKS_AMOUNT = 'tasks_amount'
+    TASK_GLOBAL_NUMBER = f'{EduStructureType.TASK.value}_global_number'
+    TASK_ID = f'{EduStructureType.TASK.value}_{ID_COLUMN_POSTFIX}'
+    TASK_NAME = f'{EduStructureType.TASK.value}_{NAME_COLUMN_POSTFIX}'
+    TASK_NUMBER = f'{EduStructureType.TASK.value}_{NUMBER_COLUMN_POSTFIX}'
+    TASK_AMOUNT = f'{EduStructureType.TASK.value}_{AMOUNT_COLUMN_POSTFIX}'
 
-    LESSON_ID = 'lesson_id'
-    LESSON_NAME = 'lesson_name'
-    LESSON_NUMBER = 'lesson_number'
-    LESSONS_AMOUNT = 'lessons_amount'
+    LESSON_ID = f'{EduStructureType.LESSON.value}_{ID_COLUMN_POSTFIX}'
+    LESSON_NAME = f'{EduStructureType.LESSON.value}_{NAME_COLUMN_POSTFIX}'
+    LESSON_NUMBER = f'{EduStructureType.LESSON.value}_{NUMBER_COLUMN_POSTFIX}'
+    LESSON_AMOUNT = f'{EduStructureType.LESSON.value}_{AMOUNT_COLUMN_POSTFIX}'
 
-    SECTION_ID = 'section_id'
-    SECTION_NAME = 'section_name'
-    SECTION_NUMBER = 'section_number'
-    SECTIONS_AMOUNT = 'sections_amount'
+    SECTION_ID = f'{EduStructureType.SECTION.value}_{ID_COLUMN_POSTFIX}'
+    SECTION_NAME = f'{EduStructureType.SECTION.value}_{NAME_COLUMN_POSTFIX}'
+    SECTION_NUMBER = f'{EduStructureType.SECTION.value}_{NUMBER_COLUMN_POSTFIX}'
+    SECTION_AMOUNT = f'{EduStructureType.SECTION.value}_{AMOUNT_COLUMN_POSTFIX}'
 
     SOLUTION_AWS_KEY = 'solution_aws_key'
     FORMAT_VERSION = 'format_version'

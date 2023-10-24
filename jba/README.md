@@ -26,29 +26,40 @@ docker run hyperstyle-analysis-prod:<VERSION> poetry run prepare_course_data [ar
 
 - `data_path` — Path to .csv file with collected data. The file must contain the following columns: `task_id`, `course_id`, `submission_datetime`, `status`, `task_type`, `user_id`, `task_name` (see [an example](tests/resources/processing/all_data.csv) in the tests).
 - `course_id` — Course id to analyze.
-- `course_sources_path` — Path to course sources to extract course structure (see [an example](tests/resources/processing/course_example) in the tests).
+- `course_sources_path` — Path to course sources to extract course structure.
 
 After this step you will get a new file with `courseId` suffix. This file will contain all data from the `data_path` file, but only for the course with the course id `course_id`.
-Also, an additional file with the course structure will be generated, e.g. for the [course](tests/resources/processing/course_example) from the test folder with the following structure:
+Also, an additional file with the course structure will be generated, e.g. for the [course](tests/resources/processing/prepare_course_data/course_with_section) from the test folder with the following structure:
 ```text
-- course_root
--- course-info.yaml
--- course-remote-info.yaml
--- section
---- section-info.yaml
---- section-remote-info.yaml
---- lesson
----- lesson-info.yaml
----- lesson-remote-info.yaml
----- task1
------ task-info.yaml
------ task-remote-info.yaml
----- task2
------ task-info.yaml
------ task-remote-info.yaml
+course-info.yaml
+course-remote-info.yaml
+section/
+├── section-info.yaml
+├── section-remote-info.yaml
+└── lesson/
+    ├── lesson-info.yaml
+    ├── lesson-remote-info.yaml
+    ├── task1/
+    │   ├── task-info.yaml
+    │   ├── task-remote-info.yaml
+    │   ├── src/
+    │   │   └── ...
+    │   └── task.md
+    ├── task2/
+    │   ├── task-info.yaml
+    │   ├── task-remote-info.yaml
+    │   ├── task.md
+    │   └── src/
+    │       └── ...
+    └── task3/
+        ├── task-info.yaml
+        ├── task-remote-info.yaml
+        ├── task.md
+        └── src/
+            └── ...
 ```
 
-the [following](tests/resources/processing/course_1_structure_expected.csv) file will be generated.
+the [following](tests/resources/processing/prepare_course_data/expected_course_with_section.csv) file will be generated.
 
 2. [data_processing.py](src/processing/data_processing.py) allows you to process data from the previous step:
 - Merge course data with task info
