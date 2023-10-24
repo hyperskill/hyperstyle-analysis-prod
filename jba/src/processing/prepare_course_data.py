@@ -3,14 +3,13 @@ from os import listdir
 
 import argparse
 from pathlib import Path
-from typing import Any
 
 import pandas as pd
 
 from core.src.utils.df_utils import read_df, filter_df_by_single_value, write_df
 from core.src.utils.file.extension_utils import AnalysisExtension
 from core.src.utils.file.file_utils import get_output_path
-from core.src.utils.file.yaml_utils import parse_yaml
+from core.src.utils.file.yaml_utils import read_yaml_field_content
 from jba.src.models.edu_columns import (
     EduColumnName,
     NUMBER_COLUMN_POSTFIX,
@@ -31,17 +30,6 @@ def filter_by_course_id_and_save(df_path: Path, course_id: int):
     initial_df = read_df(df_path)
     filtered_df = filter_df_by_single_value(initial_df, EduColumnName.COURSE_ID.value, course_id)
     write_df(filtered_df, df_path.parent / f'course_{course_id}{AnalysisExtension.CSV.value}')
-
-
-def read_meta_field_content(meta_file: Path, meta_field: str) -> Any:
-    if not meta_file.exists():
-        raise ValueError(f'{meta_field} does not exist.')
-
-    parsed_meta_file = parse_yaml(meta_file)
-    if parsed_meta_file is None:
-        raise ValueError(f'`{meta_file} is empty.')
-
-    return parsed_meta_file.get(meta_field)
 
 
 def _gather_structure(root: Path) -> EduStructureNode:  # noqa: WPS238
@@ -68,12 +56,12 @@ def _gather_structure(root: Path) -> EduStructureNode:  # noqa: WPS238
 
     structure_type = EduStructureType(info_file_structure_type)
 
-    structure_id = read_meta_field_content(root / remote_info_file, ID_META_FIELD)
+    structure_id = read_yaml_field_content(root / remote_info_file, ID_META_FIELD)
     if structure_id is None:
         raise ValueError(f'{root / remote_info_file} must contain the {ID_META_FIELD} field.')
 
     children = None
-    content = read_meta_field_content(root / info_file, CONTENT_META_FIELD)
+    content = read_yaml_field_content(root / info_file, CONTENT_META_FIELD)
     if content is not None:
         children = [_gather_structure(root / name) for name in content]
 

@@ -15,10 +15,10 @@ from pandarallel.core import NB_PHYSICAL_CORES
 from core.src.utils.df_utils import read_df
 from core.src.utils.file.extension_utils import AnalysisExtension
 from core.src.utils.file.file_utils import create_file
+from core.src.utils.file.yaml_utils import read_yaml_field_content
 from core.src.utils.parsing_utils import str_to_datetime
 from core.src.utils.subprocess_runner import run_in_subprocess
 from jba.src.models.edu_columns import EduColumnName, EduConfigField, EduCodeSnippetField
-from jba.src.processing.prepare_course_data import read_meta_field_content
 
 logger = logging.getLogger(__name__)
 
@@ -108,7 +108,7 @@ def _check_submission(
         course_root_path / ('' if section_name is None else section_name) / lesson_name / task_name  # noqa: WPS509
     )
 
-    files_info = read_meta_field_content(
+    files_info = read_yaml_field_content(
         task_root_path / f'task-info{AnalysisExtension.YAML.value}', EduConfigField.FILES.value
     )
 
