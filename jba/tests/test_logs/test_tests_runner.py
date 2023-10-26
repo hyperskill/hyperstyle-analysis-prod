@@ -156,6 +156,7 @@ def test_check_submission_empty_snippets(repo: Path):
             pd.Series({EduColumnName.CODE_SNIPPETS.value: None, **SUBMISSION_BASE_DATA}),
             repo,
             Path(tmp_dir),
+            force_ignore_tests=False,
         )
 
         assert not os.listdir(tmp_dir)
@@ -185,6 +186,7 @@ def test_check_submission(repo: Path):
             pd.Series({EduColumnName.CODE_SNIPPETS.value: code_snippets, **SUBMISSION_BASE_DATA}),
             repo,
             Path(tmp_dir),
+            force_ignore_tests=False,
         )
 
         assert (Path(tmp_dir) / '42').exists()
@@ -218,7 +220,7 @@ def test_check_user_submissions_repo_copying(repo: Path):
             modification_time_before[file_path] = os.path.getmtime(file_path)
 
     with TemporaryDirectory() as tmp_dir:
-        check_user(user_submissions, repo, Path(tmp_dir))
+        check_user(user_submissions, repo, Path(tmp_dir), force_ignore_tests=False)
 
     modification_time_after = {}
     for root, dirs, files in os.walk(repo):
@@ -246,7 +248,7 @@ def test_check_user_submissions(repo: Path):
     user_submissions = submissions[submissions[EduColumnName.USER_ID.value] == 1]
 
     with TemporaryDirectory() as tmp_dir:
-        check_user(user_submissions, repo, Path(tmp_dir))
+        check_user(user_submissions, repo, Path(tmp_dir), force_ignore_tests=False)
 
         modification_times = []
         for i in [*range(4), 6]:
