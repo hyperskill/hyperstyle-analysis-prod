@@ -187,12 +187,13 @@ then your module should be named `Introduction-LastPush-CompleteTheProject`
    
    **Optional arguments**:
    
-   | Argument                                       | Description                                       |
-   |------------------------------------------------|---------------------------------------------------|
-   | **&#8209;&#8209;timeout**                      | Timeout in seconds for subprocess to be executed. |
-   | **&#8209;&#8209;n&#8209;cpu**                  | Number of CPUs to use for parallel execution.     |
-   | **&#8209;&#8209;debug**                        | Run the script in debug mode.                     |
-   | **&#8209;&#8209;script&#8209;logs&#8209;path** | Path to a file where to save script logs.         |
+   | Argument                                         | Description                                                                 |
+   |--------------------------------------------------|-----------------------------------------------------------------------------|
+   | **&#8209;&#8209;timeout**                        | Timeout in seconds for subprocess to be executed.                           |
+   | **&#8209;&#8209;n&#8209;cpu**                    | Number of CPUs to use for parallel execution.                               |
+   | **&#8209;&#8209;force&#8209;ignore&#8209;tests** | Force to ignore substitution of test files if they are visible to the user. |
+   | **&#8209;&#8209;debug**                          | Run the script in debug mode.                                               |
+   | **&#8209;&#8209;script&#8209;logs&#8209;path**   | Path to a file where to save script logs.                                   |
 
 
 2. [logs_parser.py](src/test_logs/logs_parser.py) allows you to parse Gradle logs into json strings:
