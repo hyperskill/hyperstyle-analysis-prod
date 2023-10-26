@@ -12,6 +12,7 @@ from jba.src.visualization.common import (
     aggregate_tests_timeline,
     START_COLUMN,
     FINISH_COLUMN,
+    get_edu_name_columns,
 )
 
 
@@ -110,8 +111,6 @@ def main():
     course_structure = read_df(st.session_state.course_structure_path)
 
     submissions = submissions[(submissions.task_type != 'theory')]
-    # TODO: ignore submissions with skipped tests
-    submissions = submissions[~submissions[SubmissionColumns.GROUP.value].isin([41, 674])]
 
     submissions = (
         submissions.groupby(SubmissionColumns.GROUP.value, as_index=False)
@@ -129,19 +128,16 @@ def main():
         .droplevel(0)
     )
 
+    edu_name_columns = get_edu_name_columns()
+
     left, right = st.columns([3, 1])
 
     with left:
-        # TODO: handle absence of sections
-        submissions_by_task = submissions.groupby(
-            [EduColumnName.SECTION_NAME.value, EduColumnName.LESSON_NAME.value, EduColumnName.TASK_NAME.value]
-        )
+        submissions_by_task = submissions.groupby(edu_name_columns)
 
         tasks = filter(
             lambda name: name in submissions_by_task.groups,
-            course_structure[
-                [EduColumnName.SECTION_NAME.value, EduColumnName.LESSON_NAME.value, EduColumnName.TASK_NAME.value]
-            ].itertuples(index=False, name=None),
+            course_structure[edu_name_columns].itertuples(index=False, name=None),
         )
 
         task = st.selectbox('Task:', options=tasks, format_func=lambda option: '/'.join(option))
