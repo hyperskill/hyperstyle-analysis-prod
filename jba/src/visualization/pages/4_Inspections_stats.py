@@ -120,14 +120,6 @@ def main():
         left, right = st.columns(2)
 
         with left:
-            top = st.number_input(
-                'Top:',
-                min_value=1,
-                max_value=len(find_unique_inspections(task_submissions, file)),
-                value=min(10, len(find_unique_inspections(task_submissions, file))),
-            )
-
-        with right:
             inspections_to_ignore = st.text_input(
                 'Inspections to ignore:',
                 help=(
@@ -136,6 +128,16 @@ def main():
                 ),
                 value='KDocMissingDocumentation,UnusedSymbol',
             ).split(',')
+
+        with right:
+            number_of_inspections = len(find_unique_inspections(task_submissions, file) - set(inspections_to_ignore))
+
+            top = st.number_input(
+                'Top:',
+                min_value=1,
+                max_value=number_of_inspections,
+                value=min(10, number_of_inspections),
+            )
 
     with st.sidebar:
         normalize = st.checkbox('Normalize data', value=True)
