@@ -128,7 +128,7 @@ def main():
         .droplevel(0)
     )
 
-    edu_name_columns = get_edu_name_columns()
+    edu_name_columns = get_edu_name_columns(submissions)
 
     left, right = st.columns([3, 1])
 
