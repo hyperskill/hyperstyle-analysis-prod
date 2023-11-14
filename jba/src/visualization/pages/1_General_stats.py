@@ -36,11 +36,8 @@ def main():
         format_func=lambda option: option if option == ALL_CHOICE_OPTIONS else '/'.join(option),
     )
 
-    submissions = (
-        submissions
-        if selection == ALL_CHOICE_OPTIONS
-        else grouped_submissions.get_group(selection if len(selection) > 1 else selection[0])
-    )
+    selection = selection if len(selection) > 1 or selection == ALL_CHOICE_OPTIONS else selection[0]
+    submissions = submissions if selection == ALL_CHOICE_OPTIONS else grouped_submissions.get_group(selection)
 
     st.header('Basic stats')
 

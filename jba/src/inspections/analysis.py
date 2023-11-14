@@ -126,7 +126,7 @@ class FixingExample:
     after_code: str
 
 
-def _find_code_snippet(code_snippets: List[Dict[str, str]], file: str) -> str:
+def find_code_snippet(code_snippets: List[Dict[str, str]], file: str) -> str:
     return next(filter(lambda snippet: file == snippet['name'], code_snippets))['text']
 
 
@@ -158,8 +158,8 @@ def get_inspection_fixing_examples(
             current_issues = current_issues_per_file[file_path]
 
             if len(current_issues) < len(previous_issues):
-                previous_code = _find_code_snippet(getattr(previous_row, EduColumnName.CODE_SNIPPETS.value), file_path)
-                current_code = _find_code_snippet(getattr(current_row, EduColumnName.CODE_SNIPPETS.value), file_path)
+                previous_code = find_code_snippet(getattr(previous_row, EduColumnName.CODE_SNIPPETS.value), file_path)
+                current_code = find_code_snippet(getattr(current_row, EduColumnName.CODE_SNIPPETS.value), file_path)
                 examples.append(
                     FixingExample(task_name, file_path, previous_issues, previous_code, current_issues, current_code)
                 )

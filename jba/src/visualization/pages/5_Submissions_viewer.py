@@ -9,7 +9,7 @@ from core.src.model.column_name import SubmissionColumns
 from core.src.utils.df_utils import read_df
 import streamlit as st
 
-from jba.src.inspections.analysis import _find_code_snippet
+from jba.src.inspections.analysis import find_code_snippet
 from jba.src.models.edu_columns import EduColumnName, EduTaskType
 from jba.src.visualization.common import get_edu_name_columns
 
@@ -80,13 +80,13 @@ def main():
 
     if view_type == ViewType.PER_SUBMISSION or len(group_submissions) == 1:
         st.code(
-            _find_code_snippet(group_submissions[EduColumnName.CODE_SNIPPETS.value].iloc[number - 1], file),
+            find_code_snippet(group_submissions[EduColumnName.CODE_SNIPPETS.value].iloc[number - 1], file),
             language='kotlin',
         )
     else:
         diff_viewer(
-            _find_code_snippet(group_submissions[EduColumnName.CODE_SNIPPETS.value].iloc[number - 1], file),
-            _find_code_snippet(group_submissions[EduColumnName.CODE_SNIPPETS.value].iloc[number], file),
+            find_code_snippet(group_submissions[EduColumnName.CODE_SNIPPETS.value].iloc[number - 1], file),
+            find_code_snippet(group_submissions[EduColumnName.CODE_SNIPPETS.value].iloc[number], file),
             lang=None,
         )
 
