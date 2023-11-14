@@ -117,7 +117,7 @@ def main():
             file = None
 
     with st.expander('Config:'):
-        left, right = st.columns(2)
+        left, right = st.columns([3, 1])
 
         with left:
             inspections_to_ignore = st.text_input(
@@ -139,8 +139,7 @@ def main():
                 value=min(10, number_of_inspections),
             )
 
-    with st.sidebar:
-        normalize = st.checkbox('Normalize data', value=True)
+            normalize = st.checkbox('Normalize data', value=True)
 
     unique_inspections_stats = get_unique_inspections_stats(task_submissions, file, inspections_to_ignore, normalize)
     plot_unique_inspections_stats(unique_inspections_stats, top=top, normalize=normalize)
