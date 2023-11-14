@@ -110,7 +110,7 @@ def main():
     submissions = read_df(st.session_state.submissions_path)
     course_structure = read_df(st.session_state.course_structure_path)
 
-    submissions = submissions[(submissions.task_type != 'theory')]
+    submissions = submissions[submissions.task_type != 'theory']
 
     submissions = (
         submissions.groupby(SubmissionColumns.GROUP.value, as_index=False)
@@ -154,8 +154,9 @@ def main():
     ]
     number_of_groups_in_task_attempt = len(task_submissions_with_attempt[SubmissionColumns.GROUP.value].unique())
 
-    st.write(f'Stats for {number_of_groups_in_task_attempt} groups out of {number_of_groups_in_task}')
-    st.write(f'Groups: {group_mask[group_mask].index.tolist()}')
+    with st.expander('Description:'):
+        st.write(f'Stats for {number_of_groups_in_task_attempt} groups out of {number_of_groups_in_task}')
+        st.write(f'Groups: {group_mask[group_mask].index.tolist()}')
 
     # TODO: gray out tests from previous tasks
     # TODO: show chart for parametrized tests
