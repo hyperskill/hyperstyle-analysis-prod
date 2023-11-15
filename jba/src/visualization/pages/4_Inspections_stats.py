@@ -13,7 +13,7 @@ from core.src.model.report.hyperstyle_report import HyperstyleReport
 from core.src.utils.df_utils import read_df
 from jba.src.inspections.analysis import (
     find_unique_inspections,
-    get_unique_inspections_stats,
+    get_inspections_stats,
     get_inspection_fixing_examples,
 )
 from jba.src.models.edu_columns import EduColumnName
@@ -22,7 +22,7 @@ from jba.src.visualization.common import get_edu_name_columns
 ALL_CHOICE_OPTIONS = 'All'
 
 
-def plot_unique_inspections_stats(stats: pd.DataFrame, top: int, normalize: bool):
+def plot_inspections_stats(stats: pd.DataFrame, top: int, normalize: bool):
     title = 'Inspections frequency'
 
     if top != len(stats):
@@ -142,11 +142,11 @@ def main():
     with st.sidebar:
         normalize = st.checkbox('Normalize data', value=True)
 
-    unique_inspections_stats = get_unique_inspections_stats(task_submissions, file, inspections_to_ignore, normalize)
-    plot_unique_inspections_stats(unique_inspections_stats, top=top, normalize=normalize)
+    inspections_stats = get_inspections_stats(task_submissions, file, inspections_to_ignore, normalize)
+    plot_inspections_stats(inspections_stats, top=top, normalize=normalize)
 
-    inspections_to_choose = unique_inspections_stats.head(top).index[
-        unique_inspections_stats.head(top)['Total'] != unique_inspections_stats.head(top)['Not fixed']
+    inspections_to_choose = inspections_stats.head(top).index[
+        inspections_stats.head(top)['Total'] != inspections_stats.head(top)['Not fixed']
     ]
 
     if inspections_to_choose.empty:
@@ -167,8 +167,8 @@ def main():
     with right:
         st.metric(
             label='Number of inspections:',
-            value=len(example.after_issues),
-            delta=len(example.after_issues) - len(example.before_issues),
+            value=len(example.issues_after),
+            delta=len(example.issues_after) - len(example.issues_before),
         )
 
     if task == ALL_CHOICE_OPTIONS:
@@ -180,12 +180,12 @@ def main():
     left, right = st.columns(2)
 
     with left:
-        st.json([{'Line': issue.line_number, 'Description': issue.text} for issue in example.before_issues])
+        st.json([{'Line': issue.line_number, 'Description': issue.text} for issue in example.issues_before])
 
     with right:
-        st.json([{'Line': issue.line_number, 'Description': issue.text} for issue in example.after_issues])
+        st.json([{'Line': issue.line_number, 'Description': issue.text} for issue in example.issues_after])
 
-    diff_viewer(example.before_code, example.after_code, lang=None)
+    diff_viewer(example.code_before, example.code_after, lang=None)
 
 
 if __name__ == '__main__':
