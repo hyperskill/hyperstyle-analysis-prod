@@ -253,3 +253,15 @@ def plot_tests_timeline(tests_timeline: pd.DataFrame, duplicate_attempts: List[i
         ax.get_xticklabels()[attempt - 1].set_color(DUPLICATE_COLOR)
 
     st.pyplot(fig)
+
+
+def get_edu_name_columns(df: pd.DataFrame) -> List[str]:
+    df_columns = df.columns.tolist()
+
+    edu_name_columns = [
+        EduColumnName.SECTION_NAME.value,
+        EduColumnName.LESSON_NAME.value,
+        EduColumnName.TASK_NAME.value,
+    ]
+
+    return [element for element in edu_name_columns if element in df_columns]

@@ -1,3 +1,5 @@
+import re
+
 import argparse
 import json
 import logging
@@ -27,6 +29,11 @@ GRADLE_STDERR_LOGS_FILE = 'gradle_stderr.log'
 TEST_LOGS_FOLDER_NAME = 'test_logs'
 
 
+def _sanitize_name(name: str) -> str:
+    name = re.sub(r'[ /\\:<>"?*|()]', "_", name)
+    return re.sub("(^[.]+)|([.]+$)", "", name)
+
+
 def _run_tests(course_root_path: Path, task_root_path: Path, output_path: Path, timeout: Optional[float] = None):
     """
     Run task tests and save logs.
@@ -36,7 +43,7 @@ def _run_tests(course_root_path: Path, task_root_path: Path, output_path: Path, 
     :param output_path: Path to the folder to store logs.
     :param timeout: Timeout in seconds for subprocess to be executed.
     """
-    module_name = "-".join(task_root_path.relative_to(course_root_path).parts)
+    module_name = '-'.join(map(_sanitize_name, task_root_path.relative_to(course_root_path).parts))
     submission_id = output_path.name
 
     start = time.time()
@@ -82,6 +89,7 @@ def _check_submission(
     submission: pd.Series,
     course_root_path: Path,
     output_path: Path,
+    force_ignore_tests: bool,
     timeout: Optional[float] = None,
 ):
     """
@@ -90,6 +98,7 @@ def _check_submission(
     :param submission: User's submission data.
     :param course_root_path: Path to the course root.
     :param output_path: Path to the folder to store logs.
+    :param force_ignore_tests: Force to ignore substitution of visible test files.
     :param timeout: Timeout in seconds for subprocess to be executed.
     """
     submission_id = submission.at[EduColumnName.ID.value]
@@ -121,6 +130,7 @@ def _check_submission(
         task_root_path / snippet[EduCodeSnippetField.NAME.value]: snippet[EduCodeSnippetField.TEXT.value]
         for snippet in json.loads(submission[EduColumnName.CODE_SNIPPETS.value])
         if snippet[EduCodeSnippetField.NAME.value] in visible_files
+        and not (force_ignore_tests and snippet[EduCodeSnippetField.NAME.value].startswith('test/'))
     }
     logger.debug(f'Snippets for submissions#{submission_id}: {snippets.keys()}')
 
@@ -135,6 +145,7 @@ def check_user(
     user_submissions: pd.DataFrame,
     course_root_path: Path,
     output_path: Path,
+    force_ignore_tests: bool,
     timeout: Optional[float] = None,
 ):
     """
@@ -143,6 +154,7 @@ def check_user(
     :param user_submissions: User's submissions.
     :param course_root_path: Path to the course root.
     :param output_path: Path to the folder to store logs.
+    :param force_ignore_tests: Force to ignore substitution of visible test files.
     :param timeout: Timeout in seconds for subprocess to be executed.
     """
     user_id = user_submissions.iat[0, user_submissions.columns.get_loc(EduColumnName.USER_ID.value)]
@@ -158,7 +170,13 @@ def check_user(
         ].map(str_to_datetime)
 
         user_submissions.sort_values(EduColumnName.SUBMISSION_DATETIME.value).apply(
-            lambda submission_data: _check_submission(submission_data, Path(tmpdir), output_path, timeout=timeout),
+            lambda submission_data: _check_submission(
+                submission_data,
+                Path(tmpdir),
+                output_path,
+                timeout=timeout,
+                force_ignore_tests=force_ignore_tests,
+            ),
             axis=1,
         )
 
@@ -189,6 +207,12 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
         type=int,
         help='Number of CPUs to use for parallel execution.',
         default=NB_PHYSICAL_CORES,
+    )
+
+    parser.add_argument(
+        '--force-ignore-tests',
+        help='Force to ignore substitution of test files if they are visible to the user.',
+        action='store_true',
     )
 
     parser.add_argument(
@@ -228,6 +252,7 @@ def main():
         check_user,
         args.course_sources_path,
         args.logs_output_path,
+        args.force_ignore_tests,
         args.timeout,
     )
 

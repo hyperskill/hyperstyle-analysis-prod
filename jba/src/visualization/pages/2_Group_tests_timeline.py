@@ -5,7 +5,12 @@ from core.src.model.column_name import SubmissionColumns
 from core.src.utils.df_utils import read_df
 from jba.src.models.edu_columns import EduColumnName, EduTaskType
 from jba.src.models.edu_logs import TestDataField
-from jba.src.visualization.common import convert_tests_to_timeline, aggregate_tests_timeline, plot_tests_timeline
+from jba.src.visualization.common import (
+    convert_tests_to_timeline,
+    aggregate_tests_timeline,
+    plot_tests_timeline,
+    get_edu_name_columns,
+)
 
 
 def main():
@@ -23,10 +28,7 @@ def main():
     group_submissions = submissions[submissions[SubmissionColumns.GROUP.value] == group].reset_index(drop=True)
 
     st.markdown(
-        f'**Task**: '
-        f'{group_submissions[EduColumnName.SECTION_NAME.value].iloc[0]}/'
-        f'{group_submissions[EduColumnName.LESSON_NAME.value].iloc[0]}/'
-        f'{group_submissions[EduColumnName.TASK_NAME.value].iloc[0]}<br/>'
+        f'**Task**: {"/".join(group_submissions[get_edu_name_columns(group_submissions)].iloc[0])}<br/>'
         f'**User**: {group_submissions[EduColumnName.USER_ID.value].iloc[0]}',
         unsafe_allow_html=True,
     )
