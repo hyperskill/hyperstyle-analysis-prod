@@ -256,15 +256,12 @@ def plot_tests_timeline(tests_timeline: pd.DataFrame, duplicate_attempts: List[i
 
 
 def get_edu_name_columns(df: pd.DataFrame) -> List[str]:
-    names = []
+    df_columns = df.columns.tolist()
 
-    if EduColumnName.SECTION_NAME.value in df:
-        names.append(EduColumnName.SECTION_NAME.value)
+    edu_name_columns = [
+        EduColumnName.SECTION_NAME.value,
+        EduColumnName.LESSON_NAME.value,
+        EduColumnName.TASK_NAME.value,
+    ]
 
-    if EduColumnName.LESSON_NAME.value in df:
-        names.append(EduColumnName.LESSON_NAME.value)
-
-    if EduColumnName.TASK_NAME.value in df:
-        names.append(EduColumnName.TASK_NAME.value)
-
-    return names
+    return [element for element in edu_name_columns if element in df_columns]
