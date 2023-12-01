@@ -20,7 +20,7 @@ class TaskStat:
 
 def calculate_tasks_stat(course_data_df: pd.DataFrame) -> Dict[int, TaskStat]:
     stat = {}
-    for task_id, task_data in course_data_df.groupby(EduColumnName.TASK_ID.value):
+    for task_id, task_data in course_data_df.groupby(EduColumnName.TASK_ID.value):  # noqa: WPS426
         total_groups = task_data[SubmissionColumns.GROUP.value].nunique()
 
         correct_groups = (
