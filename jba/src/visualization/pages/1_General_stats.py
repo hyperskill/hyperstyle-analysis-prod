@@ -6,7 +6,7 @@ from jba.src.models.edu_columns import EduColumnName
 from jba.src.plots.task_attempt import plot_task_attempts
 from jba.src.plots.task_duplicates import plot_task_duplicates
 from jba.src.plots.task_solving import plot_task_solving
-from jba.src.visualization.common import get_edu_name_columns
+from jba.src.visualization.common import get_edu_name_columns, show_exclude_post_correct_submissions_flag
 
 ALL_CHOICE_OPTIONS = 'All'
 
@@ -38,6 +38,8 @@ def main():
 
     selection = selection if len(selection) > 1 or selection == ALL_CHOICE_OPTIONS else selection[0]
     submissions = submissions if selection == ALL_CHOICE_OPTIONS else grouped_submissions.get_group(selection)
+
+    submissions = show_exclude_post_correct_submissions_flag(submissions)
 
     st.header('Basic stats')
 

@@ -13,6 +13,7 @@ from jba.src.visualization.common import (
     START_COLUMN,
     FINISH_COLUMN,
     get_edu_name_columns,
+    show_exclude_post_correct_submissions_flag,
 )
 
 
@@ -129,6 +130,8 @@ def main():
     )
 
     edu_name_columns = get_edu_name_columns(submissions)
+
+    submissions = show_exclude_post_correct_submissions_flag(submissions)
 
     left, right = st.columns([3, 1])
 

@@ -10,6 +10,7 @@ from jba.src.visualization.common import (
     aggregate_tests_timeline,
     plot_tests_timeline,
     get_edu_name_columns,
+    show_exclude_post_correct_submissions_flag,
 )
 
 
@@ -22,6 +23,8 @@ def main():
     # TODO: show visualizations for theory groups too (for example, quiz results)
     submissions = submissions[submissions.task_type != EduTaskType.THEORY.value]
     edu_name_columns = get_edu_name_columns(submissions)
+
+    submissions = show_exclude_post_correct_submissions_flag(submissions)
 
     left, right = st.columns([3, 1])
 
