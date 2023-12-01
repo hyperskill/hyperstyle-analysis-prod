@@ -10,7 +10,7 @@ from core.src.utils.df_utils import read_df
 import streamlit as st
 
 from jba.src.inspections.analysis import find_code_snippet
-from jba.src.models.edu_columns import EduColumnName, EduTaskType
+from jba.src.models.edu_columns import EduColumnName, EduTaskType, EduTaskStatus
 from jba.src.visualization.common import get_edu_name_columns
 
 from diff_viewer import diff_viewer
@@ -47,7 +47,10 @@ def main():
     st.markdown(
         f'**Task**: {"/".join(group_submissions[get_edu_name_columns(group_submissions)].iloc[0])}<br/>'
         f'**User**: {group_submissions[EduColumnName.USER_ID.value].iloc[0]}<br/>'
-        f'**Number of submissions**: {len(group_submissions)}',
+        f'**Number of submissions**: {len(group_submissions)}<br/>'
+        f'**Has post-correct submissions**?: '
+        f'{(group_submissions[EduColumnName.STATUS.value] == EduTaskStatus.CORRECT.value).sum() > 1}<br/>'
+        f'**Is task solved?**: {EduTaskStatus.CORRECT.value in group_submissions[EduColumnName.STATUS.value].unique()}',
         unsafe_allow_html=True,
     )
 
@@ -62,7 +65,9 @@ def main():
         )
 
     with right:
-        view_type = ViewType(st.selectbox('View type:', options=ViewType.values(), disabled=len(group_submissions) == 1))
+        view_type = ViewType(
+            st.selectbox('View type:', options=ViewType.values(), disabled=len(group_submissions) == 1)
+        )
 
     number = 1
     if len(group_submissions) != 1:
@@ -79,11 +84,20 @@ def main():
                 )
 
     if view_type == ViewType.PER_SUBMISSION or len(group_submissions) == 1:
+        st.write(f'Status: {group_submissions[EduColumnName.STATUS.value].iloc[number - 1]}')
         st.code(
             find_code_snippet(group_submissions[EduColumnName.CODE_SNIPPETS.value].iloc[number - 1], file),
             language='kotlin',
         )
     else:
+        left, right = st.columns(2)
+
+        with left:
+            st.write(f'Status: {group_submissions[EduColumnName.STATUS.value].iloc[number - 1]}')
+
+        with right:
+            st.write(f'Status: {group_submissions[EduColumnName.STATUS.value].iloc[number]}')
+
         diff_viewer(
             find_code_snippet(group_submissions[EduColumnName.CODE_SNIPPETS.value].iloc[number - 1], file),
             find_code_snippet(group_submissions[EduColumnName.CODE_SNIPPETS.value].iloc[number], file),
