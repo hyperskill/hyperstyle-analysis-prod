@@ -11,9 +11,12 @@ import streamlit as st
 
 from jba.src.inspections.analysis import find_code_snippet
 from jba.src.models.edu_columns import EduColumnName, EduTaskType, EduTaskStatus
+from jba.src.models.edu_logs import TestData, TestResult, ExceptionData
 from jba.src.visualization.common import get_edu_name_columns
 
 from diff_viewer import diff_viewer
+
+ALL_CHOICE_OPTIONS = 'All'
 
 
 class ViewType(Enum):
@@ -25,6 +28,28 @@ class ViewType(Enum):
         return [view_type.value for view_type in cls]
 
 
+def show_submission_info(submission: pd.Series):
+    status = submission[EduColumnName.STATUS.value]
+    if status == EduTaskStatus.CORRECT.value:
+        color = 'green'
+    else:
+        color = 'red'
+
+    st.write(f'Status: :{color}[{status.title()}]')
+
+    if not pd.isna(raw_exceptions := submission[EduColumnName.EXCEPTIONS.value]):
+        if exceptions := ExceptionData.schema().loads(raw_exceptions, many=True):
+            with st.expander(f':red[Exception] {exceptions[0].message}'):
+                st.json(ExceptionData.schema().dump(exceptions, many=True))
+
+    if not pd.isna(raw_tests := submission[EduColumnName.TESTS.value]):
+        tests = TestData.schema().loads(raw_tests, many=True)
+        tests = [test for test in tests if test.result == TestResult.FAILED]
+        if tests:
+            with st.expander(f':violet[Test] {tests[0].message}'):
+                st.json(TestData.schema().dump(tests, many=True))
+
+
 def main():
     st.title('Submissions viewer')
 
@@ -33,14 +58,41 @@ def main():
         lambda code_snippets: code_snippets if pd.isna(code_snippets) else json.loads(code_snippets)
     )
 
-    left, middle, right = st.columns([1, 2, 1])
+    course_structure = read_df(st.session_state.course_structure_path)
+    edu_name_columns = get_edu_name_columns(submissions)
 
-    with left:
-        group = st.number_input(
-            'Group:',
-            min_value=submissions[SubmissionColumns.GROUP.value].min(),
-            max_value=submissions[SubmissionColumns.GROUP.value].max(),
+    columns = st.columns([1, 2, 1, 2, 1])
+
+    with columns[0]:
+        user_id = st.text_input('User ID:')
+        if user_id != '':
+            submissions = submissions[submissions[SubmissionColumns.USER_ID.value] == user_id]
+
+    with columns[1]:
+        submissions_by_task = submissions.groupby(edu_name_columns)
+
+        tasks = filter(
+            lambda name: name in submissions_by_task.groups,
+            course_structure[edu_name_columns].itertuples(index=False, name=None),
         )
+
+        task = st.selectbox(
+            'Task:',
+            options=[ALL_CHOICE_OPTIONS, *tasks],
+            format_func=lambda option: option if option == ALL_CHOICE_OPTIONS else '/'.join(option),
+        )
+
+        task_submissions = submissions if task == ALL_CHOICE_OPTIONS else submissions_by_task.get_group(task)
+
+    with columns[2]:
+        if task == ALL_CHOICE_OPTIONS:
+            group = st.number_input(
+                'Group:',
+                min_value=submissions[SubmissionColumns.GROUP.value].min(),
+                max_value=submissions[SubmissionColumns.GROUP.value].max(),
+            )
+        else:
+            group = st.selectbox('Group:', options=task_submissions[SubmissionColumns.GROUP.value].unique())
 
         group_submissions = submissions[submissions[SubmissionColumns.GROUP.value] == group].reset_index(drop=True)
 
@@ -58,13 +110,13 @@ def main():
         st.info("It's a theory group. Please choose another group.")
         st.stop()
 
-    with middle:
+    with columns[3]:
         file = st.selectbox(
             'File:',
             options=map(operator.itemgetter('name'), group_submissions[EduColumnName.CODE_SNIPPETS.value].values[0]),
         )
 
-    with right:
+    with columns[4]:
         view_type = ViewType(
             st.selectbox('View type:', options=ViewType.values(), disabled=len(group_submissions) == 1)
         )
@@ -84,23 +136,30 @@ def main():
                 )
 
     if view_type == ViewType.PER_SUBMISSION or len(group_submissions) == 1:
-        st.write(f'Status: {group_submissions[EduColumnName.STATUS.value].iloc[number - 1]}')
+        submission = group_submissions.iloc[number - 1]
+
+        show_submission_info(submission)
+
         st.code(
-            find_code_snippet(group_submissions[EduColumnName.CODE_SNIPPETS.value].iloc[number - 1], file),
+            find_code_snippet(submission[EduColumnName.CODE_SNIPPETS.value], file),
             language='kotlin',
+            line_numbers=True,
         )
     else:
+        submission_before = group_submissions.iloc[number - 1]
+        submission_after = group_submissions.iloc[number]
+
         left, right = st.columns(2)
 
         with left:
-            st.write(f'Status: {group_submissions[EduColumnName.STATUS.value].iloc[number - 1]}')
+            show_submission_info(submission_before)
 
         with right:
-            st.write(f'Status: {group_submissions[EduColumnName.STATUS.value].iloc[number]}')
+            show_submission_info(submission_after)
 
         diff_viewer(
-            find_code_snippet(group_submissions[EduColumnName.CODE_SNIPPETS.value].iloc[number - 1], file),
-            find_code_snippet(group_submissions[EduColumnName.CODE_SNIPPETS.value].iloc[number], file),
+            find_code_snippet(submission_before[EduColumnName.CODE_SNIPPETS.value], file),
+            find_code_snippet(submission_after[EduColumnName.CODE_SNIPPETS.value], file),
             lang=None,
         )
 
