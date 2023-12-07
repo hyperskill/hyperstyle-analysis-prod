@@ -37,12 +37,15 @@ def show_submission_info(submission: pd.Series):
 
     st.write(f'Status: :{color}[{status.title()}]')
 
-    if not pd.isna(raw_exceptions := submission[EduColumnName.EXCEPTIONS.value]):
-        if exceptions := ExceptionData.schema().loads(raw_exceptions, many=True):
+    raw_exceptions = submission[EduColumnName.EXCEPTIONS.value]
+    if not pd.isna(raw_exceptions):
+        exceptions = ExceptionData.schema().loads(raw_exceptions, many=True)
+        if exceptions:
             with st.expander(f':red[Exception] {exceptions[0].message}'):
                 st.json(ExceptionData.schema().dump(exceptions, many=True))
 
-    if not pd.isna(raw_tests := submission[EduColumnName.TESTS.value]):
+    raw_tests = submission[EduColumnName.TESTS.value]
+    if not pd.isna(raw_tests):
         tests = TestData.schema().loads(raw_tests, many=True)
         tests = [test for test in tests if test.result == TestResult.FAILED]
         if tests:
