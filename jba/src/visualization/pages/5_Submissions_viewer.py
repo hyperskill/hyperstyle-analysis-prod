@@ -46,11 +46,12 @@ def show_submission_info(submission: pd.Series):
 
     raw_tests = submission[EduColumnName.TESTS.value]
     if not pd.isna(raw_tests):
-        tests = TestData.schema().loads(raw_tests, many=True)
-        tests = [test for test in tests if test.result == TestResult.FAILED]
-        if tests:
-            with st.expander(f':violet[Test] {tests[0].message}'):
-                st.json(TestData.schema().dump(tests, many=True))
+        failed_tests = [
+            test for test in TestData.schema().loads(raw_tests, many=True) if test.result == TestResult.FAILED
+        ]
+        if failed_tests:
+            with st.expander(f':violet[Failed test] {failed_tests[0].message}'):
+                st.json(TestData.schema().dump(failed_tests, many=True))
 
 
 def main():
@@ -124,22 +125,22 @@ def main():
             st.selectbox('View type:', options=ViewType.values(), disabled=len(group_submissions) == 1)
         )
 
-    number = 1
+    submission_number = 1
     if len(group_submissions) != 1:
         left, _ = st.columns([1, 3])
 
         with left:
             if view_type == ViewType.PER_SUBMISSION:
-                number = st.number_input('Submission number:', min_value=1, max_value=len(group_submissions))
+                submission_number = st.number_input('Submission number:', min_value=1, max_value=len(group_submissions))
             else:
-                number = st.number_input(
+                submission_number = st.number_input(
                     'Submissions diff pair number:',
                     min_value=1,
                     max_value=len(group_submissions) - 1,
                 )
 
     if view_type == ViewType.PER_SUBMISSION or len(group_submissions) == 1:
-        submission = group_submissions.iloc[number - 1]
+        submission = group_submissions.iloc[submission_number - 1]
 
         show_submission_info(submission)
 
@@ -149,8 +150,8 @@ def main():
             line_numbers=True,
         )
     else:
-        submission_before = group_submissions.iloc[number - 1]
-        submission_after = group_submissions.iloc[number]
+        submission_before = group_submissions.iloc[submission_number - 1]
+        submission_after = group_submissions.iloc[submission_number]
 
         left, right = st.columns(2)
 
