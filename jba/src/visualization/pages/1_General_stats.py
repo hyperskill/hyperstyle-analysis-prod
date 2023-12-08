@@ -23,9 +23,12 @@ def main():
     show_stats_for = st.radio('Show stats for: ', options=edu_name_columns, horizontal=True)
     edu_name_columns = edu_name_columns[: edu_name_columns.index(show_stats_for) + 1]
 
+    # If the length of the edu_name_columns variable is larger than 1,
+    # then groups will be tuples, else they will be strings ...
     grouped_submissions = submissions.groupby(edu_name_columns)
 
     options = filter(
+        # ... and therefore we need to squeeze single element tuples.
         lambda name: name in grouped_submissions.groups if len(name) > 1 else name[0] in grouped_submissions.groups,
         course_structure[edu_name_columns].drop_duplicates().itertuples(index=False, name=None),
     )
