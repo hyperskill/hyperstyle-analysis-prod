@@ -12,7 +12,12 @@ import streamlit as st
 from jba.src.inspections.analysis import find_code_snippet
 from jba.src.models.edu_columns import EduColumnName, EduTaskType, EduTaskStatus
 from jba.src.models.edu_logs import TestData, TestResult, ExceptionData
-from jba.src.visualization.common import get_edu_name_columns, show_filter_by_task, ALL_CHOICE_OPTIONS
+from jba.src.visualization.common import (
+    get_edu_name_columns,
+    show_filter_by_task,
+    ALL_CHOICE_OPTIONS,
+    show_exclude_post_correct_submissions_flag,
+)
 
 from diff_viewer import diff_viewer
 
@@ -61,6 +66,9 @@ def main():
     )
 
     course_structure = read_df(st.session_state.course_structure_path)
+
+    with st.sidebar:
+        submissions = show_exclude_post_correct_submissions_flag(submissions)
 
     columns = st.columns([1, 2, 1, 2, 1])
 

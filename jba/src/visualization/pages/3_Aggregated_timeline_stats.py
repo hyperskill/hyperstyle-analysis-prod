@@ -129,7 +129,8 @@ def main():
         .droplevel(0)
     )
 
-    submissions = show_exclude_post_correct_submissions_flag(submissions)
+    with st.sidebar:
+        submissions = show_exclude_post_correct_submissions_flag(submissions)
 
     left, right = st.columns([3, 1])
 

@@ -22,7 +22,9 @@ def main():
 
     # TODO: show visualizations for theory groups too (for example, quiz results)
     submissions = submissions[submissions.task_type != EduTaskType.THEORY.value]
-    submissions = show_exclude_post_correct_submissions_flag(submissions)
+
+    with st.sidebar:
+        submissions = show_exclude_post_correct_submissions_flag(submissions)
 
     left, right = st.columns([3, 1])
 

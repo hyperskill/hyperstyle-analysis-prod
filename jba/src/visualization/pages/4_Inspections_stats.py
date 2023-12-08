@@ -17,7 +17,11 @@ from jba.src.inspections.analysis import (
     get_inspection_fixing_examples,
 )
 from jba.src.models.edu_columns import EduColumnName
-from jba.src.visualization.common import show_filter_by_task, ALL_CHOICE_OPTIONS
+from jba.src.visualization.common import (
+    show_filter_by_task,
+    ALL_CHOICE_OPTIONS,
+    show_exclude_post_correct_submissions_flag,
+)
 
 
 def plot_inspections_stats(stats: pd.DataFrame, top: int, normalize: bool):
@@ -77,6 +81,9 @@ def main():
 
     submissions = read_submissions(st.session_state.submissions_path)
     course_structure = read_df(st.session_state.course_structure_path)
+
+    with st.sidebar:
+        submissions = show_exclude_post_correct_submissions_flag(submissions)
 
     left, right = st.columns([3, 1])
 

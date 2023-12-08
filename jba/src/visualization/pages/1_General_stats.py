@@ -19,6 +19,9 @@ def main():
     submissions = read_df(st.session_state.submissions_path)
     course_structure = read_df(st.session_state.course_structure_path)
 
+    with st.sidebar:
+        submissions = show_exclude_post_correct_submissions_flag(submissions)
+
     edu_name_columns = get_edu_name_columns(submissions)
     show_stats_for = st.radio('Show stats for: ', options=edu_name_columns, horizontal=True)
     edu_name_columns = edu_name_columns[: edu_name_columns.index(show_stats_for) + 1]
@@ -42,7 +45,6 @@ def main():
     selection = selection if len(selection) > 1 or selection == ALL_CHOICE_OPTIONS else selection[0]
     submissions = submissions if selection == ALL_CHOICE_OPTIONS else grouped_submissions.get_group(selection)
 
-    submissions = show_exclude_post_correct_submissions_flag(submissions)
 
     st.header('Basic stats')
 
