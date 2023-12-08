@@ -17,9 +17,7 @@ from jba.src.inspections.analysis import (
     get_inspection_fixing_examples,
 )
 from jba.src.models.edu_columns import EduColumnName
-from jba.src.visualization.common import get_edu_name_columns
-
-ALL_CHOICE_OPTIONS = 'All'
+from jba.src.visualization.common import show_filter_by_task, ALL_CHOICE_OPTIONS
 
 
 def plot_inspections_stats(stats: pd.DataFrame, top: int, normalize: bool):
@@ -78,27 +76,12 @@ def main():
     st.title('Inspections stats')
 
     submissions = read_submissions(st.session_state.submissions_path)
-
     course_structure = read_df(st.session_state.course_structure_path)
-    edu_name_columns = get_edu_name_columns(submissions)
 
     left, right = st.columns([3, 1])
 
     with left:
-        submissions_by_task = submissions.groupby(edu_name_columns)
-
-        tasks = filter(
-            lambda name: name in submissions_by_task.groups,
-            course_structure[edu_name_columns].itertuples(index=False, name=None),
-        )
-
-        task = st.selectbox(
-            'Task:',
-            options=[ALL_CHOICE_OPTIONS, *tasks],
-            format_func=lambda option: option if option == ALL_CHOICE_OPTIONS else '/'.join(option),
-        )
-
-        task_submissions = submissions if task == ALL_CHOICE_OPTIONS else submissions_by_task.get_group(task)
+        task, task_submissions = show_filter_by_task(submissions, course_structure, with_all_option=True)
 
     with right:
         file = st.selectbox(

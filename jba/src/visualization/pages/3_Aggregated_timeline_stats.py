@@ -12,8 +12,8 @@ from jba.src.visualization.common import (
     aggregate_tests_timeline,
     START_COLUMN,
     FINISH_COLUMN,
-    get_edu_name_columns,
     show_exclude_post_correct_submissions_flag,
+    show_filter_by_task,
 )
 
 
@@ -129,22 +129,12 @@ def main():
         .droplevel(0)
     )
 
-    edu_name_columns = get_edu_name_columns(submissions)
-
     submissions = show_exclude_post_correct_submissions_flag(submissions)
 
     left, right = st.columns([3, 1])
 
     with left:
-        submissions_by_task = submissions.groupby(edu_name_columns)
-
-        tasks = filter(
-            lambda name: name in submissions_by_task.groups,
-            course_structure[edu_name_columns].itertuples(index=False, name=None),
-        )
-
-        task = st.selectbox('Task:', options=tasks, format_func=lambda option: '/'.join(option))
-        task_submissions = submissions_by_task.get_group(task)
+        task, task_submissions = show_filter_by_task(submissions, course_structure)
         number_of_groups_in_task = len(task_submissions[SubmissionColumns.GROUP.value].unique())
 
     with right:

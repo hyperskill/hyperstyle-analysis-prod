@@ -12,11 +12,9 @@ import streamlit as st
 from jba.src.inspections.analysis import find_code_snippet
 from jba.src.models.edu_columns import EduColumnName, EduTaskType, EduTaskStatus
 from jba.src.models.edu_logs import TestData, TestResult, ExceptionData
-from jba.src.visualization.common import get_edu_name_columns
+from jba.src.visualization.common import get_edu_name_columns, show_filter_by_task, ALL_CHOICE_OPTIONS
 
 from diff_viewer import diff_viewer
-
-ALL_CHOICE_OPTIONS = 'All'
 
 
 class ViewType(Enum):
@@ -63,7 +61,6 @@ def main():
     )
 
     course_structure = read_df(st.session_state.course_structure_path)
-    edu_name_columns = get_edu_name_columns(submissions)
 
     columns = st.columns([1, 2, 1, 2, 1])
 
@@ -73,20 +70,7 @@ def main():
             submissions = submissions[submissions[SubmissionColumns.USER_ID.value] == user_id]
 
     with columns[1]:
-        submissions_by_task = submissions.groupby(edu_name_columns)
-
-        tasks = filter(
-            lambda name: name in submissions_by_task.groups,
-            course_structure[edu_name_columns].itertuples(index=False, name=None),
-        )
-
-        task = st.selectbox(
-            'Task:',
-            options=[ALL_CHOICE_OPTIONS, *tasks],
-            format_func=lambda option: option if option == ALL_CHOICE_OPTIONS else '/'.join(option),
-        )
-
-        task_submissions = submissions if task == ALL_CHOICE_OPTIONS else submissions_by_task.get_group(task)
+        task, task_submissions = show_filter_by_task(submissions, course_structure, with_all_option=True)
 
     with columns[2]:
         if task == ALL_CHOICE_OPTIONS:

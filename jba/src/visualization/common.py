@@ -10,6 +10,8 @@ from core.src.model.column_name import SubmissionColumns
 from jba.src.models.edu_columns import EduColumnName, EduTaskStatus
 from jba.src.models.edu_logs import TestDataField, TestData, TestResult
 
+ALL_CHOICE_OPTIONS = 'All'
+
 START_COLUMN = 'start'
 FINISH_COLUMN = 'finish'
 
@@ -297,3 +299,25 @@ def show_exclude_post_correct_submissions_flag(df: pd.DataFrame) -> pd.DataFrame
         return filter_post_correct_submissions(df)
 
     return df
+
+
+def show_filter_by_task(
+    submissions: pd.DataFrame,
+    course_structure: pd.DataFrame,
+    with_all_option: bool = False,
+) -> Tuple[Tuple[str] | str, pd.DataFrame]:
+    edu_name_columns = get_edu_name_columns(submissions)
+    submissions_by_task = submissions.groupby(edu_name_columns)
+
+    tasks = filter(
+        lambda name: name in submissions_by_task.groups,
+        course_structure[edu_name_columns].itertuples(index=False, name=None),
+    )
+
+    task = st.selectbox(
+        'Task:',
+        options=[ALL_CHOICE_OPTIONS, *tasks] if with_all_option else tasks,
+        format_func=lambda option: option if option == ALL_CHOICE_OPTIONS else '/'.join(option),
+    )
+
+    return task, submissions if task == ALL_CHOICE_OPTIONS else submissions_by_task.get_group(task)

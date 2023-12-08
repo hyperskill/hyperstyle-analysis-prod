@@ -9,8 +9,8 @@ from jba.src.visualization.common import (
     convert_tests_to_timeline,
     aggregate_tests_timeline,
     plot_tests_timeline,
-    get_edu_name_columns,
     show_exclude_post_correct_submissions_flag,
+    show_filter_by_task,
 )
 
 
@@ -22,22 +22,12 @@ def main():
 
     # TODO: show visualizations for theory groups too (for example, quiz results)
     submissions = submissions[submissions.task_type != EduTaskType.THEORY.value]
-    edu_name_columns = get_edu_name_columns(submissions)
-
     submissions = show_exclude_post_correct_submissions_flag(submissions)
 
     left, right = st.columns([3, 1])
 
     with left:
-        submissions_by_task = submissions.groupby(edu_name_columns)
-
-        tasks = filter(
-            lambda name: name in submissions_by_task.groups,
-            course_structure[edu_name_columns].itertuples(index=False, name=None),
-        )
-
-        task = st.selectbox('Task:', options=tasks, format_func=lambda option: '/'.join(option))
-        task_submissions = submissions_by_task.get_group(task)
+        _, task_submissions = show_filter_by_task(submissions, course_structure)
 
     with right:
         group = st.selectbox('Group:', options=task_submissions[SubmissionColumns.GROUP.value].unique())
