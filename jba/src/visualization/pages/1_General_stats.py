@@ -45,7 +45,6 @@ def main():
     selection = selection if len(selection) > 1 or selection == ALL_CHOICE_OPTIONS else selection[0]
     submissions = submissions if selection == ALL_CHOICE_OPTIONS else grouped_submissions.get_group(selection)
 
-
     st.header('Basic stats')
 
     left, middle, right = st.columns(3)
