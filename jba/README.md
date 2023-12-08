@@ -330,3 +330,7 @@ The app consists of several pages:
    - Inspections fixing examples:
    
      <img src="./images/inspections-fixing-examples.png" title="Inspections frequency" width="70%"/>
+   
+6. [Submissions viewer](src/visualization/pages/5_Submissions_viewer.py) allows you to view user submissions within some group.
+
+   <img src="./images/submissions-viewer.png" title="Inspections frequency" width="70%"/>
