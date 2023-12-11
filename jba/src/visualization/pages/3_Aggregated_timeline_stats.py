@@ -12,7 +12,8 @@ from jba.src.visualization.common import (
     aggregate_tests_timeline,
     START_COLUMN,
     FINISH_COLUMN,
-    get_edu_name_columns,
+    show_exclude_post_correct_submissions_flag,
+    show_filter_by_task,
 )
 
 
@@ -110,7 +111,7 @@ def main():
     submissions = read_df(st.session_state.submissions_path)
     course_structure = read_df(st.session_state.course_structure_path)
 
-    submissions = submissions[(submissions.task_type != 'theory')]
+    submissions = submissions[submissions.task_type != 'theory']
 
     submissions = (
         submissions.groupby(SubmissionColumns.GROUP.value, as_index=False)
@@ -128,20 +129,13 @@ def main():
         .droplevel(0)
     )
 
-    edu_name_columns = get_edu_name_columns(submissions)
+    with st.sidebar:
+        submissions = show_exclude_post_correct_submissions_flag(submissions)
 
     left, right = st.columns([3, 1])
 
     with left:
-        submissions_by_task = submissions.groupby(edu_name_columns)
-
-        tasks = filter(
-            lambda name: name in submissions_by_task.groups,
-            course_structure[edu_name_columns].itertuples(index=False, name=None),
-        )
-
-        task = st.selectbox('Task:', options=tasks, format_func=lambda option: '/'.join(option))
-        task_submissions = submissions_by_task.get_group(task)
+        task, task_submissions = show_filter_by_task(submissions, course_structure)
         number_of_groups_in_task = len(task_submissions[SubmissionColumns.GROUP.value].unique())
 
     with right:
@@ -154,8 +148,9 @@ def main():
     ]
     number_of_groups_in_task_attempt = len(task_submissions_with_attempt[SubmissionColumns.GROUP.value].unique())
 
-    st.write(f'Stats for {number_of_groups_in_task_attempt} groups out of {number_of_groups_in_task}')
-    st.write(f'Groups: {group_mask[group_mask].index.tolist()}')
+    with st.expander('Description:'):
+        st.write(f'Stats for {number_of_groups_in_task_attempt} groups out of {number_of_groups_in_task}')
+        st.write(f'Groups: {group_mask[group_mask].index.tolist()}')
 
     # TODO: gray out tests from previous tasks
     # TODO: show chart for parametrized tests

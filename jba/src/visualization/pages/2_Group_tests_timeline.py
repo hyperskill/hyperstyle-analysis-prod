@@ -9,7 +9,8 @@ from jba.src.visualization.common import (
     convert_tests_to_timeline,
     aggregate_tests_timeline,
     plot_tests_timeline,
-    get_edu_name_columns,
+    show_exclude_post_correct_submissions_flag,
+    show_filter_by_task,
 )
 
 
@@ -17,26 +18,25 @@ def main():
     st.title('Group tests timeline')
 
     submissions = read_df(st.session_state.submissions_path)
+    course_structure = read_df(st.session_state.course_structure_path)
 
-    group = st.number_input(
-        'Group:',
-        value=submissions[SubmissionColumns.GROUP.value].min(),
-        min_value=submissions[SubmissionColumns.GROUP.value].min(),
-        max_value=submissions[SubmissionColumns.GROUP.value].max(),
+    # TODO: show visualizations for theory groups too (for example, quiz results)
+    submissions = submissions[submissions.task_type != EduTaskType.THEORY.value]
+
+    with st.sidebar:
+        submissions = show_exclude_post_correct_submissions_flag(submissions)
+
+    left, right = st.columns([3, 1])
+
+    with left:
+        _, task_submissions = show_filter_by_task(submissions, course_structure)
+
+    with right:
+        group = st.selectbox('Group:', options=task_submissions[SubmissionColumns.GROUP.value].unique())
+
+    group_submissions = task_submissions[task_submissions[SubmissionColumns.GROUP.value] == group].reset_index(
+        drop=True
     )
-
-    group_submissions = submissions[submissions[SubmissionColumns.GROUP.value] == group].reset_index(drop=True)
-
-    st.markdown(
-        f'**Task**: {"/".join(group_submissions[get_edu_name_columns(group_submissions)].iloc[0])}<br/>'
-        f'**User**: {group_submissions[EduColumnName.USER_ID.value].iloc[0]}',
-        unsafe_allow_html=True,
-    )
-
-    if group_submissions[EduColumnName.TASK_TYPE.value].iloc[0] == EduTaskType.THEORY.value:
-        # TODO: show visualizations for theory groups too (for example, quiz results)
-        st.info("It's a theory group. Please choose another group.")
-        st.stop()
 
     tests_timeline = convert_tests_to_timeline(group_submissions)
 

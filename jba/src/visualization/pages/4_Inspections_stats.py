@@ -17,9 +17,11 @@ from jba.src.inspections.analysis import (
     get_inspection_fixing_examples,
 )
 from jba.src.models.edu_columns import EduColumnName
-from jba.src.visualization.common import get_edu_name_columns
-
-ALL_CHOICE_OPTIONS = 'All'
+from jba.src.visualization.common import (
+    show_filter_by_task,
+    ALL_CHOICE_OPTIONS,
+    show_exclude_post_correct_submissions_flag,
+)
 
 
 def plot_inspections_stats(stats: pd.DataFrame, top: int, normalize: bool):
@@ -78,27 +80,15 @@ def main():
     st.title('Inspections stats')
 
     submissions = read_submissions(st.session_state.submissions_path)
-
     course_structure = read_df(st.session_state.course_structure_path)
-    edu_name_columns = get_edu_name_columns(submissions)
+
+    with st.sidebar:
+        submissions = show_exclude_post_correct_submissions_flag(submissions)
 
     left, right = st.columns([3, 1])
 
     with left:
-        submissions_by_task = submissions.groupby(edu_name_columns)
-
-        tasks = filter(
-            lambda name: name in submissions_by_task.groups,
-            course_structure[edu_name_columns].itertuples(index=False, name=None),
-        )
-
-        task = st.selectbox(
-            'Task:',
-            options=[ALL_CHOICE_OPTIONS, *tasks],
-            format_func=lambda option: option if option == ALL_CHOICE_OPTIONS else '/'.join(option),
-        )
-
-        task_submissions = submissions if task == ALL_CHOICE_OPTIONS else submissions_by_task.get_group(task)
+        task, task_submissions = show_filter_by_task(submissions, course_structure, with_all_option=True)
 
     with right:
         file = st.selectbox(
@@ -117,7 +107,7 @@ def main():
             file = None
 
     with st.expander('Config:'):
-        left, right = st.columns(2)
+        left, right = st.columns([3, 1])
 
         with left:
             inspections_to_ignore = st.text_input(
@@ -139,8 +129,7 @@ def main():
                 value=min(10, number_of_inspections),
             )
 
-    with st.sidebar:
-        normalize = st.checkbox('Normalize data', value=True)
+            normalize = st.checkbox('Normalize data', value=True)
 
     inspections_stats = get_inspections_stats(task_submissions, file, inspections_to_ignore, normalize)
     plot_inspections_stats(inspections_stats, top=top, normalize=normalize)

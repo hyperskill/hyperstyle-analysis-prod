@@ -6,6 +6,9 @@ from jba.src.models.edu_columns import EduColumnName
 from jba.src.plots.task_attempt import plot_task_attempts
 from jba.src.plots.task_duplicates import plot_task_duplicates
 from jba.src.plots.task_solving import plot_task_solving
+from jba.src.visualization.common import get_edu_name_columns, show_exclude_post_correct_submissions_flag
+
+ALL_CHOICE_OPTIONS = 'All'
 
 
 def main():
@@ -15,6 +18,32 @@ def main():
 
     submissions = read_df(st.session_state.submissions_path)
     course_structure = read_df(st.session_state.course_structure_path)
+
+    with st.sidebar:
+        submissions = show_exclude_post_correct_submissions_flag(submissions)
+
+    edu_name_columns = get_edu_name_columns(submissions)
+    show_stats_for = st.radio('Show stats for: ', options=edu_name_columns, horizontal=True)
+    edu_name_columns = edu_name_columns[: edu_name_columns.index(show_stats_for) + 1]
+
+    # If the length of the edu_name_columns variable is larger than 1,
+    # then groups will be tuples, else they will be strings ...
+    grouped_submissions = submissions.groupby(edu_name_columns)
+
+    options = filter(
+        # ... and therefore we need to squeeze single element tuples.
+        lambda name: name in grouped_submissions.groups if len(name) > 1 else name[0] in grouped_submissions.groups,
+        course_structure[edu_name_columns].drop_duplicates().itertuples(index=False, name=None),
+    )
+
+    selection = st.selectbox(
+        f'{show_stats_for}:',
+        options=[ALL_CHOICE_OPTIONS, *options],
+        format_func=lambda option: option if option == ALL_CHOICE_OPTIONS else '/'.join(option),
+    )
+
+    selection = selection if len(selection) > 1 or selection == ALL_CHOICE_OPTIONS else selection[0]
+    submissions = submissions if selection == ALL_CHOICE_OPTIONS else grouped_submissions.get_group(selection)
 
     st.header('Basic stats')
 
@@ -27,6 +56,9 @@ def main():
 
     with right:
         st.metric('Number of solution groups:', submissions[SubmissionColumns.GROUP.value].nunique())
+
+    if show_stats_for == EduColumnName.TASK_NAME.value and selection != ALL_CHOICE_OPTIONS:
+        st.stop()
 
     st.header('Task attempts')
     fig = plot_task_attempts(submissions, course_structure, st.session_state.course_name)

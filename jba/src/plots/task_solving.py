@@ -11,54 +11,55 @@ from jba.src.plots.task_stat import TaskStat, calculate_tasks_stat
 from jba.src.plots.util import prepare_task_df_for_plots, plot_name, make_plot_pretty
 
 
-def _calculate_started_amount(tasks_stat: Dict[int, TaskStat], task_id: int) -> int:
+def _calculate_total_user_amount(tasks_stat: Dict[int, TaskStat], task_id: int) -> int:
     stats = tasks_stat.get(task_id)
     if stats is None:
         return 0
 
-    return stats.started
+    return stats.total_groups
 
 
-def _calculate_finished_amount(tasks_stat: Dict[int, TaskStat], task_id: int) -> int:
+def _calculate_users_that_solved_task(tasks_stat: Dict[int, TaskStat], task_id: int) -> int:
     stats = tasks_stat.get(task_id)
     if stats is None:
         return 0
 
-    return stats.finished
+    return stats.correct_groups
 
 
-def _calculate_unfinished_correct_amount(tasks_stat: Dict[int, TaskStat], task_id: int) -> int:
+def _calculate_users_that_failed_task(tasks_stat: Dict[int, TaskStat], task_id: int) -> int:
     stats = tasks_stat.get(task_id)
     if stats is None:
         return 0
 
-    return stats.unfinished
+    return stats.wrong_groups
 
 
 def plot_task_solving(course_data_df: pd.DataFrame, all_tasks_data_df: pd.DataFrame, course_name: Optional[str] = None):
-    started_column = 'started&finished'
-    finished_correct_column = 'finished_correct'
-    unfinished_column = 'unfinished'
+    total_column = 'total'
+    solved_column = 'solved'
+    failed_column = 'failed'
     tasks_stat = calculate_tasks_stat(course_data_df)
 
     tasks_df = prepare_task_df_for_plots(course_data_df, all_tasks_data_df)
-    tasks_df[started_column] = tasks_df.apply(
-        lambda row: _calculate_started_amount(tasks_stat, row[EduColumnName.TASK_ID.value]),
+    tasks_df[total_column] = tasks_df.apply(
+        lambda row: _calculate_total_user_amount(tasks_stat, row[EduColumnName.TASK_ID.value]),
         axis=1,
     )
-    tasks_df[finished_correct_column] = tasks_df.apply(
-        lambda row: _calculate_finished_amount(tasks_stat, row[EduColumnName.TASK_ID.value]),
+    tasks_df[solved_column] = tasks_df.apply(
+        lambda row: _calculate_users_that_solved_task(tasks_stat, row[EduColumnName.TASK_ID.value]),
         axis=1,
     )
-    tasks_df[unfinished_column] = tasks_df.apply(
-        lambda row: _calculate_unfinished_correct_amount(tasks_stat, row[EduColumnName.TASK_ID.value]),
+    tasks_df[failed_column] = tasks_df.apply(
+        lambda row: _calculate_users_that_failed_task(tasks_stat, row[EduColumnName.TASK_ID.value]),
         axis=1,
     )
 
     fig, ax = plt.subplots(dpi=300)
 
-    tasks_df.plot(kind='line', x=EduColumnName.TASK_NAME.value, y=started_column, color='red', ax=ax)
-    tasks_df.plot(kind='line', x=EduColumnName.TASK_NAME.value, y=unfinished_column, color='black', ax=ax)
+    tasks_df.plot(kind='line', x=EduColumnName.TASK_NAME.value, y=total_column, color='black', ax=ax)
+    tasks_df.plot(kind='line', x=EduColumnName.TASK_NAME.value, y=solved_column, color='green', ax=ax)
+    tasks_df.plot(kind='line', x=EduColumnName.TASK_NAME.value, y=failed_column, color='red', ax=ax)
     make_plot_pretty(ax, tasks_df, plot_name('task solving process', course_name), "number of users")
 
     return fig

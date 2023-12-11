@@ -41,7 +41,7 @@ def _count_duplicates_submissions(group: pd.DataFrame) -> List[int]:
     return duplicate_submissions
 
 
-def _compute_stats(task_id: int, course_data_df: pd.DataFrame) -> Optional[pd.Series]:
+def _compute_stats(task_id: int, course_data_df: pd.DataFrame) -> pd.Series:
     number_of_duplicates = (
         course_data_df[course_data_df[EduColumnName.TASK_ID.value] == task_id]
         .groupby(SubmissionColumns.GROUP.value)
@@ -50,7 +50,14 @@ def _compute_stats(task_id: int, course_data_df: pd.DataFrame) -> Optional[pd.Se
 
     if number_of_duplicates.empty:
         logger.warning(f'There are no submissions for task#{task_id}')
-        return None
+        return pd.Series(
+            {
+                MIN_STATS_COLUMN: 0,
+                MAX_STATS_COLUMN: 0,
+                MEAN_STATS_COLUMNS: 0,
+                MEDIAN_STATS_COLUMN: 0,
+            }
+        )
 
     return pd.Series(
         {

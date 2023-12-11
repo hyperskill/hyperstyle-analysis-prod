@@ -6,8 +6,11 @@ import streamlit as st
 from matplotlib import pyplot as plt
 from matplotlib.patches import Patch
 
-from jba.src.models.edu_columns import EduColumnName
+from core.src.model.column_name import SubmissionColumns
+from jba.src.models.edu_columns import EduColumnName, EduTaskStatus
 from jba.src.models.edu_logs import TestDataField, TestData, TestResult
+
+ALL_CHOICE_OPTIONS = 'All'
 
 START_COLUMN = 'start'
 FINISH_COLUMN = 'finish'
@@ -265,3 +268,56 @@ def get_edu_name_columns(df: pd.DataFrame) -> List[str]:
     ]
 
     return [element for element in edu_name_columns if element in df_columns]
+
+
+def filter_post_correct_submissions(df: pd.DataFrame) -> pd.DataFrame:
+    filtered_df = df.groupby(SubmissionColumns.GROUP.value).apply(
+        lambda group: group[group.index <= group[EduColumnName.STATUS.value].eq(EduTaskStatus.CORRECT.value).idxmax()]
+        if EduTaskStatus.CORRECT.value in group[EduColumnName.STATUS.value].unique()
+        else group
+    )
+
+    filtered_df.reset_index(drop=True, inplace=True)
+
+    group_sizes = filtered_df.groupby(SubmissionColumns.GROUP.value).apply(len).to_dict()
+    filtered_df[SubmissionColumns.TOTAL_ATTEMPTS.value] = filtered_df[SubmissionColumns.GROUP.value].map(group_sizes)
+
+    return filtered_df
+
+
+def show_exclude_post_correct_submissions_flag(df: pd.DataFrame) -> pd.DataFrame:
+    exclude_post_correct_submissions = st.checkbox(
+        'Exclude post-correct submissions',
+        value=False,
+        help=(
+            'If checked, then all submissions within one group '
+            'that occur after the first correct submissions will be ignored.'
+        ),
+    )
+
+    if exclude_post_correct_submissions:
+        return filter_post_correct_submissions(df)
+
+    return df
+
+
+def show_filter_by_task(
+    submissions: pd.DataFrame,
+    course_structure: pd.DataFrame,
+    with_all_option: bool = False,
+) -> Tuple[Tuple[str] | str, pd.DataFrame]:
+    edu_name_columns = get_edu_name_columns(submissions)
+    submissions_by_task = submissions.groupby(edu_name_columns)
+
+    tasks = filter(
+        lambda name: name in submissions_by_task.groups,
+        course_structure[edu_name_columns].itertuples(index=False, name=None),
+    )
+
+    task = st.selectbox(
+        'Task:',
+        options=[ALL_CHOICE_OPTIONS, *tasks] if with_all_option else tasks,
+        format_func=lambda option: option if option == ALL_CHOICE_OPTIONS else '/'.join(option),
+    )
+
+    return task, submissions if task == ALL_CHOICE_OPTIONS else submissions_by_task.get_group(task)
