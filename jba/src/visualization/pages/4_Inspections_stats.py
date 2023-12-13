@@ -22,6 +22,7 @@ from jba.src.visualization.common import (
     filter_post_correct_submissions,
     filter_duplicate_submissions,
     select_file,
+    filter_invalid_submissions,
 )
 
 
@@ -85,6 +86,7 @@ def main():
 
     with st.sidebar:
         submissions = filter_post_correct_submissions(submissions)
+        submissions = filter_invalid_submissions(submissions)
         submissions = filter_duplicate_submissions(submissions)
 
     left, right = st.columns([3, 1])
@@ -93,7 +95,7 @@ def main():
         task, submissions = filter_by_task(submissions, course_structure, with_all_option=True)
 
     with right:
-        file = select_file(submissions, disabled=task == ALL_CHOICE_OPTIONS)
+        file = select_file(submissions, disabled=task == ALL_CHOICE_OPTIONS, with_all_option=True)
 
     with st.expander('Config:'):
         left, right = st.columns([3, 1])

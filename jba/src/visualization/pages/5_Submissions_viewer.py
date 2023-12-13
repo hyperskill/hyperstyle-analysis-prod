@@ -1,5 +1,4 @@
 import json
-import operator
 
 import pandas as pd
 
@@ -15,7 +14,10 @@ from jba.src.visualization.common import (
     filter_by_user,
     filter_by_group,
     select_view_type,
-    ViewType, select_file, filter_duplicate_submissions,
+    ViewType,
+    select_file,
+    filter_duplicate_submissions,
+    filter_invalid_submissions,
 )
 from jba.src.common import get_edu_name_columns
 
@@ -116,6 +118,7 @@ def main():
 
     with st.sidebar:
         submissions = filter_post_correct_submissions(submissions)
+        submissions = filter_invalid_submissions(submissions)
         submissions = filter_duplicate_submissions(submissions)
 
     columns = st.columns([1, 2, 1, 2, 1])

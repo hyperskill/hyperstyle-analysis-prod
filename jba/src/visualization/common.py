@@ -43,7 +43,7 @@ def filter_post_correct_submissions(submissions: pd.DataFrame) -> pd.DataFrame:
 
 
 def filter_duplicate_submissions(submissions: pd.DataFrame) -> pd.DataFrame:
-    filter_duplicate_submissions_flag = st.checkbox('Exclude duplicate solutions:', value=False)
+    filter_duplicate_submissions_flag = st.checkbox('Exclude duplicate submissions', value=False)
 
     if not filter_duplicate_submissions_flag:
         return submissions
@@ -52,6 +52,24 @@ def filter_duplicate_submissions(submissions: pd.DataFrame) -> pd.DataFrame:
         lambda group: group.loc[
             group[EduColumnName.CODE_SNIPPETS.value].shift() != group[EduColumnName.CODE_SNIPPETS.value]
         ]
+    )
+
+    return _fix_submissions_after_filtering(filtered_df)
+
+
+def filter_invalid_submissions(submissions: pd.DataFrame) -> pd.DataFrame:
+    filter_invalid_submissions_flag = st.checkbox(
+        'Exclude invalid submissions',
+        value=False,
+        help='If checked, then all submissions within one group, that have compile exceptions will be ignored.',
+    )
+
+    if not filter_invalid_submissions_flag:
+        return submissions
+
+    filtered_df = submissions.groupby(SubmissionColumns.GROUP.value, as_index=False).apply(
+        # Leave submission if it has no exceptions or a list of them is empty.
+        lambda group: group[group[EduColumnName.EXCEPTIONS.value].eq('[]', fill_value='[]')]
     )
 
     return _fix_submissions_after_filtering(filtered_df)
@@ -146,16 +164,15 @@ def select_view_type(disabled: bool = False) -> ViewType:
     )
 
 
-def select_file(submissions: pd.DataFrame, disabled: bool = False) -> Optional[str]:
+def select_file(submissions: pd.DataFrame, disabled: bool = False, with_all_option: bool = False) -> Optional[str]:
+    options = map(
+        operator.itemgetter('name'),
+        submissions[EduColumnName.CODE_SNIPPETS.value].values[0],
+    )
+
     file = st.selectbox(
         'File:',
-        options=[
-            ALL_CHOICE_OPTIONS,
-            *map(
-                operator.itemgetter('name'),
-                submissions[EduColumnName.CODE_SNIPPETS.value].values[0],
-            ),
-        ],
+        options=[ALL_CHOICE_OPTIONS, *options] if with_all_option else options,
         disabled=disabled,
     )
 

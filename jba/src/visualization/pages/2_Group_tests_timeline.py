@@ -11,6 +11,7 @@ from jba.src.visualization.common import (
     filter_by_task,
     filter_by_group,
     filter_duplicate_submissions,
+    filter_invalid_submissions,
 )
 from jba.src.test_logs.analysis import convert_tests_to_timeline, aggregate_tests_timeline, START_COLUMN, FINISH_COLUMN
 
@@ -118,6 +119,7 @@ def main():
 
     with st.sidebar:
         submissions = filter_post_correct_submissions(submissions)
+        submissions = filter_invalid_submissions(submissions)
         submissions = filter_duplicate_submissions(submissions)
 
     left, right = st.columns([3, 1])
