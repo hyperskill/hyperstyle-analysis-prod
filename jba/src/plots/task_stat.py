@@ -31,7 +31,7 @@ def calculate_tasks_stat(course_data_df: pd.DataFrame) -> Dict[int, TaskStat]:
 
         wrong_groups = total_groups - correct_groups
 
-        total_attempts_by_group = task_data.groupby(SubmissionColumns.GROUP.value).apply(len)
+        total_attempts_by_group = task_data.groupby(SubmissionColumns.GROUP.value).size()
 
         median_attempts = total_attempts_by_group.median()
         min_attempts = total_attempts_by_group.min()

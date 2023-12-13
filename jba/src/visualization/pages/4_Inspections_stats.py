@@ -1,5 +1,4 @@
 import json
-import operator
 from pathlib import Path
 from typing import Optional
 
@@ -18,9 +17,11 @@ from jba.src.inspections.analysis import (
 )
 from jba.src.models.edu_columns import EduColumnName
 from jba.src.visualization.common import (
-    show_filter_by_task,
+    filter_by_task,
     ALL_CHOICE_OPTIONS,
-    show_exclude_post_correct_submissions_flag,
+    filter_post_correct_submissions,
+    filter_duplicate_submissions,
+    select_file,
 )
 
 
@@ -83,28 +84,16 @@ def main():
     course_structure = read_df(st.session_state.course_structure_path)
 
     with st.sidebar:
-        submissions = show_exclude_post_correct_submissions_flag(submissions)
+        submissions = filter_post_correct_submissions(submissions)
+        submissions = filter_duplicate_submissions(submissions)
 
     left, right = st.columns([3, 1])
 
     with left:
-        task, task_submissions = show_filter_by_task(submissions, course_structure, with_all_option=True)
+        task, submissions = filter_by_task(submissions, course_structure, with_all_option=True)
 
     with right:
-        file = st.selectbox(
-            'File:',
-            options=[
-                ALL_CHOICE_OPTIONS,
-                *map(
-                    operator.itemgetter('name'),
-                    task_submissions[EduColumnName.CODE_SNIPPETS.value].values[0],
-                ),
-            ],
-            disabled=(task == ALL_CHOICE_OPTIONS),
-        )
-
-        if file == ALL_CHOICE_OPTIONS:
-            file = None
+        file = select_file(submissions, disabled=task == ALL_CHOICE_OPTIONS)
 
     with st.expander('Config:'):
         left, right = st.columns([3, 1])
@@ -120,7 +109,7 @@ def main():
             ).split(',')
 
         with right:
-            number_of_inspections = len(find_unique_inspections(task_submissions, file) - set(inspections_to_ignore))
+            number_of_inspections = len(find_unique_inspections(submissions, file) - set(inspections_to_ignore))
 
             top = st.number_input(
                 'Top:',
@@ -131,7 +120,7 @@ def main():
 
             normalize = st.checkbox('Normalize data', value=True)
 
-    inspections_stats = get_inspections_stats(task_submissions, file, inspections_to_ignore, normalize)
+    inspections_stats = get_inspections_stats(submissions, file, inspections_to_ignore, normalize)
     plot_inspections_stats(inspections_stats, top=top, normalize=normalize)
 
     inspections_to_choose = inspections_stats.head(top).index[
@@ -147,7 +136,7 @@ def main():
 
     with left:
         inspection = st.selectbox('Inspection:', options=inspections_to_choose)
-        examples = find_examples(task_submissions, inspection, file)
+        examples = find_examples(submissions, inspection, file)
 
     with middle:
         example_number = st.number_input('Example:', min_value=0, max_value=len(examples) - 1)
