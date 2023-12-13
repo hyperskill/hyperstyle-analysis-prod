@@ -7,7 +7,7 @@ from core.src.model.column_name import SubmissionColumns
 from core.src.utils.df_utils import read_df
 from jba.src.models.edu_columns import EduColumnName
 from jba.src.models.edu_logs import TestDataField, TestResult
-from jba.src.visualization.common import (
+from jba.src.visualization.common.filters import (
     filter_post_correct_submissions,
     filter_by_task,
     filter_duplicate_submissions,

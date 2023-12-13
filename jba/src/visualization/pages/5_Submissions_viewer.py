@@ -8,20 +8,18 @@ import streamlit as st
 from jba.src.inspections.analysis import find_code_snippet
 from jba.src.models.edu_columns import EduColumnName, EduTaskType, EduTaskStatus
 from jba.src.models.edu_logs import TestData, TestResult, ExceptionData
-from jba.src.visualization.common import (
+from jba.src.visualization.common.filters import (
     filter_by_task,
     filter_post_correct_submissions,
     filter_by_user,
     filter_by_group,
-    select_view_type,
-    ViewType,
-    select_file,
     filter_duplicate_submissions,
     filter_invalid_submissions,
 )
-from jba.src.common import get_edu_name_columns
 
 from diff_viewer import diff_viewer
+from jba.src.visualization.common.utils import get_edu_name_columns
+from jba.src.visualization.common.widgets import ViewType, select_file, select_view_type
 
 
 def show_group_info(group: pd.DataFrame):

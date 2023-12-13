@@ -1,15 +1,10 @@
-import operator
-from enum import Enum
-from typing import Tuple, Optional
+from typing import Tuple
 
 import pandas as pd
 import streamlit as st
-
 from core.src.model.column_name import SubmissionColumns
-from jba.src.common import get_edu_name_columns
 from jba.src.models.edu_columns import EduColumnName, EduTaskStatus
-
-ALL_CHOICE_OPTIONS = 'All'
+from jba.src.visualization.common.utils import get_edu_name_columns, ALL_CHOICE_OPTIONS
 
 
 def _fix_submissions_after_filtering(submissions: pd.DataFrame) -> pd.DataFrame:
@@ -148,35 +143,3 @@ def filter_by_number_of_attempts(submissions: pd.DataFrame) -> Tuple[int, pd.Dat
         number_of_attempts,
         submissions[submissions[SubmissionColumns.GROUP.value].isin(group_mask[group_mask].index)],
     )
-
-
-class ViewType(Enum):
-    PER_SUBMISSION = 'Per submission'
-    DIFFERENCE = 'Difference'
-
-
-def select_view_type(disabled: bool = False) -> ViewType:
-    return st.selectbox(
-        'View type:',
-        options=ViewType,
-        format_func=lambda view_type: view_type.value,
-        disabled=disabled,
-    )
-
-
-def select_file(submissions: pd.DataFrame, disabled: bool = False, with_all_option: bool = False) -> Optional[str]:
-    options = map(
-        operator.itemgetter('name'),
-        submissions[EduColumnName.CODE_SNIPPETS.value].values[0],
-    )
-
-    file = st.selectbox(
-        'File:',
-        options=[ALL_CHOICE_OPTIONS, *options] if with_all_option else options,
-        disabled=disabled,
-    )
-
-    if file == ALL_CHOICE_OPTIONS:
-        return None
-
-    return file

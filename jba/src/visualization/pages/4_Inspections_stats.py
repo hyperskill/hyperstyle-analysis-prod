@@ -16,14 +16,14 @@ from jba.src.inspections.analysis import (
     get_inspection_fixing_examples,
 )
 from jba.src.models.edu_columns import EduColumnName
-from jba.src.visualization.common import (
+from jba.src.visualization.common.filters import (
     filter_by_task,
-    ALL_CHOICE_OPTIONS,
     filter_post_correct_submissions,
     filter_duplicate_submissions,
-    select_file,
     filter_invalid_submissions,
 )
+from jba.src.visualization.common.utils import ALL_CHOICE_OPTIONS
+from jba.src.visualization.common.widgets import select_file
 
 
 def plot_inspections_stats(stats: pd.DataFrame, top: int, normalize: bool):

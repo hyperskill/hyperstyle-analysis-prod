@@ -6,13 +6,13 @@ from jba.src.models.edu_columns import EduColumnName
 from jba.src.plots.task_attempt import plot_task_attempts
 from jba.src.plots.task_duplicates import plot_task_duplicates
 from jba.src.plots.task_solving import plot_task_solving
-from jba.src.visualization.common import (
+from jba.src.visualization.common.filters import (
     filter_post_correct_submissions,
     filter_duplicate_submissions,
     filter_invalid_submissions,
     filter_by_edu_columns,
-    ALL_CHOICE_OPTIONS,
 )
+from jba.src.visualization.common.utils import ALL_CHOICE_OPTIONS
 
 
 def main():
