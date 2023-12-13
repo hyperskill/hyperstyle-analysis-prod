@@ -9,12 +9,10 @@ from jba.src.plots.task_solving import plot_task_solving
 from jba.src.visualization.common import (
     filter_post_correct_submissions,
     filter_duplicate_submissions,
+    filter_invalid_submissions,
     filter_by_edu_columns,
     ALL_CHOICE_OPTIONS,
 )
-
-
-
 
 
 def main():
@@ -27,6 +25,7 @@ def main():
 
     with st.sidebar:
         submissions = filter_post_correct_submissions(submissions)
+        submissions = filter_invalid_submissions(submissions)
         submissions = filter_duplicate_submissions(submissions)
 
     show_stats_for, selection, submissions = filter_by_edu_columns(course_structure, submissions)
@@ -47,15 +46,15 @@ def main():
         st.stop()
 
     st.header('Task attempts')
-    fig = plot_task_attempts(submissions, course_structure, st.session_state.course_name)
+    fig = plot_task_attempts(submissions, course_structure)
     st.pyplot(fig)
 
     st.header('Task solving')
-    fig = plot_task_solving(submissions, course_structure, st.session_state.course_name)
+    fig = plot_task_solving(submissions, course_structure)
     st.pyplot(fig)
 
     st.header('Task duplicates')
-    fig = plot_task_duplicates(submissions, course_structure, st.session_state.course_name)
+    fig = plot_task_duplicates(submissions, course_structure)
     st.pyplot(fig)
 
 
