@@ -8,7 +8,7 @@ import pandas as pd
 from core.src.model.column_name import SubmissionColumns
 from core.src.model.quality.issue.hyperstyle_issue import HyperstyleIssue
 from jba.src.models.edu_columns import EduColumnName
-from jba.src.common import get_edu_name_columns
+from jba.src.visualization.common.utils import get_edu_name_columns
 
 
 def _filter_inspections(
