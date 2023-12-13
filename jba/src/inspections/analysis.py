@@ -161,7 +161,9 @@ def get_inspection_fixing_examples(
             file,
         )
 
-        for file_path in previous_issues_per_file.keys():
+        # We use an intersection here because it is possible that two neighboring submissions
+        # may have different files (for example, in case when the course structure has been changed)
+        for file_path in previous_issues_per_file.keys() & current_issues_per_file.keys():
             previous_issues = previous_issues_per_file[file_path]
             current_issues = current_issues_per_file[file_path]
 
