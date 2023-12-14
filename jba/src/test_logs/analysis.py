@@ -1,29 +1,19 @@
 import itertools
-from typing import TypeVar, Tuple, Sequence, List, Optional
+from typing import Sequence, List, Optional, TypeVar, Tuple
 
 import pandas as pd
-import streamlit as st
-from matplotlib import pyplot as plt
-from matplotlib.patches import Patch
 
-from core.src.model.column_name import SubmissionColumns
-from jba.src.models.edu_columns import EduColumnName, EduTaskStatus
-from jba.src.models.edu_logs import TestDataField, TestData, TestResult
+from jba.src.models.edu_columns import EduColumnName
+from jba.src.models.edu_logs import TestData, TestResult, TestDataField
 
-ALL_CHOICE_OPTIONS = 'All'
-
-START_COLUMN = 'start'
-FINISH_COLUMN = 'finish'
-
-FAILED_COLOR = 'red'
-IGNORED_COLOR = 'yellow'
-PASSED_COLOR = 'green'
-DUPLICATE_COLOR = '#d3d3d3'
 
 T = TypeVar('T')
 
 # element, start, finish
 TimelineItem = Tuple[T, int, int]
+
+START_COLUMN = 'start'
+FINISH_COLUMN = 'finish'
 
 
 def _convert_to_timeline(elements: Sequence[T]) -> List[TimelineItem]:
@@ -71,18 +61,6 @@ def _find_test_result(
         ).result
     except StopIteration:
         return None
-
-
-def _get_result_color(result: TestResult) -> str:
-    match result:
-        case TestResult.FAILED:
-            return FAILED_COLOR
-        case TestResult.PASSED:
-            return PASSED_COLOR
-        case TestResult.IGNORED:
-            return IGNORED_COLOR
-
-    return 'black'
 
 
 def convert_tests_to_timeline(group: pd.DataFrame) -> pd.DataFrame:
@@ -184,140 +162,3 @@ def aggregate_tests_timeline(tests_timeline: pd.DataFrame) -> pd.DataFrame:
             pd.DataFrame(aggregated_tests_timeline_data, columns=non_parametrized_tests_timeline.columns),
         ]
     ).reset_index(drop=True)
-
-
-def plot_tests_timeline(tests_timeline: pd.DataFrame, duplicate_attempts: List[int], invalid_attempts: List[int]):
-    """
-    Plot tests timeline.
-
-    :param tests_timeline: Tests timeline.
-    :param duplicate_attempts: Numbers of submissions with duplicate attempts.
-    :param invalid_attempts: Numbers of submissions with invalid attempts.
-    """
-    timeline_by_unique_test_name = tests_timeline.groupby(
-        [TestDataField.CLASS_NAME.value, TestDataField.METHOD_NAME.value, TestDataField.TEST_NUMBER.value],
-        dropna=False,
-    )
-
-    fig, ax = plt.subplots()
-
-    yticks = []
-    yticklabels = []
-    for i, (unique_test_name, test_timeline) in enumerate(timeline_by_unique_test_name, start=1):
-        class_name, method_name, test_number = unique_test_name
-
-        xranges = []
-        colors = []
-        for row in test_timeline.itertuples():
-            start = getattr(row, START_COLUMN)
-            finish = getattr(row, FINISH_COLUMN)
-            duration = finish - start
-            color = _get_result_color(getattr(row, TestDataField.RESULT.value))
-
-            if duration == 0:
-                plt.plot(start, i + 0.25, marker='o', markerfacecolor=color, markeredgecolor=color, markersize=5)
-            else:
-                xranges.append((start, duration))
-                colors.append(color)
-
-        test_name = f'{class_name}.{method_name}'
-        if not pd.isna(test_number):
-            # We use explicit string concatenation here for the sake of brevity
-            test_name += f'[{int(test_number)}]'  # noqa: WPS336
-
-        yticks.append(i + 0.25)
-        yticklabels.append(test_name)
-
-        plt.broken_barh(xranges=xranges, yrange=(i, 0.5), facecolors=colors)
-
-    ax.set_yticks(yticks)
-    ax.set_yticklabels(yticklabels)
-    ax.invert_yaxis()
-
-    ax.set_xlabel('Attempt')
-
-    ax.legend(
-        handles=[
-            Patch(facecolor=FAILED_COLOR, label='Failed'),
-            Patch(facecolor=IGNORED_COLOR, label='Ignored'),
-            Patch(facecolor=PASSED_COLOR, label='Passed'),
-            Patch(facecolor=DUPLICATE_COLOR, label='Duplicate'),
-        ],
-        bbox_to_anchor=(1.02, 1),
-        borderaxespad=0,
-        loc='upper left',
-    )
-
-    left_boundary = min([tests_timeline[START_COLUMN].min(), *invalid_attempts])
-    right_boundary = max([tests_timeline[FINISH_COLUMN].max(), *invalid_attempts])
-    ax.set_xticks(range(left_boundary, right_boundary + 1))
-
-    for attempt in duplicate_attempts:
-        ax.get_xticklabels()[attempt - 1].set_color(DUPLICATE_COLOR)
-
-    st.pyplot(fig)
-
-
-def get_edu_name_columns(df: pd.DataFrame) -> List[str]:
-    df_columns = df.columns.tolist()
-
-    edu_name_columns = [
-        EduColumnName.SECTION_NAME.value,
-        EduColumnName.LESSON_NAME.value,
-        EduColumnName.TASK_NAME.value,
-    ]
-
-    return [element for element in edu_name_columns if element in df_columns]
-
-
-def filter_post_correct_submissions(df: pd.DataFrame) -> pd.DataFrame:
-    filtered_df = df.groupby(SubmissionColumns.GROUP.value).apply(
-        lambda group: group[group.index <= group[EduColumnName.STATUS.value].eq(EduTaskStatus.CORRECT.value).idxmax()]
-        if EduTaskStatus.CORRECT.value in group[EduColumnName.STATUS.value].unique()
-        else group
-    )
-
-    filtered_df.reset_index(drop=True, inplace=True)
-
-    group_sizes = filtered_df.groupby(SubmissionColumns.GROUP.value).apply(len).to_dict()
-    filtered_df[SubmissionColumns.TOTAL_ATTEMPTS.value] = filtered_df[SubmissionColumns.GROUP.value].map(group_sizes)
-
-    return filtered_df
-
-
-def show_exclude_post_correct_submissions_flag(df: pd.DataFrame) -> pd.DataFrame:
-    exclude_post_correct_submissions = st.checkbox(
-        'Exclude post-correct submissions',
-        value=False,
-        help=(
-            'If checked, then all submissions within one group '
-            'that occur after the first correct submissions will be ignored.'
-        ),
-    )
-
-    if exclude_post_correct_submissions:
-        return filter_post_correct_submissions(df)
-
-    return df
-
-
-def show_filter_by_task(
-    submissions: pd.DataFrame,
-    course_structure: pd.DataFrame,
-    with_all_option: bool = False,
-) -> Tuple[Tuple[str] | str, pd.DataFrame]:
-    edu_name_columns = get_edu_name_columns(submissions)
-    submissions_by_task = submissions.groupby(edu_name_columns)
-
-    tasks = filter(
-        lambda name: name in submissions_by_task.groups,
-        course_structure[edu_name_columns].itertuples(index=False, name=None),
-    )
-
-    task = st.selectbox(
-        'Task:',
-        options=[ALL_CHOICE_OPTIONS, *tasks] if with_all_option else tasks,
-        format_func=lambda option: option if option == ALL_CHOICE_OPTIONS else '/'.join(option),
-    )
-
-    return task, submissions if task == ALL_CHOICE_OPTIONS else submissions_by_task.get_group(task)

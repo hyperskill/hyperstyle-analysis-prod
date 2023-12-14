@@ -6,9 +6,13 @@ from jba.src.models.edu_columns import EduColumnName
 from jba.src.plots.task_attempt import plot_task_attempts
 from jba.src.plots.task_duplicates import plot_task_duplicates
 from jba.src.plots.task_solving import plot_task_solving
-from jba.src.visualization.common import get_edu_name_columns, show_exclude_post_correct_submissions_flag
-
-ALL_CHOICE_OPTIONS = 'All'
+from jba.src.visualization.common.filters import (
+    filter_post_correct_submissions,
+    filter_duplicate_submissions,
+    filter_invalid_submissions,
+    filter_by_edu_columns,
+)
+from jba.src.visualization.common.utils import ALL_CHOICE_OPTIONS
 
 
 def main():
@@ -20,30 +24,11 @@ def main():
     course_structure = read_df(st.session_state.course_structure_path)
 
     with st.sidebar:
-        submissions = show_exclude_post_correct_submissions_flag(submissions)
+        submissions = filter_post_correct_submissions(submissions)
+        submissions = filter_invalid_submissions(submissions)
+        submissions = filter_duplicate_submissions(submissions)
 
-    edu_name_columns = get_edu_name_columns(submissions)
-    show_stats_for = st.radio('Show stats for: ', options=edu_name_columns, horizontal=True)
-    edu_name_columns = edu_name_columns[: edu_name_columns.index(show_stats_for) + 1]
-
-    # If the length of the edu_name_columns variable is larger than 1,
-    # then groups will be tuples, else they will be strings ...
-    grouped_submissions = submissions.groupby(edu_name_columns)
-
-    options = filter(
-        # ... and therefore we need to squeeze single element tuples.
-        lambda name: name in grouped_submissions.groups if len(name) > 1 else name[0] in grouped_submissions.groups,
-        course_structure[edu_name_columns].drop_duplicates().itertuples(index=False, name=None),
-    )
-
-    selection = st.selectbox(
-        f'{show_stats_for}:',
-        options=[ALL_CHOICE_OPTIONS, *options],
-        format_func=lambda option: option if option == ALL_CHOICE_OPTIONS else '/'.join(option),
-    )
-
-    selection = selection if len(selection) > 1 or selection == ALL_CHOICE_OPTIONS else selection[0]
-    submissions = submissions if selection == ALL_CHOICE_OPTIONS else grouped_submissions.get_group(selection)
+    show_stats_for, selection, submissions = filter_by_edu_columns(course_structure, submissions)
 
     st.header('Basic stats')
 
@@ -61,15 +46,15 @@ def main():
         st.stop()
 
     st.header('Task attempts')
-    fig = plot_task_attempts(submissions, course_structure, st.session_state.course_name)
+    fig = plot_task_attempts(submissions, course_structure)
     st.pyplot(fig)
 
     st.header('Task solving')
-    fig = plot_task_solving(submissions, course_structure, st.session_state.course_name)
+    fig = plot_task_solving(submissions, course_structure)
     st.pyplot(fig)
 
     st.header('Task duplicates')
-    fig = plot_task_duplicates(submissions, course_structure, st.session_state.course_name)
+    fig = plot_task_duplicates(submissions, course_structure)
     st.pyplot(fig)
 
 

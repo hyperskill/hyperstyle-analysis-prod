@@ -7,14 +7,14 @@ from core.src.model.column_name import SubmissionColumns
 from core.src.utils.df_utils import read_df
 from jba.src.models.edu_columns import EduColumnName
 from jba.src.models.edu_logs import TestDataField, TestResult
-from jba.src.visualization.common import (
-    convert_tests_to_timeline,
-    aggregate_tests_timeline,
-    START_COLUMN,
-    FINISH_COLUMN,
-    show_exclude_post_correct_submissions_flag,
-    show_filter_by_task,
+from jba.src.visualization.common.filters import (
+    filter_post_correct_submissions,
+    filter_by_task,
+    filter_duplicate_submissions,
+    filter_by_number_of_attempts,
+    filter_invalid_submissions,
 )
+from jba.src.test_logs.analysis import convert_tests_to_timeline, aggregate_tests_timeline, START_COLUMN, FINISH_COLUMN
 
 
 # https://matplotlib.org/stable/gallery/images_contours_and_fields/image_annotated_heatmap.html#using-the-helper-function-code-style
@@ -115,42 +115,28 @@ def main():
 
     submissions = (
         submissions.groupby(SubmissionColumns.GROUP.value, as_index=False)
-        .apply(
-            lambda group: group.loc[
-                group[EduColumnName.CODE_SNIPPETS.value].shift() != group[EduColumnName.CODE_SNIPPETS.value]
-            ]
-        )
-        .droplevel(0)
-    )
-
-    submissions = (
-        submissions.groupby(SubmissionColumns.GROUP.value, as_index=False)
         .apply(lambda group: group.loc[~pd.isna(group[EduColumnName.TESTS.value])])
         .droplevel(0)
     )
 
     with st.sidebar:
-        submissions = show_exclude_post_correct_submissions_flag(submissions)
+        submissions = filter_post_correct_submissions(submissions)
+        submissions = filter_invalid_submissions(submissions)
+        submissions = filter_duplicate_submissions(submissions)
 
     left, right = st.columns([3, 1])
 
     with left:
-        task, task_submissions = show_filter_by_task(submissions, course_structure)
-        number_of_groups_in_task = len(task_submissions[SubmissionColumns.GROUP.value].unique())
+        task, submissions = filter_by_task(submissions, course_structure)
+        number_of_groups_in_task = len(submissions[SubmissionColumns.GROUP.value].unique())
 
     with right:
-        available_numbers_of_attempts = sorted(task_submissions.groupby(SubmissionColumns.GROUP.value).size().unique())
-        number_of_attempts = st.selectbox('Number of attempts:', available_numbers_of_attempts)
-
-    group_mask = task_submissions.groupby(SubmissionColumns.GROUP.value).size() == number_of_attempts
-    task_submissions_with_attempt = task_submissions[
-        task_submissions[SubmissionColumns.GROUP.value].isin(group_mask[group_mask].index)
-    ]
-    number_of_groups_in_task_attempt = len(task_submissions_with_attempt[SubmissionColumns.GROUP.value].unique())
+        number_of_attempts, submissions = filter_by_number_of_attempts(submissions)
+        attempt_groups = submissions[SubmissionColumns.GROUP.value].unique().tolist()
 
     with st.expander('Description:'):
-        st.write(f'Stats for {number_of_groups_in_task_attempt} groups out of {number_of_groups_in_task}')
-        st.write(f'Groups: {group_mask[group_mask].index.tolist()}')
+        st.write(f'Stats for {len(attempt_groups)} groups out of {number_of_groups_in_task}')
+        st.write(f'Groups: {attempt_groups}')
 
     # TODO: gray out tests from previous tasks
     # TODO: show chart for parametrized tests
@@ -164,7 +150,7 @@ def main():
     )
 
     pivoted_res = None
-    for name, group in task_submissions_with_attempt.groupby([SubmissionColumns.GROUP.value]):
+    for name, group in submissions.groupby(SubmissionColumns.GROUP.value):
         pivoted_tests = pivot_tests(group, number_of_attempts)
         if pivoted_res is None:
             pivoted_res = pivoted_tests.fillna(0)
@@ -206,7 +192,7 @@ def main():
         )  # noqa: WPS355
 
     chained_res = None
-    for name, group in task_submissions_with_attempt.groupby([SubmissionColumns.GROUP.value]):
+    for name, group in submissions.groupby(SubmissionColumns.GROUP.value):
         chained_tests = convert_tests_to_chain(group, number_of_attempts)
         if chained_res is None:
             chained_res = chained_tests
