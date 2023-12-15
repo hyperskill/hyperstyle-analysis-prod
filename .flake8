@@ -41,6 +41,8 @@ ignore =
     WPS305,
     # Forbid writing classes without base classes
     WPS306,
+    # Forbid multiple assignment targets for context managers
+    WPS316,
     # Forbid implicit string concatenation
     WPS326,
     # Forbid wrong for loop iter targets
