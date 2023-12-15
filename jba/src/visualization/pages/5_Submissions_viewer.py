@@ -122,7 +122,7 @@ def main():
     columns = st.columns([1, 2, 1, 2, 1])
 
     with columns[0]:
-        submissions = filter_by_user(submissions)
+        _, submissions = filter_by_user(submissions)
 
     with columns[1]:
         _, submissions = filter_by_task(submissions, course_structure, with_all_option=True)

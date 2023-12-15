@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, Optional
 
 import pandas as pd
 import streamlit as st
@@ -56,7 +56,7 @@ def filter_invalid_submissions(submissions: pd.DataFrame) -> pd.DataFrame:
     filter_invalid_submissions_flag = st.checkbox(
         'Exclude invalid submissions',
         value=False,
-        help='If checked, then all submissions within one group, that have compile exceptions will be ignored.',
+        help='If checked, then all submissions within one group, that have compilation exceptions will be ignored.',
     )
 
     if not filter_invalid_submissions_flag:
@@ -125,12 +125,12 @@ def filter_by_group(submissions: pd.DataFrame) -> Tuple[int, pd.DataFrame]:
     return group, submissions[submissions[SubmissionColumns.GROUP.value] == group].reset_index(drop=True)
 
 
-def filter_by_user(submissions: pd.DataFrame):
+def filter_by_user(submissions: pd.DataFrame) -> Tuple[Optional[str], pd.DataFrame]:
     user_id = st.text_input('User ID:')
     if user_id == '':
-        return submissions
+        return None, submissions
 
-    return submissions[submissions[SubmissionColumns.USER_ID.value] == user_id]
+    return user_id, submissions[submissions[SubmissionColumns.USER_ID.value] == user_id]
 
 
 def filter_by_number_of_attempts(submissions: pd.DataFrame) -> Tuple[int, pd.DataFrame]:
