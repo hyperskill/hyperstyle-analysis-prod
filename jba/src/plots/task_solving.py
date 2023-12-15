@@ -1,6 +1,6 @@
 import argparse
 import sys
-from typing import Dict, Optional
+from typing import Dict, Optional, Tuple
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -35,34 +35,41 @@ def _calculate_users_that_failed_task(tasks_stat: Dict[int, TaskStat], task_id: 
     return stats.wrong_groups
 
 
-def plot_task_solving(course_data_df: pd.DataFrame, all_tasks_data_df: pd.DataFrame, course_name: Optional[str] = None):
-    total_column = 'total'
-    solved_column = 'solved'
-    failed_column = 'failed'
-    tasks_stat = calculate_tasks_stat(course_data_df)
+TOTAL_COLUMN = 'total'
+SOLVED_COLUMN = 'solved'
+FAILED_COLUMN = 'failed'
 
+
+def calculate_solving_stats(course_data_df: pd.DataFrame, all_tasks_data_df: pd.DataFrame):
+    tasks_stat = calculate_tasks_stat(course_data_df)
     tasks_df = prepare_task_df_for_plots(course_data_df, all_tasks_data_df)
-    tasks_df[total_column] = tasks_df.apply(
+
+    tasks_df[TOTAL_COLUMN] = tasks_df.apply(
         lambda row: _calculate_total_user_amount(tasks_stat, row[EduColumnName.TASK_ID.value]),
         axis=1,
     )
-    tasks_df[solved_column] = tasks_df.apply(
+    tasks_df[SOLVED_COLUMN] = tasks_df.apply(
         lambda row: _calculate_users_that_solved_task(tasks_stat, row[EduColumnName.TASK_ID.value]),
         axis=1,
     )
-    tasks_df[failed_column] = tasks_df.apply(
+    tasks_df[FAILED_COLUMN] = tasks_df.apply(
         lambda row: _calculate_users_that_failed_task(tasks_stat, row[EduColumnName.TASK_ID.value]),
         axis=1,
     )
 
+    return tasks_df
+
+
+def plot_task_solving(stats: pd.DataFrame, course_name: Optional[str] = None) -> Tuple[plt.Figure, plt.Axes]:
     fig, ax = plt.subplots(dpi=300)
 
-    tasks_df.plot(kind='line', x=EduColumnName.TASK_NAME.value, y=total_column, color='black', ax=ax)
-    tasks_df.plot(kind='line', x=EduColumnName.TASK_NAME.value, y=solved_column, color='green', ax=ax)
-    tasks_df.plot(kind='line', x=EduColumnName.TASK_NAME.value, y=failed_column, color='red', ax=ax)
-    make_plot_pretty(ax, tasks_df, plot_name('task solving process', course_name), "number of users")
+    stats.plot(kind='line', x=EduColumnName.TASK_NAME.value, y=TOTAL_COLUMN, color='black', ax=ax)
+    stats.plot(kind='line', x=EduColumnName.TASK_NAME.value, y=SOLVED_COLUMN, color='green', ax=ax)
+    stats.plot(kind='line', x=EduColumnName.TASK_NAME.value, y=FAILED_COLUMN, color='red', ax=ax)
 
-    return fig
+    make_plot_pretty(ax, stats, plot_name('task solving process', course_name), "number of users")
+
+    return fig, ax
 
 
 def configure_parser(parser: argparse.ArgumentParser) -> None:
@@ -81,7 +88,8 @@ def main():
     course_data = read_df(args.preprocessed_course_data_path)
     tasks_data_df = read_df(args.course_structure_path)
 
-    plot_task_solving(course_data, tasks_data_df, args.course_name)
+    stats = calculate_solving_stats(course_data, tasks_data_df)
+    plot_task_solving(stats, args.course_name)
     plt.show()
 
 
