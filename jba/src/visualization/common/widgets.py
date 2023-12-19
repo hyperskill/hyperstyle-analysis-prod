@@ -27,9 +27,11 @@ def select_view_type(disabled: bool = False) -> ViewType:
 
 
 def select_file(submissions: pd.DataFrame, disabled: bool = False, with_all_option: bool = False) -> Optional[str]:
-    options = map(
-        operator.itemgetter('name'),
-        submissions[EduColumnName.CODE_SNIPPETS.value].values[0],
+    options = (
+        submissions[EduColumnName.CODE_SNIPPETS.value]
+        .apply(lambda code_snippets: list(map(operator.itemgetter('name'), code_snippets)))
+        .explode()
+        .unique()
     )
 
     file = st.selectbox(
