@@ -154,7 +154,7 @@ def _filter_by_suspicious_tests(submissions: pd.DataFrame, suspicious_median: in
 
     markdown_string = ''
     suspicious_groups = []
-    for task, task_submissions in submissions.groupby(edu_name_columns):
+    for task, task_submissions in submissions.groupby(edu_name_columns):  # noqa: WPS426
         # TODO: Not every group has statistics for all tests. Why?
         stats_by_group = (
             task_submissions.groupby(SubmissionColumns.GROUP.value)
@@ -166,9 +166,12 @@ def _filter_by_suspicious_tests(submissions: pd.DataFrame, suspicious_median: in
 
         suspicious_tests = test_stats[test_stats['median'] >= suspicious_median]
         if not suspicious_tests.empty:
-            markdown_string += f'* {"/".join(task)}\n'
-            for row in suspicious_tests.itertuples():
-                markdown_string += f'\t* {".".join(getattr(row, "Index"))} -- {getattr(row, "median")}\n'
+            # Ignoring WPS336 here because it looks more readable than using implicit concatenation
+            markdown_string += f'* {"/".join(task)}\n'  # noqa: WPS336
+            markdown_string += '\n'.join(  # noqa: WPS336
+                suspicious_tests.apply(lambda row: f'\t* {".".join(row.name)} -- {row["median"]}', axis=1)
+            )
+            markdown_string += '\n'  # noqa: WPS336
 
         suspicious_groups.extend(
             stats_by_group[stats_by_group[suspicious_tests.index].ge(suspicious_median).any(axis=1)].index
