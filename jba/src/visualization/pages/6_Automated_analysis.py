@@ -148,6 +148,7 @@ def show_failed_users_analysis(submissions: pd.DataFrame, course_structure: pd.D
     _filter_submissions_and_show_code_viewer(suspicious_submissions, course_structure)
 
 
+# TODO: filter submissions without tests and theory submissions + check stats_by_group for nans
 @st.cache_data
 def _filter_by_suspicious_tests(submissions: pd.DataFrame, suspicious_median: int) -> pd.DataFrame:
     edu_name_columns = get_edu_name_columns(submissions)
@@ -155,7 +156,6 @@ def _filter_by_suspicious_tests(submissions: pd.DataFrame, suspicious_median: in
     markdown_string = ''
     suspicious_groups = []
     for task, task_submissions in submissions.groupby(edu_name_columns):  # noqa: WPS426
-        # TODO: Not every group has statistics for all tests. Why?
         stats_by_group = (
             task_submissions.groupby(SubmissionColumns.GROUP.value)
             .apply(lambda group: calculate_group_test_stats(group, aggregate=True))
