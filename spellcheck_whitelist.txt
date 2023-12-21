@@ -19,6 +19,7 @@ dif
 dirs
 dotall
 dotenv
+droplevel
 dropna
 dtype
 dtypes
@@ -91,6 +92,7 @@ pyplot
 qodana
 qs
 reddit
+reindex
 removeprefix
 repo
 requestor
