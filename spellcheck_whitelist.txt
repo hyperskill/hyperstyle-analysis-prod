@@ -135,3 +135,5 @@ ylabel
 yrange
 yticklabels
 yticks
+reindex
+droplevel
