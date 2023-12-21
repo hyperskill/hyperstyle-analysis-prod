@@ -1,3 +1,4 @@
+WPS336
 arange
 astype
 barh
@@ -19,6 +20,7 @@ dif
 dirs
 dotall
 dotenv
+droplevel
 droplevel
 dropna
 dtype
@@ -93,6 +95,7 @@ qodana
 qs
 reddit
 reindex
+reindex
 removeprefix
 repo
 requestor
@@ -137,6 +140,3 @@ ylabel
 yrange
 yticklabels
 yticks
-reindex
-droplevel
-WPS336
