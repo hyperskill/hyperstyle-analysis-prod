@@ -1,5 +1,5 @@
 import itertools
-from typing import Sequence, List, Optional, TypeVar, Tuple
+from typing import Sequence, List, Optional, TypeVar, Tuple, Dict
 
 import pandas as pd
 
@@ -162,3 +162,98 @@ def aggregate_tests_timeline(tests_timeline: pd.DataFrame) -> pd.DataFrame:
             pd.DataFrame(aggregated_tests_timeline_data, columns=non_parametrized_tests_timeline.columns),
         ]
     ).reset_index(drop=True)
+
+
+def pivot_tests(group: pd.DataFrame, aggregate: bool = True) -> pd.DataFrame:
+    tests_timeline = convert_tests_to_timeline(group)
+    if aggregate:
+        tests_timeline = aggregate_tests_timeline(tests_timeline)
+
+    exploded_tests_timeline = pd.DataFrame(
+        [
+            (
+                getattr(row, TestDataField.CLASS_NAME.value),
+                getattr(row, TestDataField.METHOD_NAME.value),
+                getattr(row, TestDataField.TEST_NUMBER.value),
+                getattr(row, TestDataField.RESULT.value),
+                i,
+            )
+            for row in tests_timeline.itertuples()
+            for i in range(getattr(row, START_COLUMN), getattr(row, FINISH_COLUMN) + 1)
+        ],
+        columns=[
+            TestDataField.CLASS_NAME.value,
+            TestDataField.METHOD_NAME.value,
+            TestDataField.TEST_NUMBER.value,
+            TestDataField.RESULT.value,
+            'submission_number',
+        ],
+    )
+
+    pivoted_tests = exploded_tests_timeline.pivot(
+        index=[TestDataField.CLASS_NAME.value, TestDataField.METHOD_NAME.value, TestDataField.TEST_NUMBER.value],
+        columns='submission_number',
+        values=TestDataField.RESULT.value,
+    )
+
+    if pivoted_tests.columns.tolist() != list(range(1, len(group) + 1)):
+        columns_to_add = set(range(1, len(group) + 1)) - set(pivoted_tests.columns.tolist())
+        for column in columns_to_add:
+            pivoted_tests[column] = None
+
+        pivoted_tests = pivoted_tests.reindex(range(1, len(group) + 1), axis=1)
+
+    if aggregate:
+        pivoted_tests.index = pivoted_tests.index.droplevel(TestDataField.TEST_NUMBER.value)
+
+    return pivoted_tests
+
+
+def convert_test_results_to_numeral(df: pd.DataFrame) -> pd.DataFrame:
+    return df.replace({TestResult.FAILED: 0, TestResult.PASSED: 1, None: 0}).convert_dtypes()
+
+
+def convert_tests_to_chain(group: pd.DataFrame, aggregate: bool = True) -> pd.DataFrame:
+    pivoted_tests = convert_test_results_to_numeral(pivot_tests(group, aggregate))
+    return pivoted_tests.diff(axis=1).fillna(pivoted_tests)
+
+
+def calculate_group_test_stats(group: pd.DataFrame, aggregate: bool) -> Dict[str, int]:
+    pivoted_tests = pivot_tests(group, aggregate=aggregate)
+
+    test_attempts = {}
+    failed_test = set()
+
+    # If we don't want to count the first attempts, then it should be equal to 0
+    number_of_attempts = 1
+    for i, column in pivoted_tests.items():
+        passed_tests = pivoted_tests[column == TestResult.PASSED].index
+
+        if i == 1:
+            failed_test.update(pivoted_tests[column == TestResult.FAILED].index)
+
+            for test in passed_tests:
+                test_attempts[test] = 1
+
+            number_of_attempts += 1
+
+            continue
+
+        solved_tests = failed_test.intersection(passed_tests)
+        for test in solved_tests:
+            test_attempts[test] = number_of_attempts
+
+        if solved_tests:
+            failed_test.difference_update(solved_tests)
+            number_of_attempts = 1
+        else:
+            number_of_attempts += 1
+
+    return test_attempts
+
+
+def calculate_test_stats(stats_by_group: pd.DataFrame) -> pd.DataFrame:
+    test_stats = pd.concat([stats_by_group.min(), stats_by_group.max(), stats_by_group.median()], axis=1)
+    test_stats.columns = ['min', 'max', 'median']
+
+    return test_stats

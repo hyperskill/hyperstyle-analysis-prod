@@ -6,7 +6,6 @@ from matplotlib import pyplot as plt
 from core.src.model.column_name import SubmissionColumns
 from core.src.utils.df_utils import read_df
 from jba.src.models.edu_columns import EduColumnName
-from jba.src.models.edu_logs import TestDataField, TestResult
 from jba.src.visualization.common.filters import (
     filter_post_correct_submissions,
     filter_by_task,
@@ -14,7 +13,7 @@ from jba.src.visualization.common.filters import (
     filter_by_number_of_attempts,
     filter_invalid_submissions,
 )
-from jba.src.test_logs.analysis import convert_tests_to_timeline, aggregate_tests_timeline, START_COLUMN, FINISH_COLUMN
+from jba.src.test_logs.analysis import pivot_tests, convert_tests_to_chain, convert_test_results_to_numeral
 
 
 # https://matplotlib.org/stable/gallery/images_contours_and_fields/image_annotated_heatmap.html#using-the-helper-function-code-style
@@ -52,57 +51,6 @@ def heatmap(data, row_labels, col_labels, ax=None, cbar_kw=None, cbarlabel="", c
     ax.tick_params(which="minor", bottom=False, left=False)
 
     return im, cbar
-
-
-def pivot_tests(group: pd.DataFrame, number_of_submissions: int, aggregate: bool = True) -> pd.DataFrame:
-    tests_timeline = convert_tests_to_timeline(group)
-    if aggregate:
-        tests_timeline = aggregate_tests_timeline(tests_timeline)
-
-    exploded_tests_timeline = pd.DataFrame(
-        [
-            (
-                getattr(row, TestDataField.CLASS_NAME.value),
-                getattr(row, TestDataField.METHOD_NAME.value),
-                getattr(row, TestDataField.TEST_NUMBER.value),
-                getattr(row, TestDataField.RESULT.value),
-                i,
-            )
-            for row in tests_timeline.itertuples()
-            for i in range(getattr(row, START_COLUMN), getattr(row, FINISH_COLUMN) + 1)
-        ],
-        columns=[
-            TestDataField.CLASS_NAME.value,
-            TestDataField.METHOD_NAME.value,
-            TestDataField.TEST_NUMBER.value,
-            TestDataField.RESULT.value,
-            'submission_number',
-        ],
-    )
-
-    pivoted_tests = (
-        exploded_tests_timeline.pivot(
-            index=[TestDataField.CLASS_NAME.value, TestDataField.METHOD_NAME.value, TestDataField.TEST_NUMBER.value],
-            columns='submission_number',
-            values=TestDataField.RESULT.value,
-        )
-        .replace({TestResult.FAILED: 0, TestResult.PASSED: 1, None: 0})
-        .convert_dtypes()
-    )
-
-    if pivoted_tests.columns.tolist() != list(range(1, number_of_submissions + 1)):
-        columns_to_add = set(range(1, number_of_submissions + 1)) - set(pivoted_tests.columns.tolist())
-        for column in columns_to_add:
-            pivoted_tests[column] = None
-
-        pivoted_tests = pivoted_tests.reindex(range(1, number_of_submissions + 1), axis=1)
-
-    return pivoted_tests
-
-
-def convert_tests_to_chain(group: pd.DataFrame, aggregate: bool = True) -> pd.DataFrame:
-    pivoted_tests = pivot_tests(group, aggregate)
-    return pivoted_tests.diff(axis=1).fillna(pivoted_tests)
 
 
 def main():
@@ -151,7 +99,7 @@ def main():
 
     pivoted_res = None
     for name, group in submissions.groupby(SubmissionColumns.GROUP.value):
-        pivoted_tests = pivot_tests(group, number_of_attempts)
+        pivoted_tests = convert_test_results_to_numeral(pivot_tests(group, aggregate=True))
         if pivoted_res is None:
             pivoted_res = pivoted_tests.fillna(0)
             continue

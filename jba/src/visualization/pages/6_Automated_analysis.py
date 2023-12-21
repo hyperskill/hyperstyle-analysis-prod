@@ -9,6 +9,7 @@ from core.src.utils.df_utils import read_df
 from jba.src.models.edu_columns import EduColumnName, EduTaskStatus
 from jba.src.plots.task_attempt import plot_task_attempts, calculate_attempt_stats, MEDIAN_COLUMN
 from jba.src.plots.task_solving import calculate_solving_stats, FAILED_COLUMN, TOTAL_COLUMN, plot_task_solving
+from jba.src.test_logs.analysis import calculate_group_test_stats, calculate_test_stats
 from jba.src.visualization.common.filters import (
     filter_by_task,
     filter_by_group,
@@ -24,11 +25,13 @@ from jba.src.visualization.common.widgets import select_file, select_view_type, 
 class Analysis(Enum):
     BY_MEDIAN_ATTEMPTS = 'By median attempts'
     BY_FAILED_USERS = 'By failed users'
+    BY_MEDIAN_TEST_ATTEMPTS = 'By median test attempts'
 
     def run(self, submissions: pd.DataFrame, course_structure: pd.DataFrame):
         analysis_to_main_function = {
             Analysis.BY_MEDIAN_ATTEMPTS: show_median_attempts_analysis,
             Analysis.BY_FAILED_USERS: show_failed_users_analysis,
+            Analysis.BY_MEDIAN_TEST_ATTEMPTS: show_test_attempts_analysis,
         }
 
         return analysis_to_main_function[self](submissions, course_structure)
@@ -141,6 +144,47 @@ def show_failed_users_analysis(submissions: pd.DataFrame, course_structure: pd.D
         .groupby(SubmissionColumns.GROUP.value)
         .filter(lambda group: group[EduColumnName.STATUS.value].eq(EduTaskStatus.CORRECT.value).sum() == 0)
     )
+
+    _filter_submissions_and_show_code_viewer(suspicious_submissions, course_structure)
+
+
+@st.cache_data
+def _filter_by_suspicious_tests(submissions: pd.DataFrame, suspicious_median: int) -> pd.DataFrame:
+    edu_name_columns = get_edu_name_columns(submissions)
+
+    markdown_string = ''
+    suspicious_groups = []
+    for task, task_submissions in submissions.groupby(edu_name_columns):
+        # TODO: Not every group has statistics for all tests. Why?
+        stats_by_group = (
+            task_submissions.groupby(SubmissionColumns.GROUP.value)
+            .apply(lambda group: calculate_group_test_stats(group, aggregate=True))
+            .apply(pd.Series)
+        )
+
+        test_stats = calculate_test_stats(stats_by_group)
+
+        suspicious_tests = test_stats[test_stats['median'] >= suspicious_median]
+        if not suspicious_tests.empty:
+            markdown_string += f'* {"/".join(task)}\n'
+            for row in suspicious_tests.itertuples():
+                markdown_string += f'\t* {".".join(getattr(row, "Index"))} -- {getattr(row, "median")}\n'
+
+        suspicious_groups.extend(
+            stats_by_group[stats_by_group[suspicious_tests.index].ge(suspicious_median).any(axis=1)].index
+        )
+
+    if markdown_string:
+        st.write(markdown_string.strip())
+
+    return submissions[submissions[SubmissionColumns.GROUP.value].isin(suspicious_groups)]
+
+
+def show_test_attempts_analysis(submissions: pd.DataFrame, course_structure: pd.DataFrame) -> pd.DataFrame:
+    st.header('Test attempts analysis')
+
+    suspicious_median = st.number_input('Suspicious median:', value=3)
+    suspicious_submissions = _filter_by_suspicious_tests(submissions, suspicious_median)
 
     _filter_submissions_and_show_code_viewer(suspicious_submissions, course_structure)
 
