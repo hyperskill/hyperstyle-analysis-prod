@@ -148,7 +148,7 @@ def show_failed_users_analysis(submissions: pd.DataFrame, course_structure: pd.D
     _filter_submissions_and_show_code_viewer(suspicious_submissions, course_structure)
 
 
-# TODO: filter submissions without tests and theory submissions + check stats_by_group for nans
+# TODO: filter submissions without tests and theory submissions + check stats_by_group for none values
 @st.cache_data
 def _filter_by_suspicious_tests(submissions: pd.DataFrame, suspicious_median: int) -> pd.DataFrame:
     edu_name_columns = get_edu_name_columns(submissions)
