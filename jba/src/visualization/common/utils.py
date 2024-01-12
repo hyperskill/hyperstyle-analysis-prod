@@ -78,7 +78,7 @@ def read_submissions(path: Path, filters: PostprocessFilters) -> pd.DataFrame:
         submissions = submissions.groupby(SubmissionColumns.GROUP.value, as_index=False).apply(
             lambda group: group[
                 ~group[EduColumnName.EXCEPTIONS.value].apply(
-                    lambda exceptions: isinstance(exceptions, list) and len(exceptions) != 0
+                    lambda exceptions: isinstance(exceptions, list) and exceptions
                 )
             ]
         )
