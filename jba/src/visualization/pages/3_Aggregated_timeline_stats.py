@@ -5,15 +5,11 @@ from matplotlib import pyplot as plt
 
 from core.src.model.column_name import SubmissionColumns
 from core.src.utils.df_utils import read_df
-from jba.src.models.edu_columns import EduColumnName
-from jba.src.visualization.common.filters import (
-    filter_post_correct_submissions,
-    filter_by_task,
-    filter_duplicate_submissions,
-    filter_by_number_of_attempts,
-    filter_invalid_submissions,
-)
+from jba.src.models.edu_columns import EduColumnName, EduTaskType
 from jba.src.test_logs.analysis import pivot_tests, convert_tests_to_chain, convert_test_results_to_numeral
+from jba.src.visualization.common.filters import filter_by_task, filter_by_number_of_attempts
+from jba.src.visualization.common.utils import read_submissions, fix_submissions_after_filtering
+from jba.src.visualization.common.widgets import show_submission_postprocess_filters
 
 
 # https://matplotlib.org/stable/gallery/images_contours_and_fields/image_annotated_heatmap.html#using-the-helper-function-code-style
@@ -56,21 +52,17 @@ def heatmap(data, row_labels, col_labels, ax=None, cbar_kw=None, cbarlabel="", c
 def main():
     st.title('Aggregated timeline stats')
 
-    submissions = read_df(st.session_state.submissions_path)
+    filters = show_submission_postprocess_filters()
+    submissions = read_submissions(st.session_state.submissions_path, filters)
     course_structure = read_df(st.session_state.course_structure_path)
 
-    submissions = submissions[submissions.task_type != 'theory']
+    submissions = submissions[submissions[EduColumnName.TASK_TYPE.value] != EduTaskType.THEORY.value]
 
-    submissions = (
-        submissions.groupby(SubmissionColumns.GROUP.value, as_index=False)
-        .apply(lambda group: group.loc[~pd.isna(group[EduColumnName.TESTS.value])])
-        .droplevel(0)
+    submissions = submissions.groupby(SubmissionColumns.GROUP.value, as_index=False).apply(
+        lambda group: group.loc[~pd.isna(group[EduColumnName.TESTS.value])]
     )
 
-    with st.sidebar:
-        submissions = filter_post_correct_submissions(submissions)
-        submissions = filter_invalid_submissions(submissions)
-        submissions = filter_duplicate_submissions(submissions)
+    submissions = fix_submissions_after_filtering(submissions)
 
     left, right = st.columns([3, 1])
 
@@ -108,7 +100,7 @@ def main():
 
     fig, ax = plt.subplots()
     data = (pivoted_res / pivoted_res.max(None)).to_numpy(dtype=float)
-    im, cbar = heatmap(
+    heatmap(
         data,
         pivoted_res.index.map(lambda x: '.'.join(y for y in x if not pd.isna(y))),
         range(1, number_of_attempts + 1),
@@ -150,7 +142,7 @@ def main():
 
     fig, ax = plt.subplots()
     data = (chained_res / chained_res.abs().max(None)).to_numpy(dtype=float)
-    im, cbar = heatmap(
+    heatmap(
         data,
         chained_res.index.map(lambda x: '.'.join(y for y in x if not pd.isna(y))),
         range(1, number_of_attempts + 1),

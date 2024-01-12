@@ -2,72 +2,9 @@ from typing import Tuple, Optional
 
 import pandas as pd
 import streamlit as st
+
 from core.src.model.column_name import SubmissionColumns
-from jba.src.models.edu_columns import EduColumnName, EduTaskStatus
 from jba.src.visualization.common.utils import get_edu_name_columns, ALL_CHOICE_OPTIONS
-
-
-def _fix_submissions_after_filtering(submissions: pd.DataFrame) -> pd.DataFrame:
-    fixed_submissions = submissions.reset_index(drop=True)
-    fixed_submissions[SubmissionColumns.TOTAL_ATTEMPTS.value] = fixed_submissions[SubmissionColumns.GROUP.value].map(
-        fixed_submissions.groupby(SubmissionColumns.GROUP.value).size()
-    )
-    return fixed_submissions
-
-
-def filter_post_correct_submissions(submissions: pd.DataFrame) -> pd.DataFrame:
-    exclude_post_correct_submissions_flag = st.checkbox(
-        'Exclude post-correct submissions',
-        value=False,
-        help=(
-            'If checked, then all submissions within one group '
-            'that occur after the first correct submissions will be ignored.'
-        ),
-    )
-
-    if not exclude_post_correct_submissions_flag:
-        return submissions
-
-    filtered_df = submissions.groupby(SubmissionColumns.GROUP.value).apply(
-        lambda group: group[group.index <= group[EduColumnName.STATUS.value].eq(EduTaskStatus.CORRECT.value).idxmax()]
-        if EduTaskStatus.CORRECT.value in group[EduColumnName.STATUS.value].unique()
-        else group
-    )
-
-    return _fix_submissions_after_filtering(filtered_df)
-
-
-def filter_duplicate_submissions(submissions: pd.DataFrame) -> pd.DataFrame:
-    filter_duplicate_submissions_flag = st.checkbox('Exclude duplicate submissions', value=False)
-
-    if not filter_duplicate_submissions_flag:
-        return submissions
-
-    filtered_df = submissions.groupby(SubmissionColumns.GROUP.value, as_index=False).apply(
-        lambda group: group.loc[
-            group[EduColumnName.CODE_SNIPPETS.value].shift() != group[EduColumnName.CODE_SNIPPETS.value]
-        ]
-    )
-
-    return _fix_submissions_after_filtering(filtered_df)
-
-
-def filter_invalid_submissions(submissions: pd.DataFrame) -> pd.DataFrame:
-    filter_invalid_submissions_flag = st.checkbox(
-        'Exclude invalid submissions',
-        value=False,
-        help='If checked, then all submissions within one group, that have compilation exceptions will be ignored.',
-    )
-
-    if not filter_invalid_submissions_flag:
-        return submissions
-
-    filtered_df = submissions.groupby(SubmissionColumns.GROUP.value, as_index=False).apply(
-        # Leave submission if it has no exceptions or a list of them is empty.
-        lambda group: group[group[EduColumnName.EXCEPTIONS.value].eq('[]', fill_value='[]')]
-    )
-
-    return _fix_submissions_after_filtering(filtered_df)
 
 
 def filter_by_edu_columns(course_structure, submissions) -> Tuple[str, Tuple[str], pd.DataFrame]:

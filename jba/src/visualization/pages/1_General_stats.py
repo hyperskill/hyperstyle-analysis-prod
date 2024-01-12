@@ -6,13 +6,9 @@ from jba.src.models.edu_columns import EduColumnName
 from jba.src.plots.task_attempt import plot_task_attempts, calculate_attempt_stats
 from jba.src.plots.task_duplicates import plot_task_duplicates
 from jba.src.plots.task_solving import plot_task_solving, calculate_solving_stats
-from jba.src.visualization.common.filters import (
-    filter_post_correct_submissions,
-    filter_duplicate_submissions,
-    filter_invalid_submissions,
-    filter_by_edu_columns,
-)
-from jba.src.visualization.common.utils import ALL_CHOICE_OPTIONS
+from jba.src.visualization.common.filters import filter_by_edu_columns
+from jba.src.visualization.common.utils import ALL_CHOICE_OPTIONS, read_submissions
+from jba.src.visualization.common.widgets import show_submission_postprocess_filters
 
 
 def main():
@@ -20,13 +16,9 @@ def main():
 
     # TODO: check if session state has defined paths
 
-    submissions = read_df(st.session_state.submissions_path)
+    filters = show_submission_postprocess_filters()
+    submissions = read_submissions(st.session_state.submissions_path, filters)
     course_structure = read_df(st.session_state.course_structure_path)
-
-    with st.sidebar:
-        submissions = filter_post_correct_submissions(submissions)
-        submissions = filter_invalid_submissions(submissions)
-        submissions = filter_duplicate_submissions(submissions)
 
     show_stats_for, selection, submissions = filter_by_edu_columns(course_structure, submissions)
 

@@ -1,15 +1,18 @@
 import operator
 from enum import Enum
-from typing import Optional
+from typing import Optional, List
 
+import matplotlib.pyplot as plt
 import pandas as pd
 import streamlit as st
+from diff_viewer import diff_viewer
+from matplotlib.patches import Patch
+
 from jba.src.inspections.analysis import find_code_snippet
 from jba.src.models.edu_columns import EduColumnName, EduTaskStatus
-from jba.src.models.edu_logs import ExceptionData, TestData, TestResult
-from jba.src.visualization.common.utils import ALL_CHOICE_OPTIONS, get_edu_name_columns
-
-from diff_viewer import diff_viewer
+from jba.src.models.edu_logs import ExceptionData, TestData, TestResult, TestDataField
+from jba.src.test_logs.analysis import START_COLUMN, FINISH_COLUMN
+from jba.src.visualization.common.utils import ALL_CHOICE_OPTIONS, get_edu_name_columns, PostprocessFilters
 
 
 class ViewType(Enum):
@@ -67,18 +70,14 @@ def show_submission_info(submission: pd.Series):
 
     st.write(f'Status: :{color}[{status.title()}]')
 
-    raw_exceptions = submission[EduColumnName.EXCEPTIONS.value]
-    if not pd.isna(raw_exceptions):
-        exceptions = ExceptionData.schema().loads(raw_exceptions, many=True)
-        if exceptions:
-            with st.expander(f':red[Exception] {exceptions[0].message}'):
-                st.json(ExceptionData.schema().dump(exceptions, many=True))
+    exceptions = submission[EduColumnName.EXCEPTIONS.value]
+    if exceptions:
+        with st.expander(f':red[Exception] {exceptions[0].message}'):
+            st.json(ExceptionData.schema().dump(exceptions, many=True))
 
-    raw_tests = submission[EduColumnName.TESTS.value]
-    if not pd.isna(raw_tests):
-        failed_tests = [
-            test for test in TestData.schema().loads(raw_tests, many=True) if test.result == TestResult.FAILED
-        ]
+    tests = submission[EduColumnName.TESTS.value]
+    if tests:
+        failed_tests = [test for test in tests if test.result == TestResult.FAILED]
         if failed_tests:
             with st.expander(f':violet[Failed test] {failed_tests[0].message}'):
                 st.json(TestData.schema().dump(failed_tests, many=True))
@@ -126,3 +125,119 @@ def show_code_viewer(group: pd.DataFrame, view_type: ViewType, file: str):
             find_code_snippet(submission_after[EduColumnName.CODE_SNIPPETS.value], file),
             lang=None,
         )
+
+
+def show_submission_postprocess_filters() -> PostprocessFilters:
+    with st.sidebar:
+        exclude_post_correct_submissions = st.checkbox(
+            'Exclude post-correct submissions',
+            value=False,
+            help=(
+                'If checked, then all submissions within one group '
+                'that occur after the first correct submissions will be ignored.'
+            ),
+        )
+
+        exclude_duplicate_submissions = st.checkbox('Exclude duplicate submissions', value=False)
+
+        exclude_invalid_submissions = st.checkbox(
+            'Exclude invalid submissions',
+            value=False,
+            help='If checked, then all submissions within one group, that have compilation exceptions will be ignored.',
+        )
+
+    return PostprocessFilters(
+        exclude_post_correct_submissions,
+        exclude_duplicate_submissions,
+        exclude_invalid_submissions,
+    )
+
+
+FAILED_COLOR = 'red'
+IGNORED_COLOR = 'yellow'
+PASSED_COLOR = 'green'
+DUPLICATE_COLOR = '#d3d3d3'
+
+
+def _get_result_color(result: TestResult) -> str:
+    match result:
+        case TestResult.FAILED:
+            return FAILED_COLOR
+        case TestResult.PASSED:
+            return PASSED_COLOR
+        case TestResult.IGNORED:
+            return IGNORED_COLOR
+
+    return 'black'
+
+
+def plot_tests_timeline(tests_timeline: pd.DataFrame, duplicate_attempts: List[int], invalid_attempts: List[int]):
+    """
+    Plot tests timeline.
+
+    :param tests_timeline: Tests timeline.
+    :param duplicate_attempts: Numbers of submissions with duplicate attempts.
+    :param invalid_attempts: Numbers of submissions with invalid attempts.
+    """
+    timeline_by_unique_test_name = tests_timeline.groupby(
+        [TestDataField.CLASS_NAME.value, TestDataField.METHOD_NAME.value, TestDataField.TEST_NUMBER.value],
+        dropna=False,
+    )
+
+    fig, ax = plt.subplots()
+
+    yticks = []
+    yticklabels = []
+    for i, (unique_test_name, test_timeline) in enumerate(timeline_by_unique_test_name, start=1):
+        class_name, method_name, test_number = unique_test_name
+
+        xranges = []
+        colors = []
+        for row in test_timeline.itertuples():
+            start = getattr(row, START_COLUMN)
+            finish = getattr(row, FINISH_COLUMN)
+            duration = finish - start
+            color = _get_result_color(getattr(row, TestDataField.RESULT.value))
+
+            if duration == 0:
+                plt.plot(start, i + 0.25, marker='o', markerfacecolor=color, markeredgecolor=color, markersize=5)
+            else:
+                xranges.append((start, duration))
+                colors.append(color)
+
+        test_name = f'{class_name}.{method_name}'
+        if not pd.isna(test_number):
+            # We use explicit string concatenation here for the sake of brevity
+            test_name += f'[{int(test_number)}]'  # noqa: WPS336
+
+        yticks.append(i + 0.25)
+        yticklabels.append(test_name)
+
+        plt.broken_barh(xranges=xranges, yrange=(i, 0.5), facecolors=colors)
+
+    ax.set_yticks(yticks)
+    ax.set_yticklabels(yticklabels)
+    ax.invert_yaxis()
+
+    ax.set_xlabel('Attempt')
+
+    ax.legend(
+        handles=[
+            Patch(facecolor=FAILED_COLOR, label='Failed'),
+            Patch(facecolor=IGNORED_COLOR, label='Ignored'),
+            Patch(facecolor=PASSED_COLOR, label='Passed'),
+            Patch(facecolor=DUPLICATE_COLOR, label='Duplicate'),
+        ],
+        bbox_to_anchor=(1.02, 1),
+        borderaxespad=0,
+        loc='upper left',
+    )
+
+    left_boundary = min([tests_timeline[START_COLUMN].min(), *invalid_attempts])
+    right_boundary = max([tests_timeline[FINISH_COLUMN].max(), *invalid_attempts])
+    ax.set_xticks(range(left_boundary, right_boundary + 1))
+
+    for attempt in duplicate_attempts:
+        ax.get_xticklabels()[attempt - 1].set_color(DUPLICATE_COLOR)
+
+    st.pyplot(fig)

@@ -6,7 +6,6 @@ import pandas as pd
 from jba.src.models.edu_columns import EduColumnName
 from jba.src.models.edu_logs import TestData, TestResult, TestDataField
 
-
 T = TypeVar('T')
 
 # element, start, finish
@@ -73,13 +72,9 @@ def convert_tests_to_timeline(group: pd.DataFrame) -> pd.DataFrame:
     :param group: Group of submissions whose tests should be converted to a timeline table.
     :return: Timeline table.
     """
-    group_tests = group[EduColumnName.TESTS.value].apply(
-        lambda tests: None if pd.isna(tests) else TestData.schema().loads(tests, many=True)
-    )
-
     unique_test_names = {
         (test.class_name, test.method_name, test.test_number)
-        for tests in group_tests
+        for tests in group[EduColumnName.TESTS.value]
         if tests is not None
         # We can't swap if and for because it could lead to iterating over None
         for test in tests  # noqa: WPS361
@@ -89,7 +84,7 @@ def convert_tests_to_timeline(group: pd.DataFrame) -> pd.DataFrame:
     for class_name, method_name, test_number in unique_test_names:
         test_results = [
             None if attempt_tests is None else _find_test_result(class_name, method_name, test_number, attempt_tests)
-            for attempt_tests in group_tests
+            for attempt_tests in group[EduColumnName.TESTS.value]
         ]
 
         tests_timeline.extend(
@@ -250,10 +245,3 @@ def calculate_group_test_stats(group: pd.DataFrame, aggregate: bool) -> Dict[str
             number_of_attempts += 1
 
     return test_attempts
-
-
-def calculate_test_stats(stats_by_group: pd.DataFrame) -> pd.DataFrame:
-    test_stats = pd.concat([stats_by_group.min(), stats_by_group.max(), stats_by_group.median()], axis=1)
-    test_stats.columns = ['min', 'max', 'median']
-
-    return test_stats

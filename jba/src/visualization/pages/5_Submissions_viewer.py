@@ -1,37 +1,27 @@
-import json
-
-import pandas as pd
-
-from core.src.utils.df_utils import read_df
 import streamlit as st
 
+from core.src.utils.df_utils import read_df
 from jba.src.models.edu_columns import EduColumnName, EduTaskType
-from jba.src.visualization.common.filters import (
-    filter_by_task,
-    filter_post_correct_submissions,
-    filter_by_user,
-    filter_by_group,
-    filter_duplicate_submissions,
-    filter_invalid_submissions,
+from jba.src.visualization.common.filters import filter_by_task, filter_by_user, filter_by_group
+from jba.src.visualization.common.utils import read_submissions, fix_submissions_after_filtering
+from jba.src.visualization.common.widgets import (
+    select_file,
+    select_view_type,
+    show_code_viewer,
+    show_group_info,
+    show_submission_postprocess_filters,
 )
-
-from jba.src.visualization.common.widgets import select_file, select_view_type, show_code_viewer, show_group_info
 
 
 def main():
     st.title('Submissions viewer')
 
-    submissions = read_df(st.session_state.submissions_path)
-    submissions[EduColumnName.CODE_SNIPPETS.value] = submissions[EduColumnName.CODE_SNIPPETS.value].apply(
-        lambda code_snippets: code_snippets if pd.isna(code_snippets) else json.loads(code_snippets)
-    )
-
+    filters = show_submission_postprocess_filters()
+    submissions = read_submissions(st.session_state.submissions_path, filters)
     course_structure = read_df(st.session_state.course_structure_path)
 
-    with st.sidebar:
-        submissions = filter_post_correct_submissions(submissions)
-        submissions = filter_invalid_submissions(submissions)
-        submissions = filter_duplicate_submissions(submissions)
+    submissions = submissions[submissions[EduColumnName.TASK_TYPE.value] != EduTaskType.THEORY.value]
+    submissions = fix_submissions_after_filtering(submissions)
 
     columns = st.columns([1, 2, 1, 2, 1])
 
@@ -45,10 +35,6 @@ def main():
         _, submissions = filter_by_group(submissions)
 
     show_group_info(submissions)
-
-    if submissions[EduColumnName.TASK_TYPE.value].iloc[0] == EduTaskType.THEORY.value:
-        st.info("It's a theory group. Please choose another group.")
-        st.stop()
 
     with columns[3]:
         file = select_file(submissions)
