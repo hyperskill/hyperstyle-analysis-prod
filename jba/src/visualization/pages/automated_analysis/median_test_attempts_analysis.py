@@ -70,7 +70,7 @@ def show_test_attempts_analysis(submissions: pd.DataFrame, course_structure: pd.
 
     test_stats = calculate_test_stats(submissions)
 
-    test_stats_median = test_stats.groupby(by=[*edu_name_columns, TEST_NAME_DATA_COLUMN], as_index=False).agg(
+    test_stats_median = test_stats.groupby(by=[*edu_name_columns, TEST_NAME_DATA_COLUMN], as_index=False).aggregate(
         {NUMBER_OF_ATTEMPTS_COLUMN: 'median'}
     )
 
