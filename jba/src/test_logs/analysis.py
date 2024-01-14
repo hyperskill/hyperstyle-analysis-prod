@@ -1,5 +1,5 @@
 import itertools
-from typing import Sequence, List, Optional, TypeVar, Tuple, Dict
+from typing import Sequence, List, Optional, TypeVar, Tuple
 
 import pandas as pd
 
@@ -213,7 +213,11 @@ def convert_tests_to_chain(group: pd.DataFrame, aggregate: bool = True) -> pd.Da
     return pivoted_tests.diff(axis=1).fillna(pivoted_tests)
 
 
-def calculate_group_test_stats(group: pd.DataFrame, aggregate: bool) -> Dict[str, int]:
+TEST_NAME_DATA_COLUMN = 'test_name_data'
+NUMBER_OF_ATTEMPTS_COLUMN = 'number_of_attempts'
+
+
+def calculate_group_test_stats(group: pd.DataFrame, aggregate: bool) -> pd.DataFrame:
     pivoted_tests = pivot_tests(group, aggregate=aggregate)
 
     test_attempts = {}
@@ -244,4 +248,7 @@ def calculate_group_test_stats(group: pd.DataFrame, aggregate: bool) -> Dict[str
         else:
             number_of_attempts += 1
 
-    return test_attempts
+    test_stats = pd.DataFrame.from_dict(test_attempts, columns=[NUMBER_OF_ATTEMPTS_COLUMN], orient='index')
+    test_stats.index.name = TEST_NAME_DATA_COLUMN
+
+    return test_stats
