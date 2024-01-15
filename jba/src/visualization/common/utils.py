@@ -64,7 +64,7 @@ def read_submissions(path: Path, filters: PostprocessFilters) -> pd.DataFrame:
     submissions = _read_submissions(path)
 
     if filters.exclude_post_correct_submissions:
-        submissions = submissions.groupby(SubmissionColumns.GROUP.value).apply(
+        submissions = submissions.groupby(SubmissionColumns.GROUP.value, as_index=False).apply(
             lambda group: group[
                 group.index <= group[EduColumnName.STATUS.value].eq(EduTaskStatus.CORRECT.value).idxmax()
             ]
