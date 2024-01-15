@@ -21,7 +21,6 @@ dirs
 dotall
 dotenv
 droplevel
-droplevel
 dropna
 dtype
 dtypes
@@ -94,7 +93,6 @@ pyplot
 qodana
 qs
 reddit
-reindex
 reindex
 removeprefix
 repo
