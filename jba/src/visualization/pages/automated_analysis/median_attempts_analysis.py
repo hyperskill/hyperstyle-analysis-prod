@@ -15,9 +15,9 @@ def show_median_attempts_analysis(submissions: pd.DataFrame, course_structure: p
 
     stats = calculate_attempt_stats(submissions, course_structure)
 
-    column, _ = st.columns(2)
+    threshold_column, _ = st.columns(2)
 
-    with column, st.expander('Threshold:'):
+    with threshold_column, st.expander('Threshold:'):
         median_threshold = st.number_input(
             'Suspicious median:',
             value=min(5.0, stats[MEDIAN_COLUMN].max()),

@@ -15,9 +15,9 @@ def show_failed_users_analysis(submissions: pd.DataFrame, course_structure: pd.D
 
     stats = calculate_solving_stats(submissions, course_structure)
 
-    column, _ = st.columns(2)
+    threshold_column, _ = st.columns(2)
 
-    with column, st.expander('Threshold:'):
+    with threshold_column, st.expander('Threshold:'):
         failed_threshold = st.number_input('Suspicious failed (%):', value=10, min_value=0, max_value=100)
         suspicious_stats = stats[stats[FAILED_COLUMN] / stats[TOTAL_COLUMN] * 100 >= failed_threshold]
 
