@@ -40,7 +40,7 @@ SOLVED_COLUMN = 'solved'
 FAILED_COLUMN = 'failed'
 
 
-def calculate_solving_stats(course_data_df: pd.DataFrame, all_tasks_data_df: pd.DataFrame):
+def calculate_solving_stats(course_data_df: pd.DataFrame, all_tasks_data_df: pd.DataFrame) -> pd.DataFrame:
     tasks_stat = calculate_tasks_stat(course_data_df)
     tasks_df = prepare_task_df_for_plots(course_data_df, all_tasks_data_df)
 
