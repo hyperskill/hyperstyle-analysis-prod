@@ -1,5 +1,3 @@
-import json
-from pathlib import Path
 from typing import Optional
 
 import pandas as pd
@@ -8,7 +6,6 @@ import streamlit as st
 from diff_viewer import diff_viewer
 
 from core.src.model.column_name import SubmissionColumns
-from core.src.model.report.hyperstyle_report import HyperstyleReport
 from core.src.utils.df_utils import read_df
 from jba.src.inspections.analysis import (
     find_unique_inspections,
@@ -16,14 +13,9 @@ from jba.src.inspections.analysis import (
     get_inspection_fixing_examples,
 )
 from jba.src.models.edu_columns import EduColumnName
-from jba.src.visualization.common.filters import (
-    filter_by_task,
-    filter_post_correct_submissions,
-    filter_duplicate_submissions,
-    filter_invalid_submissions,
-)
-from jba.src.visualization.common.utils import ALL_CHOICE_OPTIONS
-from jba.src.visualization.common.widgets import select_file
+from jba.src.visualization.common.filters import filter_by_task
+from jba.src.visualization.common.utils import ALL_CHOICE_OPTIONS, read_submissions, fix_submissions_after_filtering
+from jba.src.visualization.common.widgets import select_file, show_submission_postprocess_filters
 
 
 def plot_inspections_stats(stats: pd.DataFrame, top: int, normalize: bool):
@@ -50,23 +42,7 @@ def plot_inspections_stats(stats: pd.DataFrame, top: int, normalize: bool):
     st.plotly_chart(fig, use_container_width=True)
 
 
-@st.cache_data
-def read_submissions(path: Path) -> pd.DataFrame:
-    submissions = read_df(path)
-    submissions = submissions.dropna(subset=[EduColumnName.INSPECTIONS.value])
-
-    submissions[EduColumnName.CODE_SNIPPETS.value] = submissions[EduColumnName.CODE_SNIPPETS.value].apply(json.loads)
-    submissions[EduColumnName.INSPECTIONS.value] = submissions[EduColumnName.INSPECTIONS.value].apply(
-        lambda inspections: {
-            file_path: HyperstyleReport.from_json(file_inspections).get_issues()
-            for file_path, file_inspections in json.loads(inspections).items()
-        }
-    )
-
-    return submissions
-
-
-@st.cache_data
+@st.cache_data(show_spinner='Looking for examples... :eyes:')
 def find_examples(submissions: pd.DataFrame, inspection: str, file: Optional[str]) -> pd.DataFrame:
     return (
         submissions.groupby(SubmissionColumns.GROUP.value)
@@ -81,13 +57,12 @@ def main():
     st.set_page_config(page_title='Inspections stats', layout='wide')
     st.title('Inspections stats')
 
-    submissions = read_submissions(st.session_state.submissions_path)
+    filters = show_submission_postprocess_filters()
+    submissions = read_submissions(st.session_state.submissions_path, filters)
     course_structure = read_df(st.session_state.course_structure_path)
 
-    with st.sidebar:
-        submissions = filter_post_correct_submissions(submissions)
-        submissions = filter_invalid_submissions(submissions)
-        submissions = filter_duplicate_submissions(submissions)
+    submissions = submissions.dropna(subset=[EduColumnName.INSPECTIONS.value])
+    submissions = fix_submissions_after_filtering(submissions)
 
     left, right = st.columns([3, 1])
 

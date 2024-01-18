@@ -289,7 +289,6 @@ The app consists of several pages:
 1. [README](src/visualization/README.py) contains an application description and input fields for common resources:
    1. Submissions path — Path to .csv file with submissions, parsed test logs and inspections.
    2. Course structure path — Path to .csv file with course structure.
-   3. Course name — Name of the visualized course.
 
 2. [General stats](src/visualization/pages/1_General_stats.py) contains charts from the [Simple general statistics](#simple-general-statistics) module:
    - Task attempts:
@@ -334,3 +333,23 @@ The app consists of several pages:
 6. [Submissions viewer](src/visualization/pages/5_Submissions_viewer.py) allows you to view user submissions within some group.
 
    <img src="./images/submissions-viewer.png" title="Inspections frequency" width="70%"/>
+
+7. [Automated analysis](src/visualization/pages/6_Automated_analysis.py) allows you to automatically analyse submissions' data.
+
+   - [Median attempts analysis](src/visualization/pages/automated_analysis/median_attempts_analysis.py) 
+     allows you to find suspicious tasks whose median number of attempts is not less than a threshold
+     and view group submissions from these tasks.
+
+     <img src="./images/median-attempts-analysis.png" title="Inspections frequency" width="70%"/>
+
+   - [Failed users analysis](src/visualization/pages/automated_analysis/failed_users_analysis.py) 
+     allows you to find suspicious tasks whose relative number of failed users is not less than a threshold 
+     and view group submissions from these tasks.
+   
+     <img src="./images/failed-users-analysis.png" title="Inspections frequency" width="70%"/>
+   
+   - [Median test attempts analysis](src/visualization/pages/automated_analysis/median_test_attempts_analysis.py)
+     allows you to find suspicious tests whose median number of attempts is not less than a threshold
+     and view group submissions that contain these tests.
+
+     <img src="./images/median-test-attempts-analysis.png" title="Inspections frequency" width="70%"/>

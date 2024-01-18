@@ -879,10 +879,7 @@ def test_convert_tests_to_timeline(  # noqa: WPS234
     tests: List[Optional[List[TestData]]],
     expected_timeline_data: List[Tuple],
 ):
-    group_data = pd.DataFrame(
-        map(lambda x: None if x is None else TestData.schema().dumps(x, many=True), tests),
-        columns=[EduColumnName.TESTS.value],
-    )
+    group_data = pd.Series(tests, name=EduColumnName.TESTS.value).to_frame()
 
     sort_by = [
         TestDataField.CLASS_NAME.value,
