@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
+from pathlib import Path
 from typing import List, Optional
 
 
@@ -16,3 +17,10 @@ class EduStructureNode:
     name: str
     structure_type: EduStructureType
     children: Optional[List['EduStructureNode']]
+
+
+@dataclass(frozen=True)
+class EduLesson:
+    root: Path
+    is_framework: bool
+    children: List[str]
