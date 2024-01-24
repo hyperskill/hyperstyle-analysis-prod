@@ -68,8 +68,8 @@ def flatten(paths: list) -> list:
 def get_info_file(root: Path) -> str:
     file_names = listdir(root)
     info_files = list(filter(lambda file_name: re.match(INFO_FILE_REGEX, file_name), file_names))
-    info_file = info_files[0]
-    return info_file
+
+    return info_files[0]
 
 
 def get_lessons(root: Path):
@@ -78,16 +78,15 @@ def get_lessons(root: Path):
     structure_type = EduStructureType(info_file_structure_type)
     if structure_type == EduStructureType.LESSON:
         content = read_yaml_field_content(root / info_file, CONTENT_META_FIELD)
-        t1 = read_yaml_field_content(root / info_file, TYPE_META_FIELD)
-        return EduLesson(root, t1 is not None and t1 == FRAMEWORK_TYPE, content)
+        yaml_file_content = read_yaml_field_content(root / info_file, TYPE_META_FIELD)
+        return EduLesson(root, yaml_file_content is not None and yaml_file_content == FRAMEWORK_TYPE, content)
     elif structure_type == EduStructureType.TASK or structure_type is None:
         return None
-    else:
-        children = None
-        content = read_yaml_field_content(root / info_file, CONTENT_META_FIELD)
-        if content is not None:
-            children = flatten([get_lessons(root / name) for name in content])
-        return children
+    children = None
+    content = read_yaml_field_content(root / info_file, CONTENT_META_FIELD)
+    if content is not None:
+        children = flatten([get_lessons(root / name) for name in content])
+    return children
 
 
 def get_files(root: Path, lesson: EduLesson) -> list:
@@ -107,8 +106,7 @@ def get_task_files(root: Path, relative_path: Path, is_framework: bool):
     def get_filename(file_content: dict) -> TaskTrackerFile:
         if is_framework:
             return TaskTrackerFile(relative_path / TASK_DIRECTORY_NAME / file_content[NAME_META_FIELD])
-        else:
-            return TaskTrackerFile(relative_path / root.name / file_content[NAME_META_FIELD])
+        return TaskTrackerFile(relative_path / root.name / file_content[NAME_META_FIELD])
 
     return list(map(get_filename, files))
 
@@ -120,10 +118,7 @@ def get_yaml_content(course_root: Path) -> dict:
     for lesson in lessons:
         for i in get_files(course_root, lesson):
             files.add(i)
-
-    data = get_data_template(list(map(lambda obj: obj.as_dict(), files)))
-
-    return data
+    return get_data_template(list(map(lambda obj: obj.as_dict(), files)))
 
 
 def configure_parser(parser: argparse.ArgumentParser) -> None:

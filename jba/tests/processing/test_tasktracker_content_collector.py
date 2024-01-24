@@ -11,7 +11,7 @@ import tempfile
 
 import yaml
 
-from deepdiff import DeepDiff
+from deepdiff import DeepDiff  # noqa: SC200
 
 
 def test_incorrect_arguments():
@@ -24,13 +24,13 @@ def test_incorrect_arguments():
 
 
 def yaml_as_dict(my_file):
-    my_dict = {}
-    with open(my_file, 'r') as fp:
-        docs = yaml.safe_load_all(fp)
+    result = {}
+    with open(my_file, 'r') as file_path:
+        docs = yaml.safe_load_all(file_path)
         for doc in docs:
             for key, value in doc.items():
-                my_dict[key] = value
-    return my_dict
+                result[key] = value
+    return result
 
 
 def test_correct_arguments():
@@ -46,5 +46,5 @@ def test_correct_arguments():
         file = Path(temp_directory) / 'task_content_default.yaml'
         assert file.exists()
         expected_file = (prepare_course_directory / 'expected_tasktracker_result.yaml')
-        ddiff = DeepDiff(yaml_as_dict(file), yaml_as_dict(expected_file), ignore_order=True)
-        assert len(ddiff) == 0
+        difference = DeepDiff(yaml_as_dict(file), yaml_as_dict(expected_file), ignore_order=True)
+        assert not difference
