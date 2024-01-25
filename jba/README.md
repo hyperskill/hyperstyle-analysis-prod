@@ -26,7 +26,7 @@ docker run hyperstyle-analysis-prod:<VERSION> poetry run collect_course_structur
 - `course_sources_path` — Path to course sources to extract course structure.
 - `output_path` — Path to .csv file where to save the course structure.
 
-After this step you will get a new file with the course structure, e.g. for the [course](tests/resources/processing/prepare_course_data/course_with_section) from the test folder with the following structure:
+After this step you will get a new file with the course structure, e.g. for the [course](tests/resources/processing/collect_course_structure/course_with_section) from the test folder with the following structure:
 ```text
 course-info.yaml
 course-remote-info.yaml
@@ -56,7 +56,7 @@ section/
             └── ...
 ```
 
-the [following](tests/resources/processing/prepare_course_data/expected_course_with_section.csv) file will be generated.
+the [following](tests/resources/processing/collect_course_structure/expected_course_with_section.csv) file will be generated.
 
 2. [data_processing.py](src/processing/data_processing.py) allows you to process data from the previous step:
 - Merge course data with task info
