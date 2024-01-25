@@ -45,7 +45,7 @@ def _test_course(course_name):
         assert len(os.listdir(temp_directory)) == 1
         file = Path(temp_directory) / 'task_content_default.yaml'
         assert file.exists()
-        expected_file = (PROCESSING_FOLDER/ 'tasktracker_content_collector' / f'expected_{course_name}.yaml')
+        expected_file = (PROCESSING_FOLDER / 'tasktracker_content_collector' / f'expected_{course_name}.yaml')
         difference = DeepDiff(yaml_as_dict(file), yaml_as_dict(expected_file), ignore_order=True)
         assert not difference
 
