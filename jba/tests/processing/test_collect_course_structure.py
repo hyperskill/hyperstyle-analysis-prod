@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+from tempfile import NamedTemporaryFile
 
 import pytest
 
@@ -7,13 +8,13 @@ from core.src.utils.df_utils import read_df
 from core.src.utils.subprocess_runner import run_in_subprocess
 from jba.src import MAIN_FOLDER
 from jba.src.models.edu_structure import EduStructureNode, EduStructureType
-from jba.src.processing.prepare_course_data import (
+from jba.src.processing.collect_course_structure import (
     _gather_structure,
     ID_META_FIELD,
     _convert_structure_to_dataframe,
     get_course_structure,
 )
-from jba.tests.processing import PREPARE_COURSE_DATA_FOLDER
+from jba.tests.processing import COLLECT_COURSE_STRUCTURE_FOLDER
 from pandas._testing import assert_frame_equal
 
 
@@ -64,11 +65,11 @@ COURSE_WITHOUT_SECTION_STRUCTURE = EduStructureNode(
 
 GATHER_STRUCTURE_TEST_DATA = [
     (
-        PREPARE_COURSE_DATA_FOLDER / 'course_with_section',
+        COLLECT_COURSE_STRUCTURE_FOLDER / 'course_with_section',
         COURSE_WITH_SECTION_STRUCTURE,
     ),
     (
-        PREPARE_COURSE_DATA_FOLDER / 'course_without_section',
+        COLLECT_COURSE_STRUCTURE_FOLDER / 'course_without_section',
         COURSE_WITHOUT_SECTION_STRUCTURE,
     ),
 ]
@@ -82,24 +83,24 @@ def test_gather_structure(course_root: Path, expected_structure: EduStructureNod
 
 GATHER_STRUCTURE_THROWS_TEST_DATA = [
     (
-        PREPARE_COURSE_DATA_FOLDER / 'course_with_incorrect_number_of_info_files',
+        COLLECT_COURSE_STRUCTURE_FOLDER / 'course_with_incorrect_number_of_info_files',
         r'The number of info files in .+ must be exactly 1 \(actual: 2\)\.',
     ),
     (
-        PREPARE_COURSE_DATA_FOLDER / 'course_with_incorrect_number_of_remote_info_files',
+        COLLECT_COURSE_STRUCTURE_FOLDER / 'course_with_incorrect_number_of_remote_info_files',
         r'The number of remote info files in .+ must be exactly 1 \(actual: 2\)\.',
     ),
     (
-        PREPARE_COURSE_DATA_FOLDER / 'course_with_undefined_structure_type',
+        COLLECT_COURSE_STRUCTURE_FOLDER / 'course_with_undefined_structure_type',
         r'Unable to determine a structure type for .+\.',
     ),
-    (PREPARE_COURSE_DATA_FOLDER / 'course_with_incorrect_id_field', rf'.+ must contain the {ID_META_FIELD} field\.'),
+    (COLLECT_COURSE_STRUCTURE_FOLDER / 'course_with_incorrect_id_field', rf'.+ must contain the {ID_META_FIELD} field\.'),
     (
-        PREPARE_COURSE_DATA_FOLDER / 'course_with_inconsistent_children',
+        COLLECT_COURSE_STRUCTURE_FOLDER / 'course_with_inconsistent_children',
         r'All children nodes inside .+ must have the same structure type\.',
     ),
     (
-        PREPARE_COURSE_DATA_FOLDER / 'course_with_unknown_structure_type',
+        COLLECT_COURSE_STRUCTURE_FOLDER / 'course_with_unknown_structure_type',
         "'unknown' is not a valid EduStructureType",
     ),
 ]
@@ -114,11 +115,11 @@ def test_gather_structure_throws(course_root: Path, expected_message: str):
 CONVERT_STRUCTURE_TO_DATAFRAME_TEST_DATA = [
     (
         COURSE_WITH_SECTION_STRUCTURE,
-        PREPARE_COURSE_DATA_FOLDER / 'expected_course_with_section_df_structure.csv',
+        COLLECT_COURSE_STRUCTURE_FOLDER / 'expected_course_with_section_df_structure.csv',
     ),
     (
         COURSE_WITHOUT_SECTION_STRUCTURE,
-        PREPARE_COURSE_DATA_FOLDER / 'expected_course_without_section_df_structure.csv',
+        COLLECT_COURSE_STRUCTURE_FOLDER / 'expected_course_without_section_df_structure.csv',
     ),
     (
         EduStructureNode(
@@ -187,7 +188,7 @@ CONVERT_STRUCTURE_TO_DATAFRAME_TEST_DATA = [
                 ),
             ],
         ),
-        PREPARE_COURSE_DATA_FOLDER / 'expected_big_course_df_structure.csv',
+        COLLECT_COURSE_STRUCTURE_FOLDER / 'expected_big_course_df_structure.csv',
     ),
 ]
 
@@ -199,12 +200,12 @@ def test_convert_structure_to_dataframe(structure: EduStructureNode, expected_df
 
 GET_COURSE_STRUCTURE_TEST_DATA = [
     (
-        PREPARE_COURSE_DATA_FOLDER / 'course_with_section',
-        PREPARE_COURSE_DATA_FOLDER / 'expected_course_with_section.csv',
+        COLLECT_COURSE_STRUCTURE_FOLDER / 'course_with_section',
+        COLLECT_COURSE_STRUCTURE_FOLDER / 'expected_course_with_section.csv',
     ),
     (
-        PREPARE_COURSE_DATA_FOLDER / 'course_without_section',
-        PREPARE_COURSE_DATA_FOLDER / 'expected_course_without_section.csv',
+        COLLECT_COURSE_STRUCTURE_FOLDER / 'course_without_section',
+        COLLECT_COURSE_STRUCTURE_FOLDER / 'expected_course_without_section.csv',
     ),
 ]
 
@@ -215,7 +216,26 @@ def test_get_course_structure(course_root: Path, expected_structure_path: Path):
 
 
 def test_incorrect_arguments():
-    stdout, stderr = run_in_subprocess([sys.executable, (MAIN_FOLDER.parent / 'processing' / 'prepare_course_data.py')])
+    stdout, stderr = run_in_subprocess(
+        [sys.executable, (MAIN_FOLDER.parent / 'processing' / 'collect_course_structure.py')]
+    )
 
     assert stdout == ''
     assert 'error: the following arguments are required' in stderr
+
+
+@pytest.mark.parametrize(('course_root', 'expected_structure_path'), GET_COURSE_STRUCTURE_TEST_DATA)
+def test_correct_arguments(course_root: Path, expected_structure_path: Path):
+    with NamedTemporaryFile(suffix='.csv') as output_file:
+        stdout, stderr = run_in_subprocess(
+            [
+                sys.executable,
+                (MAIN_FOLDER.parent / 'processing' / 'collect_course_structure.py'),
+                str(course_root),
+                output_file.name,
+            ]
+        )
+
+        assert stdout == ''
+        assert stderr == ''
+        assert_frame_equal(read_df(output_file.name), read_df(expected_structure_path))
