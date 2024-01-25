@@ -6,30 +6,27 @@ This module contains utilities to analyze data from JetBrains Marketplace.
 
 # Preprocess data
 
-[This module](src/processing) contains script to preprocess row data to perform further analysis.
+[This module](src/processing) contains a script to preprocess raw data to perform further analysis.
 
-1. [prepare_course_data.py](src/processing/prepare_course_data.py) allows you to filter 
-data by the course id and also to collect information about the course structure.
+1. [collect_course_structure.py](src/processing/collect_course_structure.py) allows you to collect information about the course structure.
 
 ### Usage
 
 Execute one of the following commands with necessary arguments:
 ```bash
-poetry run prepare_course_data [arguments]
+poetry run collect_course_structure [arguments]
 ```
 or
 ```bash
-docker run hyperstyle-analysis-prod:<VERSION> poetry run prepare_course_data [arguments]
+docker run hyperstyle-analysis-prod:<VERSION> poetry run collect_course_structure [arguments]
 ```
 
 **Required arguments**:
 
-- `data_path` — Path to .csv file with collected data. The file must contain the following columns: `task_id`, `course_id`, `submission_datetime`, `status`, `task_type`, `user_id`, `task_name` (see [an example](tests/resources/processing/all_data.csv) in the tests).
-- `course_id` — Course id to analyze.
 - `course_sources_path` — Path to course sources to extract course structure.
+- `output_path` — Path to .csv file where to save the course structure.
 
-After this step you will get a new file with `courseId` suffix. This file will contain all data from the `data_path` file, but only for the course with the course id `course_id`.
-Also, an additional file with the course structure will be generated, e.g. for the [course](tests/resources/processing/prepare_course_data/course_with_section) from the test folder with the following structure:
+After this step you will get a new file with the course structure, e.g. for the [course](tests/resources/processing/collect_course_structure/course_with_section) from the test folder with the following structure:
 ```text
 course-info.yaml
 course-remote-info.yaml
@@ -59,7 +56,7 @@ section/
             └── ...
 ```
 
-the [following](tests/resources/processing/prepare_course_data/expected_course_with_section.csv) file will be generated.
+the [following](tests/resources/processing/collect_course_structure/expected_course_with_section.csv) file will be generated.
 
 2. [data_processing.py](src/processing/data_processing.py) allows you to process data from the previous step:
 - Merge course data with task info
