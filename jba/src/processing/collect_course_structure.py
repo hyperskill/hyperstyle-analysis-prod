@@ -25,12 +25,6 @@ INFO_FILE_REGEX = re.compile(f'([a-z]+)-info{AnalysisExtension.YAML.value}')
 REMOTE_INFO_FILE_REGEX = re.compile(f'([a-z]+)-remote-info{AnalysisExtension.YAML.value}')
 
 
-def filter_by_course_id_and_save(df_path: Path, course_id: int):
-    initial_df = read_df(df_path)
-    filtered_df = filter_df_by_single_value(initial_df, EduColumnName.COURSE_ID.value, course_id)
-    write_df(filtered_df, df_path.parent / f'course_{course_id}{AnalysisExtension.CSV.value}')
-
-
 def _gather_structure(root: Path) -> EduStructureNode:  # noqa: WPS238
     file_names = listdir(root)
 
