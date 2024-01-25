@@ -30,7 +30,7 @@ class TaskTrackerFile:
     def __init__(self, rel_path):
         self.path = rel_path.parent
         self.name = rel_path.stem
-        self.extension = EXTENSIONS.get(rel_path.suffix.lstrip('.'), 'NOEXTENSION')
+        self.extension = EXTENSIONS.get(rel_path.suffix.lstrip('.'), 'NO_EXTENSION')
 
     def as_dict(self):
         return {
@@ -52,12 +52,12 @@ class TaskTrackerFile:
 
 def get_data_template(files: list) -> dict:
     return {
-        'tasks': {
+        'tasks': [{
             'name': 'example',
             'description': 'description',
             'id': 'main',
             'files': files
-        }
+        }]
     }
 
 
