@@ -1,0 +1,15 @@
+tasks:
+- description: description
+  files:
+  - extension: KOTLIN
+    filename: Main
+    isInternal: false
+    relativePath: lesson/task2/src/main/kotlin
+    sourceSet: SRC
+  - extension: KOTLIN
+    filename: Main
+    isInternal: false
+    relativePath: lesson/task1/src/main/kotlin
+    sourceSet: SRC
+  id: main
+  name: example

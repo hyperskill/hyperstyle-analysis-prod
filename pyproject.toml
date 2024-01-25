@@ -83,7 +83,7 @@ collect_data = 'data_collection.src.collect_data:main'
 run_hyperstyle = 'data_labelling.src.hyperstyle.evaluate:main'
 # JBA scripts
 collect_course_structure = 'jba.src.processing.collect_course_structure:main'
-course_to_tasktracker = 'jba.src.processing.tasktracker_content_collector:main'
+tasktracker_content_collector = 'jba.src.processing.tasktracker_content_collector:main'
 process_course_data = 'jba.src.processing.data_processing:main'
 plot_task_attempt = 'jba.src.plots.task_attempt:main'
 plot_task_solving = 'jba.src.plots.task_solving:main'

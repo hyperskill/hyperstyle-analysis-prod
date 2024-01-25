@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Union
+from typing import Any, Union, Dict
 
 import yaml
 
@@ -18,3 +18,8 @@ def read_yaml_field_content(yaml_file: Path, field_name: str) -> Any:
         raise ValueError(f'`{yaml_file} is empty.')
 
     return parsed_yaml_file.get(field_name)
+
+
+def save_as_yaml(yaml_content: Dict, path: Path):
+    with open(path, 'w') as file:
+        yaml.dump(yaml_content, file)

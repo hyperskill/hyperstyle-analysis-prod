@@ -82,7 +82,7 @@ docker run hyperstyle-analysis-prod:<VERSION> poetry run process_course_data [ar
 After this step you will get a new file with course data with `courseId_preprocessed` suffix. 
 
 
-3. [tasktracker_content_collector.py](src/processing/tasktracker_content_collector.py) Collects data from the course into the tasktracker task content file format
+3. [tasktracker_content_collector.py](src/processing/tasktracker_content_collector.py) collects data from the course into the tasktracker task content file format
 
 ### Usage
 

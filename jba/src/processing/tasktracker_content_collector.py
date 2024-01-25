@@ -4,10 +4,10 @@ from os import listdir
 import argparse
 from pathlib import Path
 
-import yaml
-from core.src.utils.file.extension_utils import AnalysisExtension
-from core.src.utils.file.yaml_utils import read_yaml_field_content
+from core.src.utils.file.yaml_utils import read_yaml_field_content, save_as_yaml
 from jba.src.models.edu_structure import EduStructureType, EduLesson
+from collect_course_structure import INFO_FILE_REGEX
+from typing import List, Dict
 
 CONTENT_META_FIELD = 'content'
 FILES_META_FIELD = 'files'
@@ -21,13 +21,11 @@ FRAMEWORK_TYPE = 'framework'
 
 TASK_DIRECTORY_NAME = 'task'
 
-INFO_FILE_REGEX = re.compile(f'([a-z]+)-info{AnalysisExtension.YAML.value}')
-
 EXTENSIONS = {'py': 'PYTHON', 'ipynb': 'JUPYTER', 'java': 'JAVA', 'kt': 'KOTLIN', 'cpp': 'CPP', 'csv': 'CSV'}
 
 
 class TaskTrackerFile:
-    def __init__(self, rel_path):
+    def __init__(self, rel_path: Path):
         self.path = rel_path.parent
         self.name = rel_path.stem
         self.extension = EXTENSIONS.get(rel_path.suffix.lstrip('.'), 'NO_EXTENSION')
@@ -50,7 +48,7 @@ class TaskTrackerFile:
         return hash((self.name, self.path, self.extension))
 
 
-def get_data_template(files: list) -> dict:
+def get_data_template(files: List[Dict]) -> Dict:
     return {
         'tasks': [{
             'name': 'example',
@@ -61,9 +59,9 @@ def get_data_template(files: list) -> dict:
     }
 
 
-def flatten(paths: list) -> list:
+def flatten(files: List) -> List[TaskTrackerFile]:
     result = []
-    for i in paths:
+    for i in files:
         if i is None:
             continue
         if isinstance(i, list):
@@ -80,7 +78,7 @@ def get_info_file(root: Path) -> str:
     return info_files[0]
 
 
-def get_lessons(root: Path):
+def get_lessons(root: Path) -> List[EduLesson] | EduLesson | None:
     info_file = get_info_file(root)
     info_file_structure_type = re.match(INFO_FILE_REGEX, info_file).group(1)
     structure_type = EduStructureType(info_file_structure_type)
@@ -97,7 +95,7 @@ def get_lessons(root: Path):
     return children
 
 
-def get_files(root: Path, lesson: EduLesson) -> list:
+def get_files(root: Path, lesson: EduLesson) -> List[TaskTrackerFile]:
     relative_path = lesson.root.relative_to(root)
     return flatten(
         [get_task_files(lesson.root / child, relative_path, lesson.is_framework) for child in lesson.children])
@@ -124,8 +122,8 @@ def get_yaml_content(course_root: Path) -> dict:
 
     files = set()
     for lesson in lessons:
-        for i in get_files(course_root, lesson):
-            files.add(i)
+        for file in get_files(course_root, lesson):
+            files.add(file)
     return get_data_template(list(map(lambda obj: obj.as_dict(), files)))
 
 
@@ -143,11 +141,6 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
     )
 
 
-def save_yaml_file(yaml_content: dict, path: Path):
-    with open(path, 'w') as file:
-        yaml.dump(yaml_content, file)
-
-
 def main():
     parser = argparse.ArgumentParser()
     configure_parser(parser)
@@ -155,7 +148,7 @@ def main():
     args = parser.parse_args()
 
     yaml_content = get_yaml_content(args.course_sources_path)
-    save_yaml_file(yaml_content, args.destination_path / CONTENT_FILE_NAME)
+    save_as_yaml(yaml_content, args.destination_path / CONTENT_FILE_NAME)
 
 
 if __name__ == '__main__':
