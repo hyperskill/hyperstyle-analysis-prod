@@ -41,6 +41,14 @@ class TaskTrackerFile:
             'isInternal': False
         }
 
+    def __eq__(self, other):
+        if isinstance(other, TaskTrackerFile):
+            return self.name == other.name and self.path == other.path and self.extension == other.extension
+        return False
+
+    def __hash__(self):
+        return hash((self.name, self.path, self.extension))
+
 
 def get_data_template(files: list) -> dict:
     return {
