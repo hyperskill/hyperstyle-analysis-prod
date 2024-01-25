@@ -81,7 +81,7 @@ collect_data = 'data_collection.src.collect_data:main'
 # Data labelling scripts
 run_hyperstyle = 'data_labelling.src.hyperstyle.evaluate:main'
 # JBA scripts
-prepare_course_data = 'jba.src.processing.prepare_course_data:main'
+collect_course_structure = 'jba.src.processing.collect_course_structure:main'
 process_course_data = 'jba.src.processing.data_processing:main'
 plot_task_attempt = 'jba.src.plots.task_attempt:main'
 plot_task_solving = 'jba.src.plots.task_solving:main'

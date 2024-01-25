@@ -8,7 +8,6 @@ import pandas as pd
 
 from core.src.utils.df_utils import read_df, filter_df_by_single_value, write_df
 from core.src.utils.file.extension_utils import AnalysisExtension
-from core.src.utils.file.file_utils import get_output_path
 from core.src.utils.file.yaml_utils import read_yaml_field_content
 from jba.src.models.edu_columns import (
     EduColumnName,
@@ -111,17 +110,15 @@ def get_course_structure(course_root: Path) -> pd.DataFrame:
 
 def configure_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
-        'submissions_path',
-        type=lambda value: Path(value).absolute(),
-        help='Path to .csv file with collected data.',
-    )
-
-    parser.add_argument('course_id', type=int, help='Course id to analyze.')
-
-    parser.add_argument(
         'course_sources_path',
         type=lambda value: Path(value).absolute(),
         help='Path to course sources to extract course structure.',
+    )
+
+    parser.add_argument(
+        'output_path',
+        type=lambda value: Path(value).absolute(),
+        help='Path to .csv file where to save the course structure.',
     )
 
 
@@ -131,10 +128,8 @@ def main():
 
     args = parser.parse_args()
 
-    filter_by_course_id_and_save(args.data_path, args.course_id)
-
     course_structure = get_course_structure(args.course_sources_path)
-    write_df(course_structure, get_output_path(args.data_path, '-with-structure'))
+    write_df(course_structure, args.output_path)
 
 
 if __name__ == '__main__':

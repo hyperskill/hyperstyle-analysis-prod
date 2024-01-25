@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+from tempfile import NamedTemporaryFile
 
 import pytest
 
@@ -7,7 +8,7 @@ from core.src.utils.df_utils import read_df
 from core.src.utils.subprocess_runner import run_in_subprocess
 from jba.src import MAIN_FOLDER
 from jba.src.models.edu_structure import EduStructureNode, EduStructureType
-from jba.src.processing.prepare_course_data import (
+from jba.src.processing.collect_course_structure import (
     _gather_structure,
     ID_META_FIELD,
     _convert_structure_to_dataframe,
@@ -215,7 +216,26 @@ def test_get_course_structure(course_root: Path, expected_structure_path: Path):
 
 
 def test_incorrect_arguments():
-    stdout, stderr = run_in_subprocess([sys.executable, (MAIN_FOLDER.parent / 'processing' / 'prepare_course_data.py')])
+    stdout, stderr = run_in_subprocess(
+        [sys.executable, (MAIN_FOLDER.parent / 'processing' / 'collect_course_structure.py')]
+    )
 
     assert stdout == ''
     assert 'error: the following arguments are required' in stderr
+
+
+@pytest.mark.parametrize(('course_root', 'expected_structure_path'), GET_COURSE_STRUCTURE_TEST_DATA)
+def test_correct_arguments(course_root: Path, expected_structure_path: Path):
+    with NamedTemporaryFile(suffix='.csv') as output_file:
+        stdout, stderr = run_in_subprocess(
+            [
+                sys.executable,
+                (MAIN_FOLDER.parent / 'processing' / 'collect_course_structure.py'),
+                str(course_root),
+                output_file.name,
+            ]
+        )
+
+        assert stdout == ''
+        assert stderr == ''
+        assert_frame_equal(read_df(output_file.name), read_df(expected_structure_path))
