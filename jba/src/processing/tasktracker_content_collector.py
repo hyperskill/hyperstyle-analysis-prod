@@ -1,27 +1,24 @@
 import re
 from dataclasses import dataclass
 from os import listdir
-
-import argparse
 from pathlib import Path
-
-from core.src.utils.file.yaml_utils import read_yaml_field_content, save_as_yaml
-from jba.src.models.edu_structure import EduStructureType, EduLesson, EduStructureNode
-from collect_course_structure import INFO_FILE_REGEX, _gather_structure  # noqa: WPS450
 from typing import List, Dict
 
-CONTENT_META_FIELD = 'content'
-FILES_META_FIELD = 'files'
-VISIBLE_META_FIELD = 'visible'
-TYPE_META_FIELD = 'type'
-NAME_META_FIELD = 'name'
+import argparse
+
+from collect_course_structure import gather_structure
+from core.src.utils.file.yaml_utils import read_yaml_field_content, save_as_yaml
+from jba.src.models.edu_structure import (
+    EduStructureType,
+    EduLesson,
+    EduStructureNode,
+    EduInfoFileField,
+    INFO_FILE_REGEX,
+)
 
 CONTENT_FILE_NAME = 'task_content_default.yaml'
-
 FRAMEWORK_TYPE = 'framework'
-
 TASK_DIRECTORY_NAME = 'task'
-
 EXTENSIONS = {'py': 'PYTHON', 'ipynb': 'JUPYTER', 'java': 'JAVA', 'kt': 'KOTLIN', 'cpp': 'CPP', 'csv': 'CSV'}
 
 
@@ -90,15 +87,15 @@ def get_files(root: Path, lesson: EduLesson) -> List[TaskTrackerFile]:
 def get_task_files(root: Path, relative_path: Path, is_framework: bool):
     info_file = get_info_file(root)
 
-    files = read_yaml_field_content(root / info_file, FILES_META_FIELD)
+    files = read_yaml_field_content(root / info_file, EduInfoFileField.FILES.value)
     if files is None:
         files = []
-    files = list(filter(lambda file: file[VISIBLE_META_FIELD], files))
+    files = list(filter(lambda file: file[EduInfoFileField.VISIBLE.value], files))
 
     def get_filename(file_content: Dict) -> TaskTrackerFile:
         if is_framework:
-            return TaskTrackerFile(relative_path / TASK_DIRECTORY_NAME / file_content[NAME_META_FIELD])
-        return TaskTrackerFile(relative_path / root.name / file_content[NAME_META_FIELD])
+            return TaskTrackerFile(relative_path / TASK_DIRECTORY_NAME / file_content[EduInfoFileField.NAME.value])
+        return TaskTrackerFile(relative_path / root.name / file_content[EduInfoFileField.NAME.value])
 
     return list(map(get_filename, files))
 
@@ -112,14 +109,14 @@ def course_structure_to_lessons(root: Path, structure: EduStructureNode):
         path = root / structure.name
     if structure.structure_type == EduStructureType.LESSON:
         info_file = get_info_file(path)
-        content = read_yaml_field_content(path / info_file, CONTENT_META_FIELD)
-        yaml_file_content = read_yaml_field_content(path / info_file, TYPE_META_FIELD)
+        content = read_yaml_field_content(path / info_file, EduInfoFileField.CONTENT.value)
+        yaml_file_content = read_yaml_field_content(path / info_file, EduInfoFileField.TYPE.value)
         return EduLesson(path, yaml_file_content is not None and yaml_file_content == FRAMEWORK_TYPE, content)
     return flatten([course_structure_to_lessons(path, node) for node in structure.children])
 
 
 def get_yaml_content(course_root: Path) -> Dict:
-    course_structure = _gather_structure(course_root)
+    course_structure = gather_structure(course_root)
     lessons = course_structure_to_lessons(course_root, course_structure)
 
     files = set()
