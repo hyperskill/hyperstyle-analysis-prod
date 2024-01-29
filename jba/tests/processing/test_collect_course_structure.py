@@ -11,7 +11,7 @@ from jba.src import MAIN_FOLDER
 from jba.src.models.edu_structure import EduStructureNode, EduStructureType, EduInfoFileField
 from jba.src.processing.collect_course_structure import (
     gather_structure,
-    _convert_course_structure_to_dataframe_recursively,
+    _convert_course_structure_to_dataframe,
     convert_course_structure_to_dataframe,
 )
 from jba.tests.processing import COLLECT_COURSE_STRUCTURE_FOLDER
@@ -196,7 +196,7 @@ CONVERT_STRUCTURE_TO_DATAFRAME_RECURSIVELY_TEST_DATA = [
 
 @pytest.mark.parametrize(('structure', 'expected_df_path'), CONVERT_STRUCTURE_TO_DATAFRAME_RECURSIVELY_TEST_DATA)
 def test_convert_structure_to_dataframe_recursively(structure: EduStructureNode, expected_df_path: Path):
-    assert_frame_equal(_convert_course_structure_to_dataframe_recursively(structure), read_df(expected_df_path))
+    assert_frame_equal(_convert_course_structure_to_dataframe(structure), read_df(expected_df_path))
 
 
 CONVERT_COURSE_STRUCTURE_TO_DATAFRAME_TEST_DATA = [

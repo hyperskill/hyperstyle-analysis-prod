@@ -60,7 +60,7 @@ def gather_structure(root: Path) -> EduStructureNode:  # noqa: WPS238
     return EduStructureNode(structure_id, root.name, structure_type, children)
 
 
-def _convert_course_structure_to_dataframe_recursively(structure: EduStructureNode) -> pd.DataFrame:
+def _convert_course_structure_to_dataframe(structure: EduStructureNode) -> pd.DataFrame:
     if structure.children is None:
         # If node has no content, then it is a task node
         return pd.DataFrame.from_dict(
@@ -69,7 +69,7 @@ def _convert_course_structure_to_dataframe_recursively(structure: EduStructureNo
 
     children_dfs = []
     for i, node in enumerate(structure.children, start=1):
-        node_df = _convert_course_structure_to_dataframe_recursively(node)
+        node_df = _convert_course_structure_to_dataframe(node)
         node_df[f'{node.structure_type.value}_{NUMBER_COLUMN_POSTFIX}'] = i
         node_df[f'{node.structure_type.value}_{AMOUNT_COLUMN_POSTFIX}'] = len(structure.children)
         children_dfs.append(node_df)
@@ -82,7 +82,7 @@ def _convert_course_structure_to_dataframe_recursively(structure: EduStructureNo
 
 
 def convert_course_structure_to_dataframe(course_structure: EduStructureNode) -> pd.DataFrame:
-    course_structure_df = _convert_course_structure_to_dataframe_recursively(course_structure)
+    course_structure_df = _convert_course_structure_to_dataframe(course_structure)
 
     # Removing unnecessary column
     course_structure_df.drop(
