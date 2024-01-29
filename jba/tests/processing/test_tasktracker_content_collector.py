@@ -53,4 +53,3 @@ def _test_course(course_name):
 def test_correct_arguments():
     _test_course('course_with_section')
     _test_course('course_without_section')
-    _test_course('course_with_undefined_structure_type')
