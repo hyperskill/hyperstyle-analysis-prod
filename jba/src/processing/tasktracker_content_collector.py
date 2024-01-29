@@ -7,7 +7,7 @@ from pathlib import Path
 
 from core.src.utils.file.yaml_utils import read_yaml_field_content, save_as_yaml
 from jba.src.models.edu_structure import EduStructureType, EduLesson, EduStructureNode
-from collect_course_structure import INFO_FILE_REGEX, _gather_structure
+from collect_course_structure import INFO_FILE_REGEX, _gather_structure  # noqa: WPS450
 from typing import List, Dict
 
 CONTENT_META_FIELD = 'content'
@@ -115,8 +115,7 @@ def course_structure_to_lessons(root: Path, structure: EduStructureNode):
         content = read_yaml_field_content(path / info_file, CONTENT_META_FIELD)
         yaml_file_content = read_yaml_field_content(path / info_file, TYPE_META_FIELD)
         return EduLesson(path, yaml_file_content is not None and yaml_file_content == FRAMEWORK_TYPE, content)
-    if len(structure.children) != 0:
-        return flatten([course_structure_to_lessons(path, node) for node in structure.children])
+    return flatten([course_structure_to_lessons(path, node) for node in structure.children])
 
 
 def get_yaml_content(course_root: Path) -> Dict:
