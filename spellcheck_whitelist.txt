@@ -14,6 +14,7 @@ csv
 dacite
 dataframe
 dedent
+deepdiff
 df
 dfs
 dif
@@ -138,5 +139,4 @@ ylabel
 yrange
 yticklabels
 yticks
-deepdiff
 TASKTRACKER
