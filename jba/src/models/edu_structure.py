@@ -45,10 +45,3 @@ class EduStructureNode:
             for child in self.children
             for path, leaf in child.gather_leafs_of_type(leaf_type).items()
         }
-
-
-@dataclass(frozen=True)
-class EduLesson:
-    root: Path
-    is_framework: bool
-    children: List[str]

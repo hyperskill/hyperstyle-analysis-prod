@@ -1,16 +1,14 @@
-import re
+import argparse
+import itertools
 from dataclasses import dataclass
-from os import listdir
 from pathlib import Path
 from typing import List, Dict
 
-import argparse
-
 from collect_course_structure import gather_structure
+from core.src.utils.file.file_utils import find_files_by_regex
 from core.src.utils.file.yaml_utils import read_yaml_field_content, save_as_yaml
 from jba.src.models.edu_structure import (
     EduStructureType,
-    EduLesson,
     EduStructureNode,
     EduInfoFileField,
     INFO_FILE_REGEX,
@@ -22,7 +20,7 @@ TASK_DIRECTORY_NAME = 'task'
 EXTENSIONS = {'py': 'PYTHON', 'ipynb': 'JUPYTER', 'java': 'JAVA', 'kt': 'KOTLIN', 'cpp': 'CPP', 'csv': 'CSV'}
 
 
-@dataclass(eq=False, frozen=True)
+@dataclass(eq=True, frozen=True)
 class TaskTrackerFile:
     rel_path: Path
 
@@ -59,32 +57,23 @@ def get_data_template(files: List[Dict]) -> Dict:
     }
 
 
-def flatten(files: List) -> List[TaskTrackerFile]:
-    result = []
-    for i in files:
-        if i is None:
-            continue
-        if isinstance(i, list):
-            result.extend(flatten(i))
-        else:
-            result.append(i)
-    return result
-
-
-def get_info_file(root: Path) -> str:
-    file_names = listdir(root)
-    info_files = list(filter(lambda file_name: re.match(INFO_FILE_REGEX, file_name), file_names))
-
+def get_info_file(root: Path) -> Path:
+    info_files = find_files_by_regex(root, INFO_FILE_REGEX)
     return info_files[0]
 
 
-def get_files(root: Path, lesson: EduLesson) -> List[TaskTrackerFile]:
-    relative_path = lesson.root.relative_to(root)
-    return flatten(
-        [get_task_files(lesson.root / child, relative_path, lesson.is_framework) for child in lesson.children])
+def get_files(course_root: Path, relative_path: Path, lesson: EduStructureNode) -> List[TaskTrackerFile]:
+    lesson_path = course_root / relative_path
+    info_file = get_info_file(lesson_path)
+    yaml_file_content = read_yaml_field_content(lesson_path / info_file, EduInfoFileField.TYPE.value)
+    return itertools.chain.from_iterable(
+        [get_task_files(lesson_path / child.name,
+                        relative_path,
+                        yaml_file_content is not None and yaml_file_content == FRAMEWORK_TYPE)
+         for child in lesson.children])
 
 
-def get_task_files(root: Path, relative_path: Path, is_framework: bool):
+def get_task_files(root: Path, relative_path: Path, is_framework: bool) -> List[TaskTrackerFile]:
     info_file = get_info_file(root)
 
     files = read_yaml_field_content(root / info_file, EduInfoFileField.FILES.value)
@@ -100,29 +89,11 @@ def get_task_files(root: Path, relative_path: Path, is_framework: bool):
     return list(map(get_filename, files))
 
 
-def course_structure_to_lessons(root: Path, structure: EduStructureNode):
-    if structure.structure_type == EduStructureType.TASK:
-        return None
-    if structure.structure_type == EduStructureType.COURSE:
-        path = root
-    else:
-        path = root / structure.name
-    if structure.structure_type == EduStructureType.LESSON:
-        info_file = get_info_file(path)
-        content = read_yaml_field_content(path / info_file, EduInfoFileField.CONTENT.value)
-        yaml_file_content = read_yaml_field_content(path / info_file, EduInfoFileField.TYPE.value)
-        return EduLesson(path, yaml_file_content is not None and yaml_file_content == FRAMEWORK_TYPE, content)
-    return flatten([course_structure_to_lessons(path, node) for node in structure.children])
-
-
 def get_yaml_content(course_root: Path) -> Dict:
     course_structure = gather_structure(course_root)
-    lessons = course_structure_to_lessons(course_root, course_structure)
-
-    files = set()
-    for lesson in lessons:
-        for file in get_files(course_root, lesson):
-            files.add(file)
+    lessons = course_structure.gather_leafs_of_type(EduStructureType.LESSON)
+    files = {file for path, lesson in lessons.items()
+             for file in get_files(course_root, Path(*path[1:]), lesson)}
     return get_data_template(list(map(lambda obj: obj.as_dict(), files)))
 
 
