@@ -20,7 +20,7 @@ TASK_DIRECTORY_NAME = 'task'
 EXTENSIONS = {'py': 'PYTHON', 'ipynb': 'JUPYTER', 'java': 'JAVA', 'kt': 'KOTLIN', 'cpp': 'CPP', 'csv': 'CSV'}
 
 
-@dataclass(eq=True, frozen=True)
+@dataclass(frozen=True)
 class TaskTrackerFile:
     rel_path: Path
 
@@ -62,31 +62,29 @@ def get_info_file(root: Path) -> Path:
     return info_files[0]
 
 
-def get_files(course_root: Path, relative_path: Path, lesson: EduStructureNode) -> List[TaskTrackerFile]:
+def get_lesson_files(course_root: Path, relative_path: Path, lesson: EduStructureNode) -> List[TaskTrackerFile]:
     lesson_path = course_root / relative_path
     info_file = get_info_file(lesson_path)
-    yaml_file_content = read_yaml_field_content(lesson_path / info_file, EduInfoFileField.TYPE.value)
+    lesson_type = read_yaml_field_content(lesson_path / info_file, EduInfoFileField.TYPE.value)
     return itertools.chain.from_iterable(
         [get_task_files(lesson_path / child.name,
                         relative_path,
-                        yaml_file_content is not None and yaml_file_content == FRAMEWORK_TYPE)
+                        lesson_type == FRAMEWORK_TYPE)
          for child in lesson.children])
 
 
-def get_task_files(root: Path, relative_path: Path, is_framework: bool) -> List[TaskTrackerFile]:
-    info_file = get_info_file(root)
+def get_task_files(task_root: Path, relative_path: Path, is_framework: bool) -> List[TaskTrackerFile]:
+    info_file = get_info_file(task_root)
 
-    files = read_yaml_field_content(root / info_file, EduInfoFileField.FILES.value)
-    if files is None:
-        files = []
+    files = read_yaml_field_content(task_root / info_file, EduInfoFileField.FILES.value, [])
     files = list(filter(lambda file: file[EduInfoFileField.VISIBLE.value], files))
 
-    def get_filename(file_content: Dict) -> TaskTrackerFile:
+    def convert_to_task_tracker_file(file_content: Dict) -> TaskTrackerFile:
         if is_framework:
             return TaskTrackerFile(relative_path / TASK_DIRECTORY_NAME / file_content[EduInfoFileField.NAME.value])
-        return TaskTrackerFile(relative_path / root.name / file_content[EduInfoFileField.NAME.value])
+        return TaskTrackerFile(relative_path / task_root.name / file_content[EduInfoFileField.NAME.value])
 
-    return list(map(get_filename, files))
+    return list(map(convert_to_task_tracker_file, files))
 
 
 def get_yaml_content(course_root: Path) -> Dict:
@@ -95,22 +93,22 @@ def get_yaml_content(course_root: Path) -> Dict:
     files = {
         file
         for path, lesson in lessons.items()
-        for file in get_files(course_root, Path(*path[1:]), lesson)
+        for file in get_lesson_files(course_root, Path(*path[1:]), lesson)
     }
     return get_data_template(list(map(lambda obj: obj.as_dict(), files)))
 
 
 def configure_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
-        'destination_path',
-        type=lambda value: Path(value).absolute(),
-        help='Path to directory where yaml file will be created',
-    )
-
-    parser.add_argument(
         'course_sources_path',
         type=lambda value: Path(value).absolute(),
         help='Path to course sources to extract course structure.',
+    )
+
+    parser.add_argument(
+        'destination_path',
+        type=lambda value: Path(value).absolute(),
+        help='Path to directory where yaml file will be created',
     )
 
 

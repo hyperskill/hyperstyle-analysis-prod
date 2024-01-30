@@ -97,8 +97,8 @@ docker run hyperstyle-analysis-prod:<VERSION> poetry run tasktracker_content_col
 
 **Required arguments**:
 
+- `course_sources_path` — Path to course sources to extract course structure.
 - `destination_path` — Path to directory where yaml file will be created.
-- `course_sources_path` — Path to course sources to extract course structure..
 
 ----
 
