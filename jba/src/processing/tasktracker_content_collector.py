@@ -92,8 +92,11 @@ def get_task_files(root: Path, relative_path: Path, is_framework: bool) -> List[
 def get_yaml_content(course_root: Path) -> Dict:
     course_structure = gather_structure(course_root)
     lessons = course_structure.gather_leafs_of_type(EduStructureType.LESSON)
-    files = {file for path, lesson in lessons.items()
-             for file in get_files(course_root, Path(*path[1:]), lesson)}
+    files = {
+        file
+        for path, lesson in lessons.items()
+        for file in get_files(course_root, Path(*path[1:]), lesson)
+    }
     return get_data_template(list(map(lambda obj: obj.as_dict(), files)))
 
 
