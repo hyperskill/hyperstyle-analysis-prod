@@ -57,7 +57,7 @@ def get_data_template(files: List[Dict]) -> Dict:
     }
 
 
-def get_info_file(root: Path) -> Path:
+def get_info_file(root: Path) -> str:
     info_files = find_files_by_regex(root, INFO_FILE_REGEX)
     return info_files[0]
 

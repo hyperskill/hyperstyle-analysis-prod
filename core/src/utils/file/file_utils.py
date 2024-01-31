@@ -96,5 +96,5 @@ def get_output_path(input_path: Union[str, Path], output_suffix: str) -> Path:
     return parent_dir / output_filename
 
 
-def find_files_by_regex(path: Path, regex: re.Pattern) -> List[Path]:
+def find_files_by_regex(path: Path, regex: re.Pattern) -> List[str]:
     return list(filter(lambda file_name: re.match(regex, file_name), os.listdir(path)))
