@@ -1,13 +1,11 @@
 import re
-from os import listdir
-
-import argparse
 from pathlib import Path
 
+import argparse
 import pandas as pd
 
 from core.src.utils.df_utils import write_df
-from core.src.utils.file.extension_utils import AnalysisExtension
+from core.src.utils.file.file_utils import find_files_by_regex
 from core.src.utils.file.yaml_utils import read_yaml_field_content
 from jba.src.models.edu_columns import (
     EduColumnName,
@@ -16,26 +14,24 @@ from jba.src.models.edu_columns import (
     ID_COLUMN_POSTFIX,
     NAME_COLUMN_POSTFIX,
 )
-from jba.src.models.edu_structure import EduStructureNode, EduStructureType
+from jba.src.models.edu_structure import (
+    EduStructureNode,
+    EduStructureType,
+    EduInfoFileField,
+    INFO_FILE_REGEX,
+    REMOTE_INFO_FILE_REGEX,
+)
 
-CONTENT_META_FIELD = 'content'
-ID_META_FIELD = 'id'
 
-INFO_FILE_REGEX = re.compile(f'([a-z]+)-info{AnalysisExtension.YAML.value}')
-REMOTE_INFO_FILE_REGEX = re.compile(f'([a-z]+)-remote-info{AnalysisExtension.YAML.value}')
-
-
-def _gather_structure(root: Path) -> EduStructureNode:  # noqa: WPS238
-    file_names = listdir(root)
-
-    info_files = list(filter(lambda file_name: re.match(INFO_FILE_REGEX, file_name), file_names))
+def gather_structure(root: Path) -> EduStructureNode:  # noqa: WPS238
+    info_files = find_files_by_regex(root, INFO_FILE_REGEX)
     if len(info_files) != 1:
         raise ValueError(f'The number of info files in {root} must be exactly 1 (actual: {len(info_files)}).')
 
     info_file = info_files[0]
     info_file_structure_type = re.match(INFO_FILE_REGEX, info_file).group(1)
 
-    remote_info_files = list(filter(lambda file_name: re.match(REMOTE_INFO_FILE_REGEX, file_name), file_names))
+    remote_info_files = find_files_by_regex(root, REMOTE_INFO_FILE_REGEX)
     if len(remote_info_files) != 1:
         raise ValueError(
             f'The number of remote info files in {root} must be exactly 1 (actual: {len(remote_info_files)}).',
@@ -49,14 +45,14 @@ def _gather_structure(root: Path) -> EduStructureNode:  # noqa: WPS238
 
     structure_type = EduStructureType(info_file_structure_type)
 
-    structure_id = read_yaml_field_content(root / remote_info_file, ID_META_FIELD)
+    structure_id = read_yaml_field_content(root / remote_info_file, EduInfoFileField.ID.value)
     if structure_id is None:
-        raise ValueError(f'{root / remote_info_file} must contain the {ID_META_FIELD} field.')
+        raise ValueError(f'{root / remote_info_file} must contain the {EduInfoFileField.ID.value} field.')
 
     children = None
-    content = read_yaml_field_content(root / info_file, CONTENT_META_FIELD)
+    content = read_yaml_field_content(root / info_file, EduInfoFileField.CONTENT.value)
     if content is not None:
-        children = [_gather_structure(root / name) for name in content]
+        children = [gather_structure(root / name) for name in content]
 
         if not all([node.structure_type == children[0].structure_type for node in children]):
             raise ValueError(f'All children nodes inside {root} must have the same structure type.')
@@ -64,7 +60,7 @@ def _gather_structure(root: Path) -> EduStructureNode:  # noqa: WPS238
     return EduStructureNode(structure_id, root.name, structure_type, children)
 
 
-def _convert_structure_to_dataframe(structure: EduStructureNode) -> pd.DataFrame:
+def _convert_course_structure_to_dataframe(structure: EduStructureNode) -> pd.DataFrame:
     if structure.children is None:
         # If node has no content, then it is a task node
         return pd.DataFrame.from_dict(
@@ -73,7 +69,7 @@ def _convert_structure_to_dataframe(structure: EduStructureNode) -> pd.DataFrame
 
     children_dfs = []
     for i, node in enumerate(structure.children, start=1):
-        node_df = _convert_structure_to_dataframe(node)
+        node_df = _convert_course_structure_to_dataframe(node)
         node_df[f'{node.structure_type.value}_{NUMBER_COLUMN_POSTFIX}'] = i
         node_df[f'{node.structure_type.value}_{AMOUNT_COLUMN_POSTFIX}'] = len(structure.children)
         children_dfs.append(node_df)
@@ -85,9 +81,8 @@ def _convert_structure_to_dataframe(structure: EduStructureNode) -> pd.DataFrame
     return structure_df
 
 
-def get_course_structure(course_root: Path) -> pd.DataFrame:
-    course_structure = _gather_structure(course_root)
-    course_structure_df = _convert_structure_to_dataframe(course_structure)
+def convert_course_structure_to_dataframe(course_structure: EduStructureNode) -> pd.DataFrame:
+    course_structure_df = _convert_course_structure_to_dataframe(course_structure)
 
     # Removing unnecessary column
     course_structure_df.drop(
@@ -122,8 +117,9 @@ def main():
 
     args = parser.parse_args()
 
-    course_structure = get_course_structure(args.course_sources_path)
-    write_df(course_structure, args.output_path)
+    course_structure = gather_structure(args.course_sources_path)
+    course_structure_df = convert_course_structure_to_dataframe(course_structure)
+    write_df(course_structure_df, args.output_path)
 
 
 if __name__ == '__main__':

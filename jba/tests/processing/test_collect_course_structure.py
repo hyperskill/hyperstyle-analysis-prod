@@ -3,20 +3,18 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 
 import pytest
+from pandas._testing import assert_frame_equal
 
 from core.src.utils.df_utils import read_df
 from core.src.utils.subprocess_runner import run_in_subprocess
 from jba.src import MAIN_FOLDER
-from jba.src.models.edu_structure import EduStructureNode, EduStructureType
+from jba.src.models.edu_structure import EduStructureNode, EduStructureType, EduInfoFileField
 from jba.src.processing.collect_course_structure import (
-    _gather_structure,
-    ID_META_FIELD,
-    _convert_structure_to_dataframe,
-    get_course_structure,
+    gather_structure,
+    _convert_course_structure_to_dataframe,
+    convert_course_structure_to_dataframe,
 )
 from jba.tests.processing import COLLECT_COURSE_STRUCTURE_FOLDER
-from pandas._testing import assert_frame_equal
-
 
 COURSE_WITH_SECTION_STRUCTURE = EduStructureNode(
     1,
@@ -77,7 +75,7 @@ GATHER_STRUCTURE_TEST_DATA = [
 
 @pytest.mark.parametrize(('course_root', 'expected_structure'), GATHER_STRUCTURE_TEST_DATA)
 def test_gather_structure(course_root: Path, expected_structure: EduStructureNode):
-    actual_structure = _gather_structure(course_root)
+    actual_structure = gather_structure(course_root)
     assert actual_structure == expected_structure
 
 
@@ -94,7 +92,10 @@ GATHER_STRUCTURE_THROWS_TEST_DATA = [
         COLLECT_COURSE_STRUCTURE_FOLDER / 'course_with_undefined_structure_type',
         r'Unable to determine a structure type for .+\.',
     ),
-    (COLLECT_COURSE_STRUCTURE_FOLDER / 'course_with_incorrect_id_field', rf'.+ must contain the {ID_META_FIELD} field\.'),
+    (
+        COLLECT_COURSE_STRUCTURE_FOLDER / 'course_with_incorrect_id_field',
+        rf'.+ must contain the {EduInfoFileField.ID.value} field\.',
+    ),
     (
         COLLECT_COURSE_STRUCTURE_FOLDER / 'course_with_inconsistent_children',
         r'All children nodes inside .+ must have the same structure type\.',
@@ -109,10 +110,10 @@ GATHER_STRUCTURE_THROWS_TEST_DATA = [
 @pytest.mark.parametrize(('course_root', 'expected_message'), GATHER_STRUCTURE_THROWS_TEST_DATA)
 def test_gather_structure_throws(course_root: Path, expected_message: str):
     with pytest.raises(ValueError, match=expected_message):
-        _gather_structure(course_root)
+        gather_structure(course_root)
 
 
-CONVERT_STRUCTURE_TO_DATAFRAME_TEST_DATA = [
+CONVERT_STRUCTURE_TO_DATAFRAME_RECURSIVELY_TEST_DATA = [
     (
         COURSE_WITH_SECTION_STRUCTURE,
         COLLECT_COURSE_STRUCTURE_FOLDER / 'expected_course_with_section_df_structure.csv',
@@ -193,12 +194,12 @@ CONVERT_STRUCTURE_TO_DATAFRAME_TEST_DATA = [
 ]
 
 
-@pytest.mark.parametrize(('structure', 'expected_df_path'), CONVERT_STRUCTURE_TO_DATAFRAME_TEST_DATA)
-def test_convert_structure_to_dataframe(structure: EduStructureNode, expected_df_path: Path):
-    assert_frame_equal(_convert_structure_to_dataframe(structure), read_df(expected_df_path))
+@pytest.mark.parametrize(('structure', 'expected_df_path'), CONVERT_STRUCTURE_TO_DATAFRAME_RECURSIVELY_TEST_DATA)
+def test_convert_structure_to_dataframe_recursively(structure: EduStructureNode, expected_df_path: Path):
+    assert_frame_equal(_convert_course_structure_to_dataframe(structure), read_df(expected_df_path))
 
 
-GET_COURSE_STRUCTURE_TEST_DATA = [
+CONVERT_COURSE_STRUCTURE_TO_DATAFRAME_TEST_DATA = [
     (
         COLLECT_COURSE_STRUCTURE_FOLDER / 'course_with_section',
         COLLECT_COURSE_STRUCTURE_FOLDER / 'expected_course_with_section.csv',
@@ -210,9 +211,10 @@ GET_COURSE_STRUCTURE_TEST_DATA = [
 ]
 
 
-@pytest.mark.parametrize(('course_root', 'expected_structure_path'), GET_COURSE_STRUCTURE_TEST_DATA)
-def test_get_course_structure(course_root: Path, expected_structure_path: Path):
-    assert_frame_equal(get_course_structure(course_root), read_df(expected_structure_path))
+@pytest.mark.parametrize(('course_root', 'expected_structure_path'), CONVERT_COURSE_STRUCTURE_TO_DATAFRAME_TEST_DATA)
+def test_convert_course_structure_to_dataframe(course_root: Path, expected_structure_path: Path):
+    course_structure = gather_structure(course_root)
+    assert_frame_equal(convert_course_structure_to_dataframe(course_structure), read_df(expected_structure_path))
 
 
 def test_incorrect_arguments():
@@ -224,7 +226,7 @@ def test_incorrect_arguments():
     assert 'error: the following arguments are required' in stderr
 
 
-@pytest.mark.parametrize(('course_root', 'expected_structure_path'), GET_COURSE_STRUCTURE_TEST_DATA)
+@pytest.mark.parametrize(('course_root', 'expected_structure_path'), CONVERT_COURSE_STRUCTURE_TO_DATAFRAME_TEST_DATA)
 def test_correct_arguments(course_root: Path, expected_structure_path: Path):
     with NamedTemporaryFile(suffix='.csv') as output_file:
         stdout, stderr = run_in_subprocess(

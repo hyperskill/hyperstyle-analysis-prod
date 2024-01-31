@@ -3,7 +3,7 @@ import re
 import shutil
 import tempfile
 from pathlib import Path
-from typing import Union
+from typing import Union, List
 
 from hyperstyle.src.python.review.common.file_system import Extension, ItemCondition
 
@@ -94,3 +94,7 @@ def get_output_path(input_path: Union[str, Path], output_suffix: str) -> Path:
     output_filename = get_output_filename(input_path, output_suffix)
 
     return parent_dir / output_filename
+
+
+def find_files_by_regex(path: Path, regex: re.Pattern) -> List[str]:
+    return list(filter(lambda file_name: re.match(regex, file_name), os.listdir(path)))

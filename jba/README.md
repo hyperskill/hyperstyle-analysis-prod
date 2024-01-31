@@ -81,6 +81,25 @@ docker run hyperstyle-analysis-prod:<VERSION> poetry run process_course_data [ar
 
 After this step you will get a new file with course data with `courseId_preprocessed` suffix. 
 
+
+3. [tasktracker_content_collector.py](src/processing/tasktracker_content_collector.py) collects data from the course into the tasktracker task content file format
+
+### Usage
+
+Execute one of the following commands with necessary arguments:
+```bash
+poetry run tasktracker_content_collector [arguments]
+```
+or
+```bash
+docker run hyperstyle-analysis-prod:<VERSION> poetry run tasktracker_content_collector [arguments]
+```
+
+**Required arguments**:
+
+- `course_sources_path` — Path to course sources to extract course structure.
+- `destination_path` — Path to directory where yaml file will be created.
+
 ----
 
 # Simple general statistics
