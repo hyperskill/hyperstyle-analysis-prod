@@ -1,18 +1,18 @@
 import json
-from pathlib import Path
+from typing import Optional
 
-import argparse
 import pandas as pd
 
 from core.src.model.column_name import SubmissionColumns
-from core.src.utils.df_utils import read_df, write_df
 from jba.src.models.edu_columns import EduColumnName, EduTaskStatus
 
 
-def get_main_content(snippets) -> str:
+def get_main_content(snippets) -> Optional[str]:
     for snippet in snippets:
         if 'Main.kt' in snippet['name']:
-            return '\n' + snippet['text']
+            return '\n' + snippet['text']  # noqa: WPS336
+
+    return None
 
 
 def convert_submissions(submissions: pd.DataFrame) -> pd.DataFrame:

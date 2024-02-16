@@ -56,14 +56,14 @@ class JPlagRunner:
         cmd = 'java -jar'
 
         for arg_name, arg_value in named_args.items():
-            if not arg_name.startswith('-'):
-                cmd = cmd + f' {arg_value}'
+            if arg_name.startswith('-'):
+                cmd = f'{cmd} {arg_name} {arg_value}'
             else:
-                cmd = cmd + f' {arg_name} {arg_value}'
+                cmd = f'{cmd} {arg_value}'
 
         for arg_name, arg_value in flag_args.items():
             if arg_value:
-                cmd = cmd + f' {arg_name}'
+                cmd = f'{cmd} {arg_name}'
 
         return cmd.split()
 

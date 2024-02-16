@@ -99,10 +99,11 @@ def show_agglomerative_clustering(
             )
         except Exception as e:
             print(e)
-            continue
 
     separate_solutions_by_threshold = {
-        threshold: set(submissions[submissions["task_id"] == task_id]["id"].unique())
+        threshold: set(  # noqa: WPS441
+            submissions[submissions[EduColumnName.TASK_ID.value] == task_id][EduColumnName.ID.value].unique()
+        )
         - set(itertools.chain.from_iterable(cluster))
         for threshold, cluster in clusters_by_threshold.items()
     }
@@ -117,7 +118,7 @@ def show_agglomerative_clustering(
             format_func=lambda item: format_threshold_option(*item, separate_solutions_by_threshold),
         )
 
-    separate_solutions = separate_solutions_by_threshold[threshold]
+    separate_solutions = separate_solutions_by_threshold[threshold]  # noqa: WPS441
     all_clusters = clusters + [[solution] for solution in separate_solutions]
 
     with middle:
@@ -214,15 +215,10 @@ def show_spectral_clustering(
 
 
 def main():
-    # submissions_path = st.text_input('Submissions:')
-    # course_structure_path = st.text_input('Course structure path:')
-    # executable_path = st.text_input('Executable path:')
-    # output_path = st.text_input('Output:')
-
-    submissions_path = '/Users/ilya.vlasov/Documents/jplag/koi/submissions-with_structure.csv'
-    course_structure_path = '/Users/ilya.vlasov/Documents/JBA submissions analysis/18 Aug 23/koi/course_structure.csv'
-    executable_path = '/Users/ilya.vlasov/Documents/jplag/jplag-4.3.0-jar-with-dependencies.jar'
-    output_path = '/Users/ilya.vlasov/Documents/jplag/koi/'
+    submissions_path = st.text_input('Submissions:')
+    course_structure_path = st.text_input('Course structure path:')
+    executable_path = st.text_input('Executable path:')
+    output_path = st.text_input('Output:')
 
     if not submissions_path or not course_structure_path or not executable_path or not output_path:
         st.stop()
@@ -242,8 +238,8 @@ def main():
     task_id = st.selectbox(
         'Task:',
         options=course_structure[EduColumnName.TASK_ID.value].unique(),
-        format_func=lambda value: '/'.join(
-            course_structure[course_structure[EduColumnName.TASK_ID.value] == value]
+        format_func=lambda task_id: '/'.join(
+            course_structure[course_structure[EduColumnName.TASK_ID.value] == task_id]
             .reset_index()
             .loc[0, get_edu_name_columns(course_structure)]
         ),
