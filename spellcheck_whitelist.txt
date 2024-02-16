@@ -1,4 +1,4 @@
-TASKTRACKER
+tasktracker
 WPS336
 arange
 astype
@@ -140,3 +140,8 @@ ylabel
 yrange
 yticklabels
 yticks
+cdf
+plag
+jplag
+cmd
+agglomerative
