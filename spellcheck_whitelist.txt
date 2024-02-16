@@ -1,12 +1,14 @@
-tasktracker
 WPS336
+agglomerative
 arange
 astype
 barh
 bbox
 borderaxespad
 bs4
+cdf
 cleanupSemantic
+cmd
 comparator
 concat
 copyfile
@@ -61,6 +63,7 @@ iterrows
 itertuples
 jba
 jpg
+jplag
 langs
 linkedin
 listdir
@@ -83,6 +86,7 @@ parametrized
 params
 parsers
 pathlib
+plag
 plotly
 plt
 pos
@@ -109,6 +113,7 @@ styleguide
 subheader
 substring
 svg
+tasktracker
 textwrap
 ticklabels
 tmp
@@ -140,8 +145,3 @@ ylabel
 yrange
 yticklabels
 yticks
-cdf
-plag
-jplag
-cmd
-agglomerative
