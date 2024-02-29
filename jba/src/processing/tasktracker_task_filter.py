@@ -10,7 +10,7 @@ PACKAGE_PATTERN = r'package ([\w\.]+)'
 FRAGMENT_COLUMN = 'fragment'
 TASK_COLUMN = 'task'
 DATE_COLUMN = 'date'
-DATE_FORMAT = '%d.%m.%Y'
+DATE_FORMAT = '%d.%m.%Y'  # noqa: WPS323
 
 
 def configure_parser(parser: argparse.ArgumentParser) -> None:
