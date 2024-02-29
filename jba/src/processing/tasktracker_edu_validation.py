@@ -54,8 +54,7 @@ def research_to_email(users_path: Path, researches_path: Path) -> Dict[str, str]
         EMAIL_COLUMN].to_dict()
 
 
-# noqa: WPS320
-def split_dataframe(filtered_df: pd.DataFrame, edu_df: pd.DataFrame, res_to_email: Dict[str, str]) -> (
+def split_dataframe(filtered_df: pd.DataFrame, edu_df: pd.DataFrame, res_to_email: Dict[str, str]) -> (   # noqa: WPS320
         pd.DataFrame, pd.DataFrame):
     filtered_df[EMAIL_COLUMN] = filtered_df[RESEARCH_ID_COLUMN].map(res_to_email)
     edu_emails = edu_df[EMAIL_COLUMN].unique()
