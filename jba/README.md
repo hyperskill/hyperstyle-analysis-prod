@@ -100,6 +100,26 @@ docker run hyperstyle-analysis-prod:<VERSION> poetry run tasktracker_content_col
 - `course_sources_path` — Path to course sources to extract course structure.
 - `destination_path` — Path to directory where yaml file will be created.
 
+
+4.[tasktracker_task_filter.py](src/processing/tasktracker_task_filter.py) filtering data by the start research date. Grouping by package name.
+
+### Usage
+
+Execute one of the following commands with necessary arguments:
+```bash
+poetry run tasktracker_task_filter [arguments]
+```
+or
+```bash
+docker run hyperstyle-analysis-prod:<VERSION> poetry run tasktracker_task_filter [arguments]
+```
+
+**Required arguments**:
+
+- `document_path` — Path to documentdata.csv.
+- `destination_path` — Path of the file to save filtered data.
+- `start_date` — Start of the research in the DD.MM.YYYY format.
+
 ----
 
 # Simple general statistics
