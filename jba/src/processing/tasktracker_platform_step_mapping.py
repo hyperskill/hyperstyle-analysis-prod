@@ -24,7 +24,6 @@ SOLUTION_TEXT = 'solution_text'
 EMAIL = 'email'
 
 # TaskTracker dataset column names
-TT_ID = 'id'
 TT_DATE = 'date'
 TT_FRAGMENT = 'fragment'
 TT_EMAIL = 'email'
@@ -80,9 +79,13 @@ def map_solutions(tasktracker_file_path: Path, platform_file_path: Path) -> pd.D
     tasktracker_df = read_df(tasktracker_file_path)
     platform_df = read_df(platform_file_path)
 
-    tasktracker_df = tasktracker_df.dropna()
+    tasktracker_df = tasktracker_df.dropna(subset=[TT_DATE, TT_FRAGMENT, TT_EMAIL, TT_PACKAGE])
+
     tasktracker_df = tasktracker_df.sort_values(by=TT_DATE)
     platform_df = platform_df.sort_values(by=EduColumnName.SUBMISSION_DATETIME.value)
+
+    tasktracker_df[TT_LESSON_NUMBER] = None
+    tasktracker_df[TT_TASK_NAME] = None
 
     user_emails = tasktracker_df[TT_EMAIL].unique()
 
@@ -98,7 +101,8 @@ def map_solutions(tasktracker_file_path: Path, platform_file_path: Path) -> pd.D
                                                                   lesson_number)
 
             user_tt_filtered_df = find_mapping_solutions(user_tt_filtered_df, user_platform_filtered_df, lesson_number)
-            tasktracker_df = merge_dfs(tasktracker_df, user_tt_filtered_df, TT_ID, TT_ID, 'left')
+            tasktracker_df.loc[user_tt_filtered_df.index, [TT_LESSON_NUMBER, TT_TASK_NAME]] = (
+                user_tt_filtered_df)[[TT_LESSON_NUMBER, TT_TASK_NAME]]
 
     return tasktracker_df
 
