@@ -117,7 +117,7 @@ docker run hyperstyle-analysis-prod:<VERSION> poetry run tasktracker_content_col
 - `course_sources_path` — Path to course sources to extract course structure.
 - `destination_path` — Path to directory where yaml file will be created.
 
-4.[tasktracker_task_filter.py](src/processing/tasktracker_task_filter.py) filtering data by the start research date.
+4. [tasktracker_task_filter.py](src/processing/tasktracker_task_filter.py) filtering data by the start research date.
 Grouping by package name.
 
 ### Usage
@@ -140,7 +140,7 @@ docker run hyperstyle-analysis-prod:<VERSION> poetry run tasktracker_task_filter
 - `destination_path` — Path of the file to save filtered data.
 - `start_date` — Start of the research in the DD.MM.YYYY format.
 
-5.[tasktracker_edu_validation.py](src/processing/tasktracker_edu_validation.py) Divide filtered tasktracker file to 2
+5. [tasktracker_edu_validation.py](src/processing/tasktracker_edu_validation.py) Divide filtered tasktracker file to 2
 files - the first with emails that have been presented in the edu csv file, and the second file without them.
 
 ### Usage
@@ -192,7 +192,7 @@ docker run hyperstyle-analysis-prod:<VERSION> poetry run tasktracker_edu_validat
    Optional arguments:
 
    | Argument                            | Description                                 |
-         |-------------------------------------|---------------------------------------------|
+   |-------------------------------------|---------------------------------------------|
    | **&#8209;&#8209;course&#8209;name** | Name of the course to display on the chart. |
 
 
@@ -218,7 +218,7 @@ docker run hyperstyle-analysis-prod:<VERSION> poetry run tasktracker_edu_validat
    **Optional arguments**:
 
    | Argument                            | Description                                 |
-         |-------------------------------------|---------------------------------------------|
+   |-------------------------------------|---------------------------------------------|
    | **&#8209;&#8209;course&#8209;name** | Name of the course to display on the chart. |
 
 3. [task_duplicates.py](src/plots/task_duplicates.py) allows you to plot line charts how many duplicate submissions
@@ -243,7 +243,7 @@ docker run hyperstyle-analysis-prod:<VERSION> poetry run tasktracker_edu_validat
    **Optional arguments**:
 
    | Argument                            | Description                                 |
-         |-------------------------------------|---------------------------------------------|
+   |-------------------------------------|---------------------------------------------|
    | **&#8209;&#8209;course&#8209;name** | Name of the course to display on the chart. |
 
 Charts plotted with this module can be found in [this section](#visualization).
@@ -280,7 +280,7 @@ then your module should be named `Introduction-LastPush-CompleteTheProject`
    **Optional arguments**:
 
    | Argument                                         | Description                                                                 |
-         |--------------------------------------------------|-----------------------------------------------------------------------------|
+   |--------------------------------------------------|-----------------------------------------------------------------------------|
    | **&#8209;&#8209;timeout**                        | Timeout in seconds for subprocess to be executed.                           |
    | **&#8209;&#8209;n&#8209;cpu**                    | Number of CPUs to use for parallel execution.                               |
    | **&#8209;&#8209;force&#8209;ignore&#8209;tests** | Force to ignore substitution of test files if they are visible to the user. |
@@ -328,7 +328,7 @@ then your module should be named `Introduction-LastPush-CompleteTheProject`
    **Optional arguments**:
 
    | Argument                | Description                  |
-         |-------------------------|------------------------------|
+   |-------------------------|------------------------------|
    | **&#8209;&#8209;debug** | Run the script in debug mode |
 
 Charts plotted with this module can be found in [this section](#visualization).

@@ -1,6 +1,6 @@
 import argparse
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Tuple
 
 import pandas as pd
 
@@ -54,8 +54,8 @@ def research_to_email(users_path: Path, researches_path: Path) -> Dict[str, str]
         EMAIL_COLUMN].to_dict()
 
 
-def split_dataframe(filtered_df: pd.DataFrame, edu_df: pd.DataFrame, res_to_email: Dict[str, str]) -> (   # noqa: WPS320
-        pd.DataFrame, pd.DataFrame):
+def split_dataframe(filtered_df: pd.DataFrame, edu_df: pd.DataFrame, res_to_email: Dict[str, str]) \
+        -> Tuple[pd.DataFrame, pd.DataFrame]:
     filtered_df[EMAIL_COLUMN] = filtered_df[RESEARCH_ID_COLUMN].map(res_to_email)
     edu_emails = edu_df[EMAIL_COLUMN].unique()
     df_in_edu = filtered_df[filtered_df[EMAIL_COLUMN].isin(edu_emails)]
@@ -63,7 +63,7 @@ def split_dataframe(filtered_df: pd.DataFrame, edu_df: pd.DataFrame, res_to_emai
     return df_in_edu, df_not_in_edu
 
 
-def validate(filtered_data: Path, edu_file: Path, destination_path: Path, res_to_email: Dict[str, str]) -> None:
+def validate(filtered_data: Path, edu_file: Path, destination_path: Path, res_to_email: Dict[str, str]):
     filtered_df = read_df(filtered_data)
     edu_df = read_df(edu_file)
     df_in_edu, df_not_in_edu = split_dataframe(filtered_df, edu_df, res_to_email)
