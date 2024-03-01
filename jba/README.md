@@ -120,15 +120,18 @@ docker run hyperstyle-analysis-prod:<VERSION> poetry run tasktracker_content_col
 4. [tasktracker_task_filter.py](src/processing/tasktracker_task_filter.py) filtering data by the start research date.
 Grouping by package name.
 
+
 ### Usage
 
 Execute one of the following commands with necessary arguments:
+
 
 ```bash
 poetry run tasktracker_task_filter [arguments]
 ```
 
 or
+
 
 ```bash
 docker run hyperstyle-analysis-prod:<VERSION> poetry run tasktracker_task_filter [arguments]
@@ -164,6 +167,7 @@ docker run hyperstyle-analysis-prod:<VERSION> poetry run tasktracker_edu_validat
 - `users_file` — Tasktracker users.csv file.
 - `researches_file` — Tasktracker researches.csv file.
 - `edu_file` — Edu csv file.
+
 
 ----
 
