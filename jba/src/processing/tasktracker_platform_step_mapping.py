@@ -63,8 +63,7 @@ def find_mapping_solutions(user_df: pd.DataFrame, platform_df: pd.DataFrame, les
             break
 
     if last_status == EduTaskStatus.WRONG.value:
-        for index, _ in enumerate(range(user_ind, len(user_df))):
-            user_df.at[user_index[index + user_ind], TASKTRACKER_TASK_NAME] = platform_task_name
+        user_df.at[user_index[user_ind:len(user_df)], TASKTRACKER_TASK_NAME] = platform_task_name
 
     return user_df
 
