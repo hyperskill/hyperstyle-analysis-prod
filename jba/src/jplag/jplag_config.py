@@ -68,11 +68,14 @@ class JPlagConfiguration:
     def to_file_path(self) -> Path:
         elements = [f'{self.algorithm.value}-{self.metric.value}-{self.preprocessing.value}']
 
-        if self.algorithm == Algorithm.AGGLOMERATIVE_CLUSTERING:
-            elements.extend(map(str, [self.threshold, self.inter_cluster_similarity]))
-        else:
-            elements.extend(
-                map(str, [self.bandwidth, self.noise, self.min_runs, self.max_runs, self.k_means_iterations])
-            )
+        match self.algorithm:
+            case Algorithm.AGGLOMERATIVE_CLUSTERING:
+                args = [self.threshold, self.inter_cluster_similarity]
+            case Algorithm.SPECTRAL_CLUSTERING:
+                args = [self.bandwidth, self.noise, self.min_runs, self.max_runs, self.k_means_iterations]
+            case _:
+                raise NotImplementedError(f'Unknown algorithm: {self.algorithm}')
+
+        elements.extend(map(str, args))
 
         return Path(*elements)
