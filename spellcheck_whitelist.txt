@@ -1,4 +1,3 @@
-idx
 WPS336
 agglomerative
 arange
@@ -50,6 +49,7 @@ groupby
 hyperskill
 hyperstyle
 iat
+idx
 idxmax
 ij
 iloc
