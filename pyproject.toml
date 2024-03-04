@@ -84,6 +84,8 @@ run_hyperstyle = 'data_labelling.src.hyperstyle.evaluate:main'
 # JBA scripts
 collect_course_structure = 'jba.src.processing.collect_course_structure:main'
 tasktracker_content_collector = 'jba.src.processing.tasktracker_content_collector:main'
+tasktracker_task_filter = 'jba.src.processing.tasktracker_task_filter:main'
+tasktracker_edu_validation = 'jba.src.processing.tasktracker_edu_validation:main'
 process_course_data = 'jba.src.processing.data_processing:main'
 plot_task_attempt = 'jba.src.plots.task_attempt:main'
 plot_task_solving = 'jba.src.plots.task_solving:main'
