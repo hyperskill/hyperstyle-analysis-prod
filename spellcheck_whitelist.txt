@@ -1,13 +1,14 @@
-IDX
-TASKTRACKER
 WPS336
+agglomerative
 arange
 astype
 barh
 bbox
 borderaxespad
 bs4
+cdf
 cleanupSemantic
+cmd
 comparator
 concat
 copyfile
@@ -48,6 +49,7 @@ groupby
 hyperskill
 hyperstyle
 iat
+idx
 idxmax
 ij
 iloc
@@ -62,6 +64,7 @@ iterrows
 itertuples
 jba
 jpg
+jplag
 langs
 linkedin
 listdir
@@ -84,6 +87,7 @@ parametrized
 params
 parsers
 pathlib
+plag
 plotly
 plt
 pos
@@ -110,6 +114,7 @@ styleguide
 subheader
 substring
 svg
+tasktracker
 textwrap
 ticklabels
 tmp
