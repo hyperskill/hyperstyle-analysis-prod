@@ -169,6 +169,29 @@ docker run hyperstyle-analysis-prod:<VERSION> poetry run tasktracker_edu_validat
 - `edu_file` — Edu csv file.
 
 
+4. [tasktracker_platform_step_mapping.py](src/processing/tasktracker_platform_step_mapping.py) determines the lesson 
+and the task for TaskTracker records (if possible) by mapping with the data about submissions to the platform.
+
+### Usage
+
+Execute one of the following commands with necessary arguments:
+
+```bash
+poetry run tasktracker_platform_step_mapping [arguments]
+```
+
+or
+
+```bash
+docker run hyperstyle-analysis-prod:<VERSION> poetry run tasktracker_platform_step_mapping [arguments]
+```
+
+**Required arguments**:
+
+- `tasktracker_file_path` — Path to .csv file with TaskTracker dataset.
+- `platform_file_path` — Path to .csv file with platform dataset.
+- `output_path` — Path to output directory where updated TaskTracker dataset will be saved.
+
 ----
 
 # Simple general statistics
