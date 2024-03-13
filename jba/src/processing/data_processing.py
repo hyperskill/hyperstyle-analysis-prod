@@ -47,17 +47,14 @@ def get_submissions_attempt(df_submissions: pd.DataFrame) -> pd.DataFrame:
 # 1. Merge course data with task info
 # 2. Add submission group
 # 3. Add submission attempt
-def preprocess_course_data_and_save(course_data_path: str, course_structure_path: str):
-    output_path = get_output_path(course_data_path, '_preprocessed')
-    course_data_df = read_df(course_data_path)
-    task_info_df = read_df(course_structure_path)
-    course_data_df = course_data_df.drop({EduColumnName.TASK_NAME.value}, axis=1)
-    df = pd.merge(task_info_df, course_data_df, how='inner', on=EduColumnName.TASK_ID.value)
+def append_structure(course_data: pd.DataFrame, course_structure: pd.DataFrame) -> pd.DataFrame:
+    course_data = course_data.drop({EduColumnName.TASK_NAME.value}, axis=1, errors='ignore')
+    course_data_with_structure = pd.merge(course_structure, course_data, how='inner', on=EduColumnName.TASK_ID.value)
     # Add submission group
-    df = get_submissions_group(df)
+    course_data_with_structure = get_submissions_group(course_data_with_structure)
     # Add submission attempt
-    df = get_submissions_attempt(df)
-    write_df(df, output_path)
+    course_data_with_structure = get_submissions_attempt(course_data_with_structure)
+    return course_data_with_structure
 
 
 def configure_parser(parser: argparse.ArgumentParser) -> None:
@@ -70,7 +67,14 @@ def main():
     configure_parser(parser)
 
     args = parser.parse_args(sys.argv[1:])
-    preprocess_course_data_and_save(args.course_data_path, args.course_structure_path)
+
+    course_data = read_df(args.course_data_path)
+    course_structure = read_df(args.course_structure_path)
+
+    course_data_with_structure = append_structure(course_data, course_structure)
+
+    output_path = get_output_path(args.course_data_path, '-with_structure')
+    write_df(course_data_with_structure, output_path)
 
 
 if __name__ == '__main__':

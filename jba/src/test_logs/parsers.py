@@ -8,7 +8,6 @@ from bs4 import BeautifulSoup, Tag
 from jba.src.models.edu_logs import TestData, TestDataField, ExceptionData, TestResult
 
 EXCEPTION_REGEXP = re.compile(r'^e: (.*): \((\d+), (\d+)\): (.*)$')
-CLASS_NAME_REGEXP = re.compile('^Class (.*)$')
 PARAMETRIZED_TEST = re.compile(r'^\[(\d+)] (.*)$', re.DOTALL)
 PARAMETRIZED_METHOD_NAME = re.compile(r'(.*)\[(\d+)]')
 
@@ -69,8 +68,8 @@ def parse_gradle_test_logs(test_logs_path: Path) -> List[TestData]:
 
     test_table = _parse_gradle_test_table(soup.find('div', {'id': test_table_tab_id}).find('table'))
 
-    class_name_block = soup.find(lambda tag: tag.name == 'h1' and re.match(CLASS_NAME_REGEXP, tag.text))
-    class_name = re.match(CLASS_NAME_REGEXP, class_name_block.text).group(1)
+    breadcrumbs = soup.find('div', {'class': 'breadcrumbs'})
+    class_name = breadcrumbs.text.split(' > ')[-1].strip()
 
     tests = []
     for row in test_table.itertuples():
